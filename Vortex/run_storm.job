@@ -1,0 +1,51 @@
+#!/bin/bash
+
+#$ -N MESH
+#$ -q *@@westerink_d12chas_1992
+#$ -pe mpi-24 XXX
+
+np=XXX
+
+# set up environment
+module load mvapich2
+module load netcdf
+module load matlab
+
+## Setting up inputs
+date > run.timing
+
+# run the merging script
+matlab -nosplash -nodesktop -nodisplay < MERGEFN 
+
+date >> run.timing
+
+# plot the merged mesh in the background
+( matlab -nosplash -nodesktop -nodisplay < PLOTF & )
+
+# running the make new f15 script
+matlab -nosplash -nodesktop -nodisplay < MAKEF15 
+
+date >> run.timing
+
+# Setup cold start
+#rm *.inv
+#rm *.nc
+#rm fort.15
+#ln -s MESH_CS.15 fort.15
+#./adcprepall.sh
+
+## Run My Program
+#mpiexec -n $np ./padcirc
+
+# Setup hot start
+#rm fort.15
+#ln -s MESH_HS.15 fort.15
+#./adcprep15.sh
+
+# download winds
+#./dl_arch-nam.sh
+
+## Run My Program
+#mpiexec -n $np ./padcirc
+#
+#date >> run.timing

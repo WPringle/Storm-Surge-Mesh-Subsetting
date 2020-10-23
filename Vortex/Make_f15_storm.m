@@ -30,7 +30,8 @@ spinupdays = 10; % spinup time [days]
 rampdays = 5;    % ramping time [days]
 outg = 3;        % global elevation output interval [hours]
 outs = 12;       % station elevation output interval [min]
-wtmh = 3;        % wind time interval [hours]
+BLAdj = 0.78;    % wind speed adjustment factor to the boundary layer
+geofactor = 1;   % geofactor is one to consider Coriolis effect
 %% make the cold start
 
 % Set time step
@@ -99,8 +100,9 @@ m.f15.nhstar = [0 0];
 m.f15.ihot = 567;
 m.f15.nramp = 8;
 m.f15.dramp = [0 0 0 0 0 0 1 0 spinupdays];
-m.f15.nws = [20];
-m.f15.wtimnc = 3600*wtmh; %[s]
+m.f15.nws = 20;
+               %YYYY MM DD HH24 StormNumber BLAdj geofactor
+m.f15.wtimnc = [year ms ds hr stormcode BLAdj geofactor];
 m.f15.rndy = rndy;
 
 % elevation output

@@ -12,7 +12,7 @@ plotf="Plot_Mesh.m"
 jobscript="run_storm.job"
 # Setting some parameters and storm names
 np=24 # number of processors
-storms=("Florence" "Sandy" "Barry") # storm names
+storms=("Florence") # "Sandy" "Barry") # storm names
 expint=true #true for explicit, false for implicit
 
 # loop over the years
@@ -34,10 +34,7 @@ do
       me=07
       ds=11
       de=16
-      lonmi=-93.0
-      lonma=-88.5
-      latmi=+28.0
-      latma=+31.5
+      code="AL062018"
    elif [ $s == "Sandy" ]
    then
       yy=2012
@@ -45,10 +42,7 @@ do
       me=11
       ds=22
       de=2
-      lonmi=-77.0
-      lonma=-73.5
-      latmi=+37.5
-      latma=+41.5
+      code="AL062018"
    elif [ $s == "Florence" ]
    then
       yy=2018
@@ -56,10 +50,7 @@ do
       me=09
       ds=31
       de=18
-      lonmi=-79.7
-      lonma=-75.0
-      latmi=+33.5
-      latma=+36.5
+      code="AL062018"
    fi
 
    # copy over and configure the ALCF dl script
@@ -87,18 +78,11 @@ do
    # copy over and edit make merging file
    cp ../$mergef .     
    sed -i -- 's/STORMNAME/'$s'/g' $mergef
-   sed -i -- 's/LONMIN/'$lonmi'/g' $mergef 
-   sed -i -- 's/LONMAX/'$lonma'/g' $mergef
-   sed -i -- 's/LATMIN/'$latmi'/g' $mergef 
-   sed -i -- 's/LATMAX/'$latma'/g' $mergef  
+   sed -i -- 's/STORMCODE/'$code'/g' $mergef 
    
    # copy over and edit make plotting file
    cp ../$plotf .     
    sed -i -- 's/STORMNAME/'$s'/g' $plotf
-   sed -i -- 's/LONMIN/'$lonmi'/g' $plotf 
-   sed -i -- 's/LONMAX/'$lonma'/g' $plotf
-   sed -i -- 's/LATMIN/'$latmi'/g' $plotf 
-   sed -i -- 's/LATMAX/'$latma'/g' $plotf  
 
    # copy over and edit make fort.15 file
    cp ../$mf15 .     
@@ -111,6 +95,7 @@ do
    sed -i -- 's/MESH/'$fn'/g' $mf15 
    sed -i -- 's/EXPLICIT_INT/'$expint'/g' $mf15
 
+   # download the NAM winds
    # submit job
    cp ../$jobscript .
    sed -i -- 's/XXX/'$np'/g' $jobscript 

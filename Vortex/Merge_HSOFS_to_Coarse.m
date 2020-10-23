@@ -1,7 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Merge_HSOFS_to_Coarse.m                                                 %
 % Script to merge subset of HSOFS to ~1-km coarse WNAT mesh               %
-% By William Pringle Oct 18-20 2020                                       %
+% Based on a given wind swath of the Hurricane track                      %
+% By William Pringle Oct 2020                                             %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clearvars; clc;
 %
@@ -9,9 +10,9 @@ clearvars; clc;
 addpath(genpath('~/MATLAB/OM_Mesh2D_Stuff'))
 addpath(genpath('~/MATLAB/OceanMesh2D'))
 addpath(genpath('~/MATLAB/m_map'))
+addpath(genpath('/pontus/wpringle/ECGC/HSOFS_Ensemble/data'))
 addpath('/pontus/wpringle/Bathy/GEBCO')
 addpath('/pontus/wpringle/tidedata')
-addpath('/pontus/wpringle/ECGC/HSOFS_Ensemble/data')
 %
 % Setting up the projection variables
 global MAP_PROJECTION MAP_COORDS MAP_VAR_LIST
@@ -65,7 +66,7 @@ load(WNAT);
 % Fine HSOFS Mesh
 load(HSOFS);
 % Extract the subdomain
-[ms,ind] = ExtractSubDomain(m,track_poly,0,centroid);
+[ms,ind] = ExtractSubDomain(m,track_poly,0,centroid,0);
 % Map back mesh properties
 ms = mapMeshProperties(ms,ind);
 clear m

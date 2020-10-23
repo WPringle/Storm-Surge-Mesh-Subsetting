@@ -6,7 +6,6 @@
 clearvars; clc;
 %
 % add paths to data and scripts
-
 addpath(genpath('~/MATLAB/OceanMesh2D/'))
 addpath(genpath('~/MATLAB/m_map/'))
 
@@ -14,8 +13,8 @@ addpath(genpath('~/MATLAB/m_map/'))
 % Input Storm Name
 storm = 'STORMNAME';
 % Input Storm related polygon 
-bou = [LONMIN LONMAX; % the boundary that defines the subset to extract
-       LATMIN LATMAX]; 
+% bou = [LONMIN LONMAX; % the boundary that defines the subset to extract
+%        LATMIN LATMAX]; 
 
 % Parameters
 buff = 1.0;       % the buffer for the plot
@@ -23,15 +22,18 @@ lines = '--';     % bbox line style
 linew = 1;        % bbox line width
 figres = '-r300'; % figure resolution
 
-% Making buffer for plot
-bou_buff(:,1) = bou(:,1) - buff;
-bou_buff(:,2) = bou(:,2) + buff;
-
 % Output Plot Names
 outname = ['HSOFS+Coarse_' storm];
 
 % Load the mesh
 load([outname '.mat'])
+
+% Get the bbox from the ms subset polygon
+bou = [min(ms_poly_vec)' max(ms_poly_vec)'];
+
+% Making buffer for plot
+bou_buff(:,1) = bou(:,1) - buff;
+bou_buff(:,2) = bou(:,2) + buff;
 
 %% Plot mesh subsets
 % Plot the mesh quality

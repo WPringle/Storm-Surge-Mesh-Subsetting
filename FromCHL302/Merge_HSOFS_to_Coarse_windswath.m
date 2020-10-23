@@ -6,31 +6,28 @@
 clearvars; clc;
 %
 % add paths to data and scripts
-addpath(genpath('~/MATLAB/OM_Mesh2D_Stuff'))
-addpath(genpath('~/MATLAB/OceanMesh2D'))
-addpath(genpath('~/MATLAB/m_map'))
-addpath('/pontus/wpringle/Bathy/GEBCO')
-addpath('/pontus/wpringle/tidedata')
-addpath('/pontus/wpringle/ECGC/HSOFS_Ensemble/data')
-%
+addpath(genpath('C:\Users\chl302\Documents\GitHub\OM_Mesh2D_Stuff'))
+addpath('E:\Global_Data\Bathymetry_Datasets\SRTM30_PLUS_w_Abyssal_Hills')
+addpath('E:\Global_Data\WOA_Data')
 % Setting up the projection variables
 global MAP_PROJECTION MAP_COORDS MAP_VAR_LIST
 %
 %% Input Setup
 % Input Storm Name and Code
-stormname = 'STORMNAME';
-stormcode = 'STORMCODE';
+stormname = 'Florence';
+stormcode = 'AL062018';
 % Input Storm Track
-trackfile = [stormcode '_windswath.shp'];
+trackfile = ['best_track/' stormcode '_windswath.shp'];
 % Input Coarse mesh bathy data
-B_filename = 'GEBCO_2020.nc';
+B_filename = 'SRTM15+V2.nc';
 % Input buoyancy frequency values
 N_filename = 'Gridded_N_values_WOA2018_2005-2017.mat';
 %
 % Input Mesh
-HSOFS = 'Model_120m_Release_v1_nof24.mat';
+meshdir = '../../';
+HSOFS = [meshdir 'Model_120m_Release_v1_nof24.mat'];
 % Input Coarse Mesh Property
-WNAT  = 'WNAT_1km_properties.mat';
+WNAT  = [meshdir 'WNAT_1km_properties.mat'];
 
 % Output Mesh Name
 outname = ['HSOFS+Coarse_' stormname];

@@ -14,13 +14,20 @@ module load matlab
 ## Setting up inputs
 date > run.timing
 
+# download storm track and vortex information
+./dl_storm_vortex.sh
+
+date >> run.timing
+
 # run the merging script
 matlab -nosplash -nodesktop -nodisplay < MERGEFN 
 
 date >> run.timing
 
-# plot the merged mesh in the background
-( matlab -nosplash -nodesktop -nodisplay < PLOTF & )
+# plot the merged mesh
+matlab -nosplash -nodesktop -nodisplay < PLOTF
+
+date >> run.timing
 
 # running the make new f15 script
 matlab -nosplash -nodesktop -nodisplay < MAKEF15 
@@ -41,9 +48,6 @@ date >> run.timing
 #rm fort.15
 #ln -s MESH_HS.15 fort.15
 #./adcprep15.sh
-
-# download winds
-#./dl_arch-nam.sh
 
 ## Run My Program
 #mpiexec -n $np ./padcirc

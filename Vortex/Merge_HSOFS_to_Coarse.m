@@ -10,7 +10,7 @@ clearvars; clc;
 addpath(genpath('~/MATLAB/OM_Mesh2D_Stuff'))
 addpath(genpath('~/MATLAB/OceanMesh2D'))
 addpath(genpath('~/MATLAB/m_map'))
-addpath(genpath('/pontus/wpringle/ECGC/HSOFS_Ensemble/data'))
+addpath('/pontus/wpringle/ECGC/HSOFS_Ensemble/data')
 addpath('/pontus/wpringle/Bathy/GEBCO')
 addpath('/pontus/wpringle/tidedata')
 %
@@ -22,7 +22,7 @@ global MAP_PROJECTION MAP_COORDS MAP_VAR_LIST
 stormname = 'STORMNAME';
 stormcode = 'STORMCODE';
 % Input Storm Track
-trackfile = [stormcode '_windswath.shp'];
+trackfile = [upper(stormcode) '_windswath.shp'];
 % Input Coarse mesh bathy data
 B_filename = 'GEBCO_2020.nc';
 % Input buoyancy frequency values

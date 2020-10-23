@@ -17,6 +17,7 @@ explicit = EXPLICIT_INT;
 
 %% Set Storm Formation Time and duration
 stormname = 'STORMNAME';
+stormcode = 'STORMCODE';
 year = YYYY;
 ms = MMS;
 ds = DDS;
@@ -55,7 +56,7 @@ m = Make_f15(m,TS,TE,DT,'const',CONST,'tidal_database',tpxoh);
 
 % metadata
 m.f15.nscreen = ceil(24*3600/m.f15.dtdp);
-m.f15.rundes = ['Hurricane ' stormname]; % Run description
+m.f15.rundes = ['Storm: ' stormname '(' stormcode ')']; % Run description
 m.f15.runid = [outname '-CS']; % Run description
 m.f15.extraline(1).msg = m.f15.rundes;
 m.f15.extraline(6).msg = 'Tide Only';
@@ -98,7 +99,7 @@ m.f15.nhstar = [0 0];
 m.f15.ihot = 567;
 m.f15.nramp = 8;
 m.f15.dramp = [0 0 0 0 0 0 1 0 spinupdays];
-m.f15.nws = 14;
+m.f15.nws = [20];
 m.f15.wtimnc = 3600*wtmh; %[s]
 m.f15.rndy = rndy;
 
@@ -111,7 +112,7 @@ m.f15.outgm = [5 spinupdays m.f15.rndy ceil(outg*3600/m.f15.dtdp)];
 % metadata
 m.f15.runid = [outname '-HS']; % Run description
 m.f15.extraline(1).msg = m.f15.rundes;
-m.f15.extraline(6).msg = 'Tide + 3-hrly NAM atmos.';
+m.f15.extraline(6).msg = 'Tide + GAHM vortex forcing';
 
 % writing out the hotstart
 write(m,[outname '_HS'],'15');

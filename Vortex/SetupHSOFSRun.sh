@@ -5,7 +5,7 @@ module load matlab
 
 # Setting the file names which do not change
 fnpre="HSOFS+Coarse_"
-dln="dl_arch-alcf.sh" 
+dln="dl_storm_vortex.sh" 
 mf15="Make_f15_storm.m" 
 mergef="Merge_HSOFS_to_Coarse.m" 
 plotf="Plot_Mesh.m" 
@@ -34,7 +34,7 @@ do
       me=07
       ds=11
       de=16
-      code="AL062018"
+      code="al062018"
    elif [ $s == "Sandy" ]
    then
       yy=2012
@@ -42,7 +42,7 @@ do
       me=11
       ds=22
       de=2
-      code="AL062018"
+      code="al062018"
    elif [ $s == "Florence" ]
    then
       yy=2018
@@ -50,18 +50,10 @@ do
       me=09
       ds=31
       de=18
-      code="AL062018"
+      code="al062018"
    fi
 
-   # copy over and configure the ALCF dl script
-   #cp ../$dln .     
-   #sed -i -- 's/ms=XX/ms='$ms'/g' $dln  
-   #sed -i -- 's/me=XX/me='$me'/g' $dln  
-   #sed -i -- 's/ds=XX/ds='$ds'/g' $dln  
-   #sed -i -- 's/de=XX/de='$de'/g' $dln  
-   #sed -i -- 's/yy=XXXX/yy='$yy'/g' $dln  
-   
-   # pre-link the input and run files
+   # pre-link the input and exec files
    fn=$fnpre$s
    #ln -s $fn".24" fort.24
    ln -s $fn".14" fort.14
@@ -69,11 +61,17 @@ do
    ln -s ../elev_stat.151 .
    ln -s ../adcprep .
    ln -s ../padcirc .
+   ln -s ../aswip .
    # copy over the acdprep scripts and add np var
    cp ../adcprepall.sh .
    cp ../adcprep15.sh .
    sed -i -- 's/XXX/'$np'/g' adcprepall.sh  
    sed -i -- 's/XXX/'$np'/g' adcprep15.sh  
+   
+   # copy over and configure the ALCF dl script
+   cp ../$dln .     
+   sed -i -- 's/STORMCODE/'$code'/g' $dln  
+   sed -i -- 's/XXXX/'$yy'/g' $dln  
    
    # copy over and edit make merging file
    cp ../$mergef .     
@@ -87,6 +85,7 @@ do
    # copy over and edit make fort.15 file
    cp ../$mf15 .     
    sed -i -- 's/STORMNAME/'$s'/g' $mf15
+   sed -i -- 's/STORMCODE/'$code'/g' $mf15 
    sed -i -- 's/MMS/'$ms'/g' $mf15  
    sed -i -- 's/DDS/'$ds'/g' $mf15  
    sed -i -- 's/MME/'$me'/g' $mf15  

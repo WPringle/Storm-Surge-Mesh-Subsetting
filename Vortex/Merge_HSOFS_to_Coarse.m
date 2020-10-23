@@ -49,7 +49,12 @@ wind_swath = 34; %[kt] wind speed at which to set the TC edge (34, 50, or 64)
 deep_water = 250; %[m] the cutoff depth for "deep-water"
      
 %% Load the track data and determine the high-res region
-shp = shaperead(trackfile);
+try
+   shp = shaperead(trackfile);
+catch
+   trackfile = [lower(stormcode) '_windswath.shp'];
+   shp = shaperead(trackfile);
+end
 % Set high-res region to the "wind_swath"-kt wind speed boundary...
 rad = [shp.RADII]; WI = find(rad == wind_swath,1,'last');
 tx = shp(WI).X; ty = shp(WI).Y;

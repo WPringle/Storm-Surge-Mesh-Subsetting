@@ -12,7 +12,7 @@ plotf="Plot_Mesh.m"
 jobscript="run_storm.job"
 # Setting some parameters and storm names
 np=24 # number of processors
-storms=("Florence") # "Sandy" "Barry") # storm names
+storms=("Florence" "Sandy" "Barry") # storm names
 expint=true #true for explicit, false for implicit
 
 # loop over the years
@@ -34,7 +34,7 @@ do
       me=07
       ds=11
       de=16
-      code="al062018"
+      code="al022019"
    elif [ $s == "Sandy" ]
    then
       yy=2012
@@ -42,7 +42,7 @@ do
       me=11
       ds=22
       de=2
-      code="al062018"
+      code="al182012"
    elif [ $s == "Florence" ]
    then
       yy=2018

@@ -30,7 +30,7 @@ spinupdays = 10; % spinup time [days]
 rampdays = 5;    % ramping time [days]
 outg = 3;        % global elevation output interval [hours]
 outs = 12;       % station elevation output interval [min]
-BLAdj = 0.78;    % wind speed adjustment factor to the boundary layer
+BLAdj = 0.9;     % wind speed adjustment factor to the boundary layer
 geofactor = 1;   % geofactor is one to consider Coriolis effect
 %% make the cold start
 
@@ -57,7 +57,7 @@ m = Make_f15(m,TS,TE,DT,'const',CONST,'tidal_database',tpxoh);
 
 % metadata
 m.f15.nscreen = ceil(24*3600/m.f15.dtdp);
-m.f15.rundes = ['Storm: ' stormname '(' stormcode ')']; % Run description
+m.f15.rundes = ['Storm: ' stormname ' (' stormcode ')']; % Run description
 m.f15.runid = [outname '-CS']; % Run description
 m.f15.extraline(1).msg = m.f15.rundes;
 m.f15.extraline(6).msg = 'Tide Only';
@@ -102,7 +102,7 @@ m.f15.nramp = 8;
 m.f15.dramp = [0 0 0 0 0 0 1 0 spinupdays];
 m.f15.nws = 20;
                %YYYY MM DD HH24 StormNumber BLAdj geofactor
-m.f15.wtimnc = [year ms ds hr stormcode BLAdj geofactor];
+m.f15.wtimnc = [year ms ds hr 1 BLAdj geofactor];
 m.f15.rndy = rndy;
 
 % elevation output

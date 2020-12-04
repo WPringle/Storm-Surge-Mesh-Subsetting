@@ -1,8 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Merge_HSOFS_to_Coarse.m                                                 %
+% Merge_HSOFS_to_Coarse_V2.m                                              %
 % Script to merge subset of HSOFS to ~1-km coarse WNAT mesh               %
 % Based on a given wind swath of the Hurricane track                      %
-% By William Pringle Oct 2020                                             %
+% -V2 Updates: making sure small portions of tributaries/rivers etc       %
+%              do not become disconnected                                 %
+% By William Pringle Oct-Dec 2020                                         %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clearvars; clc;
 %
@@ -47,6 +49,7 @@ bc_points = [-60.0000   45.7;   % the start and end points of [lons, lats;
              -60.0000    8.8];  % the open boundary            lone, late]
 wind_swath = 34; %[kt] wind speed at which to set the TC edge (34, 50, or 64)
 deep_water = 250; %[m] the cutoff depth for "deep-water"
+small_portion = 0.1; %fraction of the mesh that's considered a small disconnected portion to keep if cutoff
      
 %% Load the track data and determine the high-res region
 try
@@ -67,13 +70,24 @@ track_poly = [tx(1:WI-1); ty(1:WI-1)]';
 tic
 % Coarse Mesh
 load(WNAT); 
-
 % Fine HSOFS Mesh
 load(HSOFS);
 % Extract the subdomain
-[ms,ind] = ExtractSubDomain(m,track_poly,0,centroid,0);
-% Map back mesh properties
-ms = mapMeshProperties(ms,ind);
+ms = extract_subdomain(m,track_poly,0,centroid);
+% Extract the inverse of the subdomain
+mi = extract_subdomain(m,track_poly,1,centroid);
+% Keep the small disconnected portions 
+mi.bd = []; mi.op = [];
+mi = Extract_Small_Portion( mi, small_portion, 0, 1 );
+% add back small disconnected portions to ms
+ms = cat(ms,mi); 
+% reset mesh properties for ms back to those of original m 
+ms.b = m.b; ms.bx = m.bx; ms.by = m.by; 
+ms.bd = m.bd; ms.op = m.op; ms.f13 = m.f13; 
+% get the indice to map the original mesh properties to ms
+ind = ourKNNsearch(m.p',ms.p',1);
+% Map mesh properties
+ms = map_mesh_properties(ms,ind);
 clear m
 % get element depths
 [~,bc] = baryc(ms);

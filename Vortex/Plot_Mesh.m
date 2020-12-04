@@ -11,7 +11,7 @@ addpath(genpath('~/MATLAB/m_map/'))
 
 %% Input Setup
 % Input Storm Name
-storm = 'STORMNAME';
+stormname = 'STORMNAME';
 stormcode = 'STORMCODE';
 % Input Storm Track
 try
@@ -31,7 +31,7 @@ tw = 2;           % track line width
 figres = '-r300'; % figure resolution
 
 % Output Plot Names
-outname = ['HSOFS+Coarse_' storm];
+outname = ['HSOFS+Coarse_' stormname];
 
 % Load the mesh
 load([outname '.mat'])
@@ -62,7 +62,7 @@ print([outname '_resomesh.png'],figres,'-dpng')
 
 % Plot the bathy
 plot(m,'b',1,[],bou_buff);
-demcmap([-100 10])
+caxis([-10 100])
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'r--','linew',bw);
 m_plot(trackx,tracky,'r-','linew',tw);
 print([outname '_bathy.png'],figres,'-dpng')

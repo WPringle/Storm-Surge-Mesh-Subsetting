@@ -1,8 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Merge_HSOFS_to_Coarse.m                                                 %
 % Script to merge subset of HSOFS to ~1-km coarse WNAT mesh               %
-% Based on a given wind swath of the Hurricane track                      %
-% By William Pringle Oct 2020                                             %
+% By William Pringle Oct 18-20 2020                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clearvars; clc;
 %
@@ -13,28 +12,24 @@ addpath(genpath('~/MATLAB/m_map'))
 addpath('/pontus/wpringle/ECGC/HSOFS_Ensemble/data')
 addpath('/pontus/wpringle/Bathy/GEBCO')
 addpath('/pontus/wpringle/tidedata')
-%
 % Setting up the projection variables
 global MAP_PROJECTION MAP_COORDS MAP_VAR_LIST
 %
 %% Input Setup
-% Input Storm Name and Code
-stormname = 'STORMNAME';
-stormcode = 'STORMCODE';
-% Input Storm Track
-trackfile = [upper(stormcode) '_windswath.shp'];
+% Input mesh related polygon 
+bou = dlmread('DelBayPolygon.dat') % the boundary that defines the subset to extract
 % Input Coarse mesh bathy data
 B_filename = 'GEBCO_2020.nc';
 % Input buoyancy frequency values
 N_filename = 'Gridded_N_values_WOA2018_2005-2017.mat';
 %
 % Input Mesh
-HSOFS = 'Model_120m_Release_v1_nof24.mat';
+HSOFS = 'Model_120m_Combinedv24_Run.mat';
 % Input Coarse Mesh Property
 WNAT  = 'WNAT_1km_properties.mat';
 
 % Output Mesh Name
-outname = ['HSOFS+Coarse_' stormname];
+outname = 'UNDv24-DelChesBay+WNAT1km';
 
 % Set some parameters
 centroid = 0;  % = 0 [default] inpolygon test is based on whether all vertices
@@ -43,25 +38,9 @@ centroid = 0;  % = 0 [default] inpolygon test is based on whether all vertices
                % is inside (outside) the bou polygon
 dbc = 0.35;    % The allowable boundary quality of coarse outer mesh
 con = 9;       % The allowable element connectivity of coarse outer mesh
-bc_points = [-60.0000   45.7;   % the start and end points of [lons, lats;
-             -60.0000    8.8];  % the open boundary            lone, late]
-wind_swath = 34; %[kt] wind speed at which to set the TC edge (34, 50, or 64)
-deep_water = 250; %[m] the cutoff depth for "deep-water"
+bc_points = [-60.0000   45.7;   % the start and end points of 
+             -60.0000    8.8];  % the open boundary
      
-%% Load the track data and determine the high-res region
-try
-   shp = shaperead(trackfile);
-catch
-   trackfile = [lower(stormcode) '_windswath.shp'];
-   shp = shaperead(trackfile);
-end
-% Set high-res region to the "wind_swath"-kt wind speed boundary...
-rad = [shp.RADII]; WI = find(rad == wind_swath,1,'last');
-tx = shp(WI).X; ty = shp(WI).Y;
-% make sure only get the outer polygon component. 
-WI = find(isnan(tx),1,'first');
-track_poly = [tx(1:WI-1); ty(1:WI-1)]';
-
 %% Load the outer coarse mesh properties,
 %% the HSOFS mesh and extract the desired subset
 tic
@@ -70,15 +49,12 @@ load(WNAT);
 
 % Fine HSOFS Mesh
 load(HSOFS);
+m.op = []; m.bd = []; m.f24 = [];
 % Extract the subdomain
-[ms,ind] = ExtractSubDomain(m,track_poly,0,centroid,0);
+[ms,ind] = extract_subdomain(m,bou,0,centroid,0);
 % Map back mesh properties
 ms = mapMeshProperties(ms,ind);
 clear m
-% get element depths
-[~,bc] = baryc(ms);
-% remove the parts in deep water
-ms.t(bc > deep_water,:) = [];
 % project the vertices in ms using the WNAT coarse mesh projection
 [p1(:,1),p1(:,2)] = m_ll2xy(ms.p(:,1),ms.p(:,2)) ;
 ms.p = p1;
@@ -91,7 +67,7 @@ tic
 % get the ms polygonal boundary as a cell
 ms_bound = getBoundaryOfMesh(ms,1);
 % determine the area of each polygon
-area = zeros(size(ms_bound));
+area = size(ms_bound);
 for ib = 1:length(ms_bound)
     area(ib) = polyarea(ms_bound{ib}(1:end-1,1),ms_bound{ib}(1:end-1,2));
 end
@@ -139,15 +115,8 @@ m = cat(ms,mc); % this order is important as cat will carry over info from ms no
 m.proj   = MAP_PROJECTION;
 m.coord  = MAP_COORDS;
 m.mapvar = MAP_VAR_LIST;
-% Make sure to reset bd and op
-m.bd = []; m.op = [];
-% if HSOFS subset contains weirs carry these over...
-if ~isempty(ms.bd) && any(ms.bd.ibtype == 24)
-    m = carryoverweirs(m,ms);
-end
 % project back to lat-lon
 [m.p(:,1),m.p(:,2)] = m_xy2ll(m.p(:,1),m.p(:,2)) ;
-[ms_poly_vec(:,1),ms_poly_vec(:,2)] = m_xy2ll(ms_poly_vec(:,1),ms_poly_vec(:,2)) ;
 toc
 %% Add on open bc, bathy, and recompute global f13 attributes
 tic
@@ -165,5 +134,5 @@ m = Calc_tau0(m);
 % recompute the internal tide using N_filename data
 m = Calc_IT_Fric(m,N_filename,'cutoff_depth',250,'Cit',2.75);
 % save the mesh
-save([outname '.mat'],'m','ms_poly_vec');
+save([outname '.mat'],'m');
 toc

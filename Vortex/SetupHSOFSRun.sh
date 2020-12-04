@@ -7,7 +7,7 @@ module load matlab
 fnpre="HSOFS+Coarse_"
 dln="dl_storm_vortex.sh" 
 mf15="Make_f15_storm.m" 
-mergef="Merge_HSOFS_to_Coarse.m" 
+mergef="Merge_HSOFS_to_Coarse_V2.m" 
 plotf="Plot_Mesh.m" 
 jobscript="run_storm.job"
 # Setting some parameters and storm names
@@ -81,6 +81,7 @@ do
    # copy over and edit make plotting file
    cp ../$plotf .     
    sed -i -- 's/STORMNAME/'$s'/g' $plotf
+   sed -i -- 's/STORMCODE/'$code'/g' $plotf
 
    # copy over and edit make fort.15 file
    cp ../$mf15 .     

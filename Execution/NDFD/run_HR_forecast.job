@@ -1,0 +1,51 @@
+#!/bin/bash
+
+#SBATCH --job-name=NDFD_STORM
+#SBATCH --account=HSOFS_Ensemble
+#SBATCH --partition=bdwall
+#SBATCH --nodes=20
+#SBATCH --ntasks-per-node=36
+#SBATCH --output=NDFD_STORM.out
+#SBATCH --error=NDFD_STORM.error
+#SBATCH --mail-user=wpringle@anl.gov
+#SBATCH --time=2:00:00
+
+np=720
+#np=360
+sed -i -- 's/XXX/'$np'/g' adcprepall.sh  
+sed -i -- 's/XXX/'$np'/g' adcprep15.sh  
+
+# Setup My Environment
+module load mvapich2
+module load netcdf
+module load netcdf-fortran
+
+# run through the spinup and forecast
+date > run.timing
+   
+# download the NAM winds
+./dl_arch-nam.sh
+
+# Setup cold start
+ln -s WNAT_v14_CS.15 fort.15
+./adcprepall.sh
+
+date >> run.timing
+
+# Run My Program
+srun -n $np ./padcirc
+
+date >> run.timing
+
+# Setup hot start
+rm fort.15
+ln -s WNAT_v14_HS.15 fort.15
+./adcprep15.sh
+
+# Run My Program
+srun -n $np ./padcirc
+
+# exit with end date
+date >> run.timing
+
+rm -r PE*

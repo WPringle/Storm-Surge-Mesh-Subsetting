@@ -11,7 +11,6 @@
 #SBATCH --time=2:00:00
 
 np=720
-#np=360
 sed -i -- 's/XXX/'$np'/g' adcprepall.sh  
 sed -i -- 's/XXX/'$np'/g' adcprep15.sh  
 
@@ -20,29 +19,45 @@ module load mvapich2
 module load netcdf
 module load netcdf-fortran
 
-# run through the spinup and forecast
+# data downloading/processing 
+# adcirc mesh prepping
 date > run.timing
+
+# Generate the fort.15 files   
+matlab -nosplash -nodesktop -nodisplay < F15SCRIPT
    
 # download the NAM winds
-./dl_arch-nam.sh
+./NAMDL
 
-# Setup cold start
+# process the NDFD winds
+./NDFDP
+
+date >> run.timing
+
+# Link and prep the cold-start files
+ls -s NAM.221.grb2 fort.221.grb2
+ls -s NAM.222.grb2 fort.222.grb2
 ln -s WNAT_v14_CS.15 fort.15
 ./adcprepall.sh
 
 date >> run.timing
 
-# Run My Program
+# Run the cold-start tide+NAM forcing
 srun -n $np ./padcirc
 
 date >> run.timing
 
-# Setup hot start
+# Link and prep hot-start files
+rm *.inv
+rm fort.222.grb2
+ln -s NDFD_1hr.222.grb2 fort.222.grb2
 rm fort.15
 ln -s WNAT_v14_HS.15 fort.15
 ./adcprep15.sh
 
-# Run My Program
+date >> run.timing
+
+# Run the hostart with tide+NDFD forcing
 srun -n $np ./padcirc
 
 # exit with end date

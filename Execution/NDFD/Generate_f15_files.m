@@ -1,22 +1,26 @@
-% Put on Bathy and plot stuff 
+% Make the f15 files for the current storm
 clearvars; clc; close all
 
-addpath(genpath('~/OceanMesh2D/'))
+% adding data and routines to path
+addpath(genpath('~/MATLAB/OceanMesh2D/'))
 addpath('~/datasets/')
 
+% setting the name of the mesh
 outname = 'WNAT_v14';
 load(['../../mesh/' outname '.mat'])
 
+% setting whether we used implicit or explicit timestepping
 explicit = false;
 
 %% Set Storm Formation Time and duration
 stormname = 'STORM';
-year = 2019;
+year = YY;
 ms = MS;
 ds = DS;
 me = ME;
 de = DE;
-hr = HSS;
+hs = HSS;
+he = HE;
 
 % Some constantds
 spinupdays = 10; % spinup time [days]
@@ -34,8 +38,8 @@ else
 end
 
 % Make f15 data using the following times, constituents and stations
-TS = datetime(year,ms,ds,hr,0,0) - spinupdays; % simulation start time
-TE = datetime(year,me,de,hr,0,0); % simulation end time
+TS = datetime(year,ms,ds,hs,0,0) - spinupdays; % simulation start time
+TE = datetime(year,me,de,he,0,0); % simulation end time
 TS = datestr(TS);
 TE = datestr(TE);
 
@@ -52,7 +56,7 @@ m.f15.nscreen = ceil(24*3600/m.f15.dtdp);
 m.f15.rundes = ['Fine Model - Hurricane ' stormname]; % Run description
 m.f15.runid = 'WNAT_v14-CS'; % Run description
 m.f15.extraline(1).msg = m.f15.rundes;
-m.f15.extraline(6).msg = 'Tide Only';
+m.f15.extraline(6).msg = 'Tide + 3-hrly NAM hindcast';
 
 % ramping
 m.f15.nramp = 1;
@@ -62,6 +66,8 @@ m.f15.dramp = rampdays;
 m.f15.ics = 22;
 m.f15.elsm = -0.2;
 m.f15.nwp = 3;
+m.f15.nws = 14;
+m.f15.wtimnc = 3600*wtmh; %[s]
 
 if ~explicit
   m = Calc_tau0(m,'opt',DT,'kappa',0.5);
@@ -91,10 +97,8 @@ write(m,[outname '_CS'],'15');
 %% make the hot start
 m.f15.nhstar = [0 0];
 m.f15.ihot = 567;
-m.f15.nramp = 8;
-m.f15.dramp = [0 0 0 0 0 0 1 0 spinupdays];
-m.f15.nws = 14;
-m.f15.wtimnc = 3600*wtmh; %[s]
+m.f15.nramp = 0;
+m.f15.dramp = 0;
 m.f15.rndy = rndy;
 
 % elevation output
@@ -106,7 +110,7 @@ m.f15.outgm = [5 spinupdays m.f15.rndy ceil(outg*3600/m.f15.dtdp)];
 % metadata
 m.f15.runid = 'WNAT_v14-HS'; % Run description
 m.f15.extraline(1).msg = m.f15.rundes;
-m.f15.extraline(6).msg = 'Tide + 3-hrly NAM atmos.';
+m.f15.extraline(6).msg = 'Tide + 3-hrly NDFD forecast';
 
 % writing out the hotstart
 write(m,[outname '_HS'],'15');

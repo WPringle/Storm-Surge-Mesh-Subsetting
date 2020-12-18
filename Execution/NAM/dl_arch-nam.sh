@@ -49,8 +49,8 @@ do
             get_inv.pl $URL".inv" > my_inv
             grep "GRD:10 m above ground" < my_inv | get_grib.pl $URL".grb2" ugrd.grb2
             grep ":MSLET:" < my_inv | get_grib.pl $URL".grb2" prmsl.grb2
-            wgrib2 "prmsl.grb2" -append -grib "fort.221.grb2"
-            wgrib2 "ugrd.grb2" -append -grib "fort.222.grb2"
+            wgrib2 "prmsl.grb2" -append -grib "NAM.221.grb2"
+            wgrib2 "ugrd.grb2" -append -grib "NAM.222.grb2"
          done
       done
    done

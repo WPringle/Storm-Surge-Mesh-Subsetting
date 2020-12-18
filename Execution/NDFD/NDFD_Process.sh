@@ -1,24 +1,17 @@
 #!/bin/sh
-# use wgrib2 to interpolate to time interpolate two forecast files
 #
-# ASSUMPTION: THE TWO FORECAST FILES MUST HAVE THE RECORDS IN THE
-# SAME ORDER
-#
-# Yes, I am shouting.
-# 
-# $1 = 2 hour forecast
-# $2 = 3 hour forecast
-# $3 = output   (2:15, 2:30 and 2:45 hour forecasts)
-#
-# note: wgrib2 v2.0.5 is needed for the -set_scaling same same
-#    for older versions of wgrib2, remove the "-set_scaling same same"
-#    the output will be written in the default mode .. 12 bits
+# use wgrib2 to convert wind speed and direction to UGRID and VGRID 
+# then interpolate 3-hrly forecasts to 1-hrly forecasts
 #
 # Input/Output filenames
-WSPDin='YCUZ98_KWBN_201907130147' #the wind-speed grb2
-WDIRin='YBUZ98_KWBN_201907130146' #the wind-direction grb2
+#WSPDin='YCUZ98_KWBN_201907130147' #example filename of wind-speed grb2
+#WDIRin='YBUZ98_KWBN_201907130146' #example filename of wind-direction grb2
+WSPDin='WSPDfilename' #the wind-speed grb2
+WDIRin='WDIRfilename' #the wind-direction grb2
+# these are temp files deleted at end of script
 WINDin='NDFD_WIND_1hr.grb2'       #the combined wind-speed and wind-direction
 UVin='NDFD_UV_1hr.grb'            #the input U10/V10 grb2 (hourly)
+# these is the final output filename
 UVout='NDFD_1hr.222.grb'          #the output interpolated U10/V10 grb2 (hourly)
 
 ####################### Operations below ###########################
@@ -35,7 +28,8 @@ wgrib2 $WINDin -start_ft -s | sort -t: -k3 | wgrib2 -i $WINDin -grib $WINDin"2"
 # Compute the U10/V10 and output as UVin
 wgrib2 $WINDin"2" -wind_uv $UVin
 
-# doing conversion native reverse polish notation 
+# doing conversion using native reverse polish notation 
+# keep for reference
 #for i in {1..70}
 #do
 ## Do the operation
@@ -48,7 +42,7 @@ wgrib2 $WINDin"2" -wind_uv $UVin
 #     -rpn "rcl_2:-180:/:pi:*:cos:rcl_1:*" -set_var VGRD -append -grib_out $UVin
 #done
 
-## Now do the interpolation
+## Interpolation of the 3-hr forecasts after 36hrs to 1-hr forecast
 cp $UVin $UVout
 for i in {37..67..3} 
 do

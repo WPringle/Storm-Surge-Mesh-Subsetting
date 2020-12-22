@@ -4,8 +4,6 @@
 #$ -q *@@westerink_d12chas_1992
 #$ -pe mpi-24 XXX
 
-np=XXX
-
 # set up environment
 module load mvapich2
 module load netcdf
@@ -19,16 +17,18 @@ date > run.timing
 
 date >> run.timing
 
-# run the merging script
-matlab -nosplash -nodesktop -nodisplay < MERGEFN 
+if SUBSET; then
+   # run the merging script
+   matlab -nosplash -nodesktop -nodisplay < MERGEFN 
 
-date >> run.timing
+   date >> run.timing
 
-# plot the merged mesh
-matlab -nosplash -nodesktop -nodisplay < PLOTF
+   # plot the merged mesh
+   matlab -nosplash -nodesktop -nodisplay < PLOTF
 
-date >> run.timing
-
+   date >> run.timing
+fi
+   
 # running the make new f15 script
 matlab -nosplash -nodesktop -nodisplay < MAKEF15 
 
@@ -42,7 +42,7 @@ date >> run.timing
 #./adcprepall.sh
 
 ## Run My Program
-#mpiexec -n $np ./padcirc
+#mpiexec -n XXX ./padcirc
 
 # Setup hot start
 #rm fort.15
@@ -50,6 +50,6 @@ date >> run.timing
 #./adcprep15.sh
 
 ## Run My Program
-#mpiexec -n $np ./padcirc
+#mpiexec -n XXX ./padcirc
 #
 #date >> run.timing

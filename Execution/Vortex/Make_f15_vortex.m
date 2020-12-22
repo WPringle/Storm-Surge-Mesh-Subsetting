@@ -1,13 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Make_f15_storm.m                                                        %
-% Script to make new f15 for the current storm                            %
-% By William Pringle Oct, 2020                                            %
+% Make_f15_vortex.m                                                       %
+% Script to make new f15 for the current vortex                           %
+% By William Pringle Oct-Dec 2020                                         %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clearvars; clc; close all
 
 addpath(genpath('~/MATLAB/OceanMesh2D/'))
-addpath(genpath('~/MATLAB/m_map/'))
-addpath('/pontus/wpringle/tidedata')
+addpath('~/datasets/')
 
 outname = 'MESH';
 load([outname '.mat'])
@@ -16,7 +15,6 @@ load([outname '.mat'])
 explicit = EXPLICIT_INT;
 
 %% Set Storm Formation Time and duration
-stormname = 'STORMNAME';
 stormcode = 'STORMCODE';
 year = YYYY;
 ms = MMS;
@@ -32,6 +30,19 @@ outg = 3;        % global elevation output interval [hours]
 outs = 12;       % station elevation output interval [min]
 BLAdj = 0.9;     % wind speed adjustment factor to the boundary layer
 geofactor = 1;   % geofactor is one to consider Coriolis effect
+
+%% get the storm start/end times from the downloaded data
+% start
+ys = YYYY;
+ms = MMS;
+ds = DDS;
+hs = 0;
+% end
+ye = YYYY;
+me = MME;
+de = DDE;
+he = 0;
+
 %% make the cold start
 
 % Set time step
@@ -42,8 +53,8 @@ else
 end
 
 % Make f15 data using the following times, constituents and stations
-TS = datetime(year,ms,ds,hr,0,0) - spinupdays; % simulation start time
-TE = datetime(year,me,de,hr,0,0); % simulation end time
+TS = datetime(ys,ms,ds,hs,0,0) - spinupdays; % simulation start time
+TE = datetime(ye,me,de,he,0,0); % simulation end time
 TS = datestr(TS);
 TE = datestr(TE);
 
@@ -57,7 +68,7 @@ m = Make_f15(m,TS,TE,DT,'const',CONST,'tidal_database',tpxoh);
 
 % metadata
 m.f15.nscreen = ceil(24*3600/m.f15.dtdp);
-m.f15.rundes = ['Storm: ' stormname ' (' stormcode ')']; % Run description
+m.f15.rundes = ['Storm Code: ' stormcode]; % Run description
 m.f15.runid = [outname '-CS']; % Run description
 m.f15.extraline(1).msg = m.f15.rundes;
 m.f15.extraline(6).msg = 'Tide Only';

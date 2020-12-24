@@ -4,23 +4,32 @@
 # then interpolate 3-hrly forecasts to 1-hrly forecasts
 #
 # Input/Output filenames
-#WSPDin='YCUZ98_KWBN_201907130147' #example filename of wind-speed grb2
-#WDIRin='YBUZ98_KWBN_201907130146' #example filename of wind-direction grb2
-WSPDin='WSPDfilename' #the wind-speed grb2
-WDIRin='WDIRfilename' #the wind-direction grb2
+WSPDin='NDFD_WSPD.grb2' #the wind-speed grb2 [example NDFD filename: YCUZ98_KWBN_201907130147]
+WDIRin='NDFD_WDIR.grb2' #the wind-direction grb2 [example NDFD filename: YBUZ98_KWBN_201907130146]
 # these are temp files deleted at end of script
 WINDin='NDFD_WIND_1hr.grb2'       #the combined wind-speed and wind-direction
 UVin='NDFD_UV_1hr.grb'            #the input U10/V10 grb2 (hourly)
 # these is the final output filename
-UVout='NDFD_1hr.222.grb'          #the output interpolated U10/V10 grb2 (hourly)
-
+UVout='NDFD_1hr.222.grb'          #the output U10/V10 grb2 file (the 2 will appended by the script)
+# setting the temporal interpolation parameters
+interp=true                       #turn interp on/off
+#units="hour"                      #units of forecast/interpolaton [hour/min] 
+#ts=72 #37                         #start time to interpolate from
+#te=156 #67                        #end time to interpolate to
+#step=6 #3                         #original step time of interpolation range
+#newstep=3 #1                      #desired step time for interpolation
+units="min"                        #units of forecast/interpolaton [hour/min] 
+ts=2190                            #start time to interpolate from
+te=3810                            #end time to interpolate to
+step=180                           #original step time of interpolation range
+newstep=60                         #desired step time for interpolation
 ####################### Operations below ###########################
 
 # First we need to convert wind speed and direction to UGRD/VGRD
 
-# append the wind speed and direction
-cp $WSPDin $WINDin
-wgrib2 $WDIRin -append -grib $WINDin
+# Swap out the null values for 0
+wgrib2 $WSPDin -rpn "0:swap:merge" -grib_out $WINDin
+wgrib2 $WDIRin -rpn "0:swap:merge" -append -grib_out $WINDin
 
 # sort for use with the wind_uv
 wgrib2 $WINDin -start_ft -s | sort -t: -k3 | wgrib2 -i $WINDin -grib $WINDin"2"
@@ -42,37 +51,40 @@ wgrib2 $WINDin"2" -wind_uv $UVin
 #     -rpn "rcl_2:-180:/:pi:*:cos:rcl_1:*" -set_var VGRD -append -grib_out $UVin
 #done
 
-## Interpolation of the 3-hr forecasts after 36hrs to 1-hr forecast
+### Interpolation....
 cp $UVin $UVout
-for i in {37..67..3} 
-do
-# setting the original forecast times we want
-j=$((i+3))
-a="$i hour fcst"  # the prior forecast
-b="$j hour fcst"  # the next forecast
-# setting the new interpolation times
-i1=$((i+1))
-i2=$((i+2))
-d1="$i1 hour fcst" # the 1-hr after interpolated forecast
-d2="$i2 hour fcst" # the 2-hr after interpolated forecast
-# UGRD
-# extracting out the forecasts we want
-wgrib2 $UVin -match ":UGRD:10 m above ground:$a:" -grib_out $UVin"1"
-wgrib2 $UVin -match ":UGRD:10 m above ground:$b:" -grib_out $UVin"2"
-# doing the time-interpolation
-wgrib2 $UVin"1" -rpn sto_1 -import_grib $UVin"2" -rpn sto_2 \
-   -rpn "rcl_1:2:*:rcl_2:1:*:+:3:/" -set_ftime "$d1" -append -grib_out $UVout \
-   -rpn "rcl_1:1:*:rcl_2:2:*:+:3:/" -set_ftime "$d2" -append -grib_out $UVout
-
-# VGRD
-# extracting out the forecasts we want
-wgrib2 $UVin -match ":VGRD:10 m above ground:$a:" -grib_out $UVin"1"
-wgrib2 $UVin -match ":VGRD:10 m above ground:$b:" -grib_out $UVin"2"
-# doing the time-interpolation
-wgrib2 $UVin"1" -rpn sto_1 -import_grib $UVin"2" -rpn sto_2 \
-   -rpn "rcl_1:2:*:rcl_2:1:*:+:3:/" -set_ftime "$d1" -append -grib_out $UVout \
-   -rpn "rcl_1:1:*:rcl_2:2:*:+:3:/" -set_ftime "$d2" -append -grib_out $UVout
-done
+if [ $interp ]; then
+   ## Interpolation of the Step [hours/minutes] forecasts 
+   ## after Start time to NewStep forecast
+   for i in $(eval echo {$ts..$te..$step}); do
+      # setting the original forecast times we want
+      j=$((i+step))
+      a="$i $units fcst"  # the prior forecast
+      b="$j $units fcst"  # the next forecast
+      echo $a
+      echo $b
+      # loop over UGRD and VGRD variables and do interpolation
+      for var in {"UGRD","VGRD"}; do
+         echo $var
+         # extracting out the forecasts we want
+         wgrib2 $UVin -match ":$var:10 m above ground:$a:" -grib_out $UVin"1"
+         wgrib2 $UVin -match ":$var:10 m above ground:$b:" -grib_out $UVin"2"
+         t_start=$((i+newstep))
+         t_end=$((j-newstep))
+         w1=$step # interpolation weight left
+         w2=0     # interpolation weight right
+         for interp_time in $(eval echo {$t_start..$t_end..$newstep}); do
+            d1="$interp_time $units fcst" # the new interpolation forecast
+            w1=$((w1-newstep))
+            w2=$((w2+newstep))
+            echo $d1
+            # doing the time-interpolation
+            wgrib2 $UVin"1" -rpn sto_1 -import_grib $UVin"2" -rpn sto_2 \
+               -rpn "rcl_1:$w1:*:rcl_2:$w2:*:+:$step:/" -set_ftime "$d1" -append -grib_out $UVout
+         done
+      done
+   done
+fi
 
 #sort times and output grb2
 wgrib2 $UVout -start_ft -s | sort -t: -k3 | wgrib2 -i $UVout -grib $UVout"2"

@@ -3,21 +3,22 @@
 #SBATCH --job-name=NDFD_STORM
 #SBATCH --account=HSOFS_Ensemble
 #SBATCH --partition=bdwall
-#SBATCH --nodes=20
+#SBATCH --nodes=10
 #SBATCH --ntasks-per-node=36
 #SBATCH --output=NDFD_STORM.out
 #SBATCH --error=NDFD_STORM.error
 #SBATCH --mail-user=wpringle@anl.gov
-#SBATCH --time=2:00:00
+#SBATCH --time=3:00:00
 
-np=720
+np=360
 sed -i -- 's/XXX/'$np'/g' adcprepall.sh  
 sed -i -- 's/XXX/'$np'/g' adcprep15.sh  
 
 # Setup My Environment
+module load matlab
 module load mvapich2
 module load netcdf
-module load netcdf-fortran
+module load netcdf-fortran/4.4.4-ojwazvy
 
 # data downloading/processing 
 # adcirc mesh prepping
@@ -35,8 +36,8 @@ matlab -nosplash -nodesktop -nodisplay < F15SCRIPT
 date >> run.timing
 
 # Link and prep the cold-start files
-ls -s NAM.221.grb2 fort.221.grb2
-ls -s NAM.222.grb2 fort.222.grb2
+ln -s NAM.221.grb2 fort.221.grb2
+ln -s NAM.222.grb2 fort.222.grb2
 ln -s WNAT_v14_CS.15 fort.15
 ./adcprepall.sh
 

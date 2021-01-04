@@ -1,5 +1,5 @@
 #!/bin/bash
-# By William Pringle, Dec 2020/Jan 2021
+# By William Pringle, Dec 2020 - Jan 2021
 # Argonne National Laboratory
 # HSOFS_Ensemble project for NOAA Office of Coast Survey
 
@@ -15,14 +15,14 @@ scriptdir="/lcrc/project/HSOFS_Ensemble/HSOFS/scripts/" # where the various bash
 
 ## Enter script filenames
 vortex_download_script="dl_storm_vortex.sh" 
-make_f15_script="Make_f15_vortex.m" 
+make_f15_script="Make_f15_vortex_and_write_mesh.m" 
 subset_merge_script="Subset_Fine_and_Merge_to_Coarse.m" 
 plot_mesh_script="Plot_Mesh.m" 
 job_script="run_storm.slurm" # choose .SGE (qsub) or .slurm (sbatch)
 
 ## Setting some parameters and vortex codes
 # storm names: Florence    Matthew
-vortexcodes=("al062018") # "al062012") # vortex codes
+vortexcodes=("al062018" "al142016") # vortex codes
 meshname="HSOFS" # name of the mesh[.mat] file
 explicit=true    # true for explicit, false for implicit
 subset=false     # true for doing the mesh subsett + merge
@@ -78,6 +78,7 @@ do
 
    # pre-link the input and exec files
    fn=$meshname"_"$subsetdir"_"$code
+   ln -s $meshdir$meshname".mat" $fn".mat"
    ln -s $fn".24" fort.24
    ln -s $fn".14" fort.14
    ln -s $fn".13" fort.13
@@ -96,18 +97,18 @@ do
    sed -i -- 's/STORMCODE/'$code'/g' $vortex_download_script  
    sed -i -- 's/XXXX/'$yy'/g' $vortex_download_script 
   
+   # if we are subsetting and merging the coarse mesh with fine mesh
    if $subset; then 
       # copy over and edit mesh subset+merge script
       cp $scriptdir$subset_merge_script .     
-      sed -i -- 's/STORMNAME/'$s'/g' $subset_merge_script
-      sed -i -- 's/STORMCODE/'$code'/g' $subset_merge_script 
+      sed -i -- 's/code/'$code'/g' $subset_merge_script 
    
       # copy over and edit mesh plotting script
       cp $scriptdir$plot_mesh_script .     
-      sed -i -- 's/STORMCODE/'$code'/g' $plot_mesh_script
+      sed -i -- 's/code/'$code'/g' $plot_mesh_script
    fi
-
-   # copy over and edit make fort.15 script
+      
+   # copy over and edit make fort.15 and write mesh script
    cp $scriptdir$make_f15_script .     
    sed -i -- 's/STORMCODE/'$code'/g' $make_f15_script 
    sed -i -- 's/MESH/'$fn'/g' $make_f15_script 
@@ -125,7 +126,8 @@ do
    sed -i -- 's/PLOTF/'$plot_mesh_script'/g' $new_job_script 
    sed -i -- 's/MAKEF15/'$make_f15_script'/g' $new_job_script 
    # submission based on job scheduler
-   if [ ${job_script: -3} -eq "SGE" ]; then 
+   scheduler=${job_script: -3}
+   if [ $scheduler = "SGE" ]; then 
       qsub $new_job_script
    else
       sbatch $new_job_script

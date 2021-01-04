@@ -1,12 +1,11 @@
 #!/bin/bash
 # run adcprep
-nc=XXX
 ./adcprep << EOF
-$nc
+NP
 1
 fort.14
 EOF
 ./adcprep << EOF
-$nc
+NP
 2
 EOF

@@ -26,8 +26,9 @@ vortexcodes=("al062018" "al142016") # vortex codes
 meshname="HSOFS" # name of the mesh[.mat] file
 explicit=true    # true for explicit, false for implicit
 subset=false     # true for doing the mesh subsett + merge
-nodes=1          # number of computational nodes
+nodes=3          # number of computational nodes
 np_per_node=36   # number of processors per computational node
+job_time="2:00:00" # time allowed for job in hh:mm:ss format
 
 #################################################################################
 ############## Scripting processes below [do not edit] ##########################
@@ -86,8 +87,8 @@ do
    # copy over the acdprep scripts and add np variable
    cp $scriptdir"adcprepall.sh" .
    cp $scriptdir"adcprep15.sh" .
-   sed -i -- 's/XXX/'$np'/g' adcprepall.sh  
-   sed -i -- 's/XXX/'$np'/g' adcprep15.sh  
+   sed -i -- 's/NP/'$np'/g' adcprepall.sh  
+   sed -i -- 's/NP/'$np'/g' adcprep15.sh  
    
    # copy over and configure the ALCF download script
    cp $scriptdir$vortex_download_script .     
@@ -116,6 +117,7 @@ do
    sed -i -- 's/NP/'$np'/g' $new_job_script 
    sed -i -- 's/NODES/'$nodes'/g' $new_job_script 
    sed -i -- 's/NTPN/'$np_per_node'/g' $new_job_script 
+   sed -i -- 's/HH:MM:SS/'$job_time'/g' $new_job_script 
    sed -i -- 's/MESH_STORM/'$fn'/g' $new_job_script 
    sed -i -- 's/SUBSET/'$subset'/g' $new_job_script 
    sed -i -- 's/MERGEFN/'$subset_merge_script'/g' $new_job_script 

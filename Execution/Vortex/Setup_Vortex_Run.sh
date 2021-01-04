@@ -69,9 +69,6 @@ do
    mkdir $code
    cd $code
 
-   # get the year of the storm
-   yy=${code: -4}
-   
    # echo the storm code and current path 
    echo "Storm code is: $code" 
    pwd 
@@ -95,7 +92,6 @@ do
    # copy over and configure the ALCF download script
    cp $scriptdir$vortex_download_script .     
    sed -i -- 's/STORMCODE/'$code'/g' $vortex_download_script  
-   sed -i -- 's/XXXX/'$yy'/g' $vortex_download_script 
   
    # if we are subsetting and merging the coarse mesh with fine mesh
    if $subset; then 

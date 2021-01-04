@@ -2,7 +2,7 @@
 
 ## setting the stormcode and year
 code="STORMCODE"
-yyyy=XXXX
+yyyy=${code: -4}
 
 ## the urls for the best track data 
 ATCF="ftp://ftp.nhc.noaa.gov/atcf/archive/" 
@@ -22,7 +22,7 @@ gzip -d "b"$code".dat.gz"
 mv "b"$code".dat" fort.22 
 # ASWIP option descriptor
 #-n = nws option
-#-m = methods using isotachs, 1 = use the 34 isotach, 2 = use the 64 isotach, 3 = use the 50 isotach, 4 – use all available isotach (use 4 for NWS=20)
+#-m = methods using isotachs, 1 = use the 34 isotach, 2 = use the 64 isotach, 3 = use the 50 isotach, 4 = use all available isotachs (use 4 for NWS=20)
 #-z = approaches solving for Rmax, 1 = only rotate wind vectors afterward, 2 = rotate wind vectors before and afterwards (use this for NWS=20)
 ./aswip -n 20 -m 4 -z 2
 mv fort.22 Orig_fort.22

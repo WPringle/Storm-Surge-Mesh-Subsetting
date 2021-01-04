@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#$ -N MESH
+#$ -N MESH_STORM
 #$ -q *@@westerink_d12chas_1992
-#$ -pe mpi-24 XXX
+#$ -pe mpi-NTPN NP
 
 # set up environment
 module load mvapich2
@@ -42,7 +42,7 @@ date >> run.timing
 #./adcprepall.sh
 
 ## Run My Program
-#mpiexec -n XXX ./padcirc
+#mpiexec -n NP ./padcirc
 
 # Setup hot start
 #rm fort.15
@@ -50,6 +50,6 @@ date >> run.timing
 #./adcprep15.sh
 
 ## Run My Program
-#mpiexec -n XXX ./padcirc
+#mpiexec -n NP ./padcirc
 #
 #date >> run.timing

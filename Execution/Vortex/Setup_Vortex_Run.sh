@@ -1,34 +1,41 @@
 #!/bin/bash
-# By William Pringle, Dec 2020
+# By William Pringle, Dec 2020/Jan 2021
+# Argonne National Laboratory
+# HSOFS_Ensemble project for NOAA Office of Coast Survey
 
 #################################################################################
 ############## Edit the input info here #########################################
 #################################################################################
 
 ## Enter full paths of the location of various items
-meshdir="/lcrc/project/HSOFS_Ensemble/HSOFS/mesh/"
-datadir="/lcrc/project/HSOFS_Ensemble/HSOFS/data/"
-execdir="/lcrc/project/HSOFS_Ensemble/HSOFS/executables/"
-scriptdir="/lcrc/project/HSOFS_Ensemble/HSOFS/scripts/"
+meshdir="/lcrc/project/HSOFS_Ensemble/HSOFS/mesh/" # where mesh data is located
+datadir="/lcrc/project/HSOFS_Ensemble/HSOFS/data/" # where station location data is located 
+execdir="/lcrc/project/HSOFS_Ensemble/HSOFS/executables/" # where the ADCIRC-related executable files are located
+scriptdir="/lcrc/project/HSOFS_Ensemble/HSOFS/scripts/" # where the various bash and MATLAB scripts are located
 
 ## Enter script filenames
 vortex_download_script="dl_storm_vortex.sh" 
 make_f15_script="Make_f15_vortex.m" 
 subset_merge_script="Subset_Fine_and_Merge_to_Coarse.m" 
 plot_mesh_script="Plot_Mesh.m" 
-job_script="run_storm.job"
+job_script="run_storm.slurm" # choose .SGE (qsub) or .slurm (sbatch)
 
 ## Setting some parameters and vortex codes
 # storm names: Florence    Matthew
-vortexcodes=("al062018" "al062012") # vortex codes
-meshname="HSOFS" #name of the mesh[.mat] file
-explicit=true  # true for explicit, false for implicit
-subset=false # true for doing the mesh subsett + merge
-np=24 # number of computational processors
+vortexcodes=("al062018") # "al062012") # vortex codes
+meshname="HSOFS" # name of the mesh[.mat] file
+explicit=true    # true for explicit, false for implicit
+subset=false     # true for doing the mesh subsett + merge
+nodes=1          # number of computational nodes
+np_per_node=36   # number of processors per computational node
 
 #################################################################################
 ############## Scripting processes below [do not edit] ##########################
 #################################################################################
+
+# compute total number of processors based on nodes and tasks per node
+np=$(( nodes*$np_per_node ))
+echo "Number of computational processors is: $np"
 
 # make the folder for the mesh the mesh and move into it
 echo "Mesh is: $meshname"
@@ -61,10 +68,14 @@ do
    # make the new directory and step in
    mkdir $code
    cd $code
+
+   # get the year of the storm
+   yy=${code: -4}
    
-   # echo the current path 
-   pwd  
- 
+   # echo the storm code and current path 
+   echo "Storm code is: $code" 
+   pwd 
+
    # pre-link the input and exec files
    fn=$meshname"_"$subsetdir"_"$code
    ln -s $fn".24" fort.24
@@ -102,16 +113,23 @@ do
    sed -i -- 's/MESH/'$fn'/g' $make_f15_script 
    sed -i -- 's/EXPLICIT_INT/'$explicit'/g' $make_f15_script
 
-   # submit job
+   # edit job submission script and submit
    new_job_script="run_"$code".job"
    cp $scriptdir$job_script $new_job_script
-   sed -i -- 's/XXX/'$np'/g' $new_job_script 
-   sed -i -- 's/MESH/'$fn'/g' $new_job_script 
+   sed -i -- 's/NP/'$np'/g' $new_job_script 
+   sed -i -- 's/NODES/'$nodes'/g' $new_job_script 
+   sed -i -- 's/NTPN/'$np_per_node'/g' $new_job_script 
+   sed -i -- 's/MESH_STORM/'$fn'/g' $new_job_script 
    sed -i -- 's/SUBSET/'$subset'/g' $new_job_script 
    sed -i -- 's/MERGEFN/'$subset_merge_script'/g' $new_job_script 
    sed -i -- 's/PLOTF/'$plot_mesh_script'/g' $new_job_script 
    sed -i -- 's/MAKEF15/'$make_f15_script'/g' $new_job_script 
-   #qsub $new_job_script
+   # submission based on job scheduler
+   if [ ${job_script: -3} -eq "SGE" ]; then 
+      qsub $new_job_script
+   else
+      sbatch $new_job_script
+   fi
 
    #step out
    cd ../

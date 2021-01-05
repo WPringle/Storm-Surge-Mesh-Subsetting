@@ -42,14 +42,11 @@ matlab -nosplash -nodesktop -nodisplay < MAKEF15
 date >> run.timing
 
 ## Setup cold start
-rm *.inv
-rm *.nc
-rm fort.15
 ln -s MESH_STORM_CS.15 fort.15
 ./adcprepall.sh
 
 ## Run My Program
-mpiexec -n NP ./padcirc
+srun -n NP ./padcirc
 
 date >> run.timing
 
@@ -59,6 +56,6 @@ ln -s MESH_STORM_HS.15 fort.15
 ./adcprep15.sh
 
 ## Run My Program
-mpiexec -n NP ./padcirc
+srun -n NP ./padcirc
 
 date >> run.timing

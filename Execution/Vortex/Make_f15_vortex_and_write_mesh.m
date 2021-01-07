@@ -43,7 +43,7 @@ ye = str2num(lastline(9:12));
 me = str2num(lastline(13:14));
 de = str2num(lastline(15:16));
 he = str2num(lastline(17:18));
-fclose(fid)
+fclose(fid);
 
 %% make the cold start
 
@@ -55,14 +55,14 @@ if explicit
    DT = 60/minutes_divisor %[s]
 else
    % not sure how to define, just guess atm
-   DT = 12; %[s]
+   DT = 12 %[s]
 end
 
 % Make f15 data using the following times, constituents and stations
 TS = datetime(ys,ms,ds,hs,0,0) - spinupdays; % simulation start time
 TE = datetime(ye,me,de,he,0,0); % simulation end time
-TS = datestr(TS)
-TE = datestr(TE)
+TSS = datestr(TS)
+TES = datestr(TE)
 
 % List of constituents for tidal potential and SAL terms (also for boundary
 % conditions but SA and SSA will be omitted automatically)
@@ -70,7 +70,7 @@ CONST = "major8";
 tpxoh = 'h_tpxo9.v1.nc'; 
 
 % Make the fort.15 struct
-m = Make_f15(m,TS,TE,DT,'const',CONST,'tidal_database',tpxoh); 
+m = Make_f15(m,TSS,TES,DT,'const',CONST,'tidal_database',tpxoh); 
 
 % metadata
 m.f15.nscreen = floor(24*3600/m.f15.dtdp);
@@ -124,7 +124,7 @@ m.f15.nramp = 8;
 m.f15.dramp = [0 0 0 0 0 0 0.5 0 spinupdays]; % ramping met up for half a day
 m.f15.nws = 20;
                %YYYY MM DD HH24 StormNumber BLAdj geofactor
-m.f15.wtimnc = [ys ms ds hs 1 BLAdj geofactor];
+m.f15.wtimnc = [year(TS) month(TS) day(TS) hour(TS) 1 BLAdj geofactor];
 m.f15.rndy = rndy;
 
 % elevation output

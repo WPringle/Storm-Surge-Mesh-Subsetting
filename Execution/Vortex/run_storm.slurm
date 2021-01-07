@@ -11,9 +11,10 @@
 #SBATCH --time=HH:MM:SS
 
 ## set up environment
+module load matlab
 module load mvapich2
 module load netcdf
-module load matlab
+module load netcdf-fortran/4.4.4-ojwazvy
 
 ## Setting up inputs
 date > run.timing

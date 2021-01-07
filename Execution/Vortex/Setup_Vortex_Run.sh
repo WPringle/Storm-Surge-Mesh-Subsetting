@@ -15,7 +15,7 @@ scriptdir="/lcrc/project/HSOFS_Ensemble/HSOFS/scripts/" # where the various bash
 
 ## Enter script filenames
 vortex_download_script="dl_storm_vortex.sh" 
-make_f15_script="Make_f15_vortex_and_write_mesh.m" 
+make_f15_script="make_f15_vortex_and_write_mesh.m" 
 subset_merge_script="Subset_Fine_and_Merge_to_Coarse.m" 
 plot_mesh_script="Plot_Mesh.m" 
 job_script="run_storm.slurm" # choose .SGE (qsub) or .slurm (sbatch)
@@ -26,9 +26,9 @@ vortexcodes=("al062018" "al142016") # vortex codes
 meshname="HSOFS" # name of the mesh[.mat] file
 explicit=true    # true for explicit, false for implicit
 subset=false     # true for doing the mesh subsett + merge
-nodes=3          # number of computational nodes
+nodes=5          # number of computational nodes
 np_per_node=36   # number of processors per computational node
-job_time="2:00:00" # time allowed for job in hh:mm:ss format
+job_time="1:30:00" # time allowed for job in hh:mm:ss format
 
 #################################################################################
 ############## Scripting processes below [do not edit] ##########################
@@ -119,6 +119,7 @@ do
    sed -i -- 's/NTPN/'$np_per_node'/g' $new_job_script 
    sed -i -- 's/HH:MM:SS/'$job_time'/g' $new_job_script 
    sed -i -- 's/MESH_STORM/'$fn'/g' $new_job_script 
+   sed -i -- 's/DLSTORM/'$vortex_download_script'/g' $new_job_script  
    sed -i -- 's/SUBSET/'$subset'/g' $new_job_script 
    sed -i -- 's/MERGEFN/'$subset_merge_script'/g' $new_job_script 
    sed -i -- 's/PLOTF/'$plot_mesh_script'/g' $new_job_script 

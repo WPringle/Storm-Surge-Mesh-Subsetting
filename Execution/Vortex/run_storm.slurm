@@ -20,7 +20,7 @@ module load netcdf-fortran/4.4.4-ojwazvy
 date > run.timing
 
 # Download storm track and vortex information
-./dl_storm_vortex.sh
+./DLSTORM
 
 date >> run.timing
 
@@ -44,7 +44,7 @@ date >> run.timing
 
 ## Setup cold start
 ln -s MESH_STORM_CS.15 fort.15
-./adcprepall.sh
+./run_adcprep-all.sh
 
 ## Run My Program
 srun -n NP ./padcirc
@@ -54,9 +54,10 @@ date >> run.timing
 # Setup hot start
 rm fort.15
 ln -s MESH_STORM_HS.15 fort.15
-./adcprep15.sh
+./run_adcprep-15.sh
 
 ## Run My Program
 srun -n NP ./padcirc
 
+# exit with end date
 date >> run.timing

@@ -28,7 +28,7 @@ explicit=true    # true for explicit, false for implicit
 subset=false     # true for doing the mesh subsett + merge
 nodes=5          # number of computational nodes
 np_per_node=36   # number of processors per computational node
-job_time="1:30:00" # time allowed for job in hh:mm:ss format
+job_time="2:30:00" # time allowed for job in hh:mm:ss format
 
 #################################################################################
 ############## Scripting processes below [do not edit] ##########################
@@ -85,10 +85,9 @@ do
    ln -s $execdir"padcirc" .
    ln -s $execdir"aswip" .
    # copy over the acdprep scripts and add np variable
-   cp $scriptdir"adcprepall.sh" .
-   cp $scriptdir"adcprep15.sh" .
-   sed -i -- 's/NP/'$np'/g' adcprepall.sh  
-   sed -i -- 's/NP/'$np'/g' adcprep15.sh  
+   cp $scriptdir"run_adcprep-all.sh" .
+   cp $scriptdir"run_adcprep-15.sh" .
+   sed -i -- 's/NP/'$np'/g' run_adcprep*.sh  
    
    # copy over and configure the ALCF download script
    cp $scriptdir$vortex_download_script .     

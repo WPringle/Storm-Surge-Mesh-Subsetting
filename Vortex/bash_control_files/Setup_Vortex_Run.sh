@@ -8,10 +8,10 @@
 #################################################################################
 
 ## Enter full paths of the location of various items
-meshdir="/lcrc/project/HSOFS_Ensemble/HSOFS/mesh/" # where mesh data is located
 datadir="/lcrc/project/HSOFS_Ensemble/HSOFS/data/" # where station location data is located 
 execdir="/lcrc/project/HSOFS_Ensemble/HSOFS/executables/" # where the ADCIRC-related executable files are located
 scriptdir="/lcrc/project/HSOFS_Ensemble/HSOFS/scripts/" # where the various bash and MATLAB scripts are located
+meshdir="\/lcrc\/project\/HSOFS_Ensemble\/HSOFS\/mesh\/" # where mesh data is located [NOTE: this one must use back- slash before any forward slashes because it is used in a sed command]
 
 ## Enter script filenames
 vortex_download_script="dl_storm_vortex.sh" 
@@ -98,12 +98,9 @@ do
   
    # if we are subsetting and merging the coarse mesh with fine mesh
    if $subset; then
-      # link the coarse mesh info 
-      ln -s $meshdir$coarsename".mat" .
-      # link the non-subbsetted fine mesh
-      ln -s $meshdir$meshname".mat" .
       # copy over and edit mesh subset+merge script
       cp $scriptdir$subset_merge_script .     
+      sed -i -- 's/MESH_DIR/'$meshdir'/g' $subset_merge_script 
       sed -i -- 's/STORMCODE/'$code'/g' $subset_merge_script 
       sed -i -- 's/MESH_STORM/'$fn'/g' $subset_merge_script 
       sed -i -- 's/MESH/'$meshname'/g' $subset_merge_script 
@@ -112,9 +109,6 @@ do
       cp $scriptdir$plot_mesh_script .     
       sed -i -- 's/STORMCODE/'$code'/g' $plot_mesh_script
       sed -i -- 's/MESH_STORM/'$fn'/g' $plot_mesh_script
-   else
-      # just link the original fine mesh as the new mesh
-      ln -s $meshdir$meshname".mat" $fn
    fi
       
    cp $scriptdir$plot_result_script .     
@@ -123,8 +117,16 @@ do
       
    # copy over and edit make fort.15 and write mesh script
    cp $scriptdir$make_f15_script .     
+   sed -i -- 's/MESH_DIR/'$meshdir'/g' $make_f15_script 
    sed -i -- 's/STORMCODE/'$code'/g' $make_f15_script 
    sed -i -- 's/MESH_STORM/'$fn'/g' $make_f15_script
+   if $subset; then
+      # use the subsetted mesh as mesh input
+      sed -i -- 's/MESH/'$fn'/g' $make_f15_script
+   else
+      # no subsetting just use the original fine mesh
+      sed -i -- 's/MESH/'$meshname'/g' $make_f15_script
+   fi
    sed -i -- 's/EXPLICIT_INT/'$explicit'/g' $make_f15_script
       
    # edit job submission script and submit

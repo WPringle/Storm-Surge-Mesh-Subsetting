@@ -8,9 +8,13 @@ clearvars; clc; close all
 
 addpath(genpath('~/MATLAB/OceanMesh2D/'))
 addpath('~/datasets/')
+addpath('MESH_DIR')
 
+%% Load the mesh
+load('MESH.mat')
+
+% Set the output filename
 outname = 'MESH_STORM';
-load([outname '.mat'])
 
 %% Set integration logical
 explicit = EXPLICIT_INT;

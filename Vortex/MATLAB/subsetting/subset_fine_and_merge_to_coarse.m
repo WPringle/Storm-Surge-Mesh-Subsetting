@@ -10,6 +10,7 @@ clearvars; clc;
 % add paths to data and scripts
 addpath(genpath('~/MATLAB/OceanMesh2D'))
 addpath('~/datasets/')
+addpath('MESH_DIR')
 %
 % Setting up the projection variables
 global MAP_PROJECTION MAP_COORDS MAP_VAR_LIST

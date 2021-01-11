@@ -11,18 +11,17 @@ addpath(genpath('~/MATLAB/m_map/'))
 
 %% Input Setup
 % Input Storm Name
-stormname = 'STORMNAME';
 stormcode = 'STORMCODE';
 % Input Storm Track
 try
-   trackfile = [upper(stormcode) '_pts.shp'];
-   shp = shaperead(trackfile);
+   trackfile = [upper(stormcode) '_pts'];
+   shp = m_shaperead(trackfile);
 catch
-   trackfile = [lower(stormcode) '_pts.shp'];
-   shp = shaperead(trackfile);
+   trackfile = [lower(stormcode) '_pts'];
+   shp = m_shaperead(trackfile);
 end
-trackx = [shp.X];
-tracky = [shp.Y];
+track = cell2mat(shp.ncst);
+track(track(:,1) > -60,:) = [];
 
 % Parameters
 buff = 1.0;       % the buffer for the plot
@@ -31,7 +30,7 @@ tw = 2;           % track line width
 figres = '-r300'; % figure resolution
 
 % Output Plot Names
-outname = ['HSOFS+Coarse_' stormname];
+outname = 'MESH_STORM';
 
 % Load the mesh
 load([outname '.mat'])
@@ -51,33 +50,33 @@ outname = ['Figs/' outname];
 % Plot the mesh quality
 plot(m,'qual',1,[],bou_buff);
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'g--','linew',bw);
-m_plot(trackx,tracky,'g-','linew',tw);
+m_plot(track(:,1),track(:,2),'g-','linew',tw);
 print([outname '_meshqual.png'],figres,'-dpng')
 
 % Plot the mesh reolution
 plot(m,'resomeshlog',1,[],bou_buff);
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'k--','linew',bw);
-m_plot(trackx,tracky,'k-','linew',tw);
+m_plot(track(:,1),track(:,2),'k-','linew',tw);
 print([outname '_resomesh.png'],figres,'-dpng')
 
 % Plot the bathy
 plot(m,'b',1,[],bou_buff);
 caxis([-10 100])
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'r--','linew',bw);
-m_plot(trackx,tracky,'r-','linew',tw);
+m_plot(track(:,1),track(:,2),'r-','linew',tw);
 print([outname '_bathy.png'],figres,'-dpng')
 
 % Plot the bottom friction
 plot(m,'quad',1,[],bou_buff);
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'k--','linew',bw);
-m_plot(trackx,tracky,'k-','linew',tw);
+m_plot(track(:,1),track(:,2),'k-','linew',tw);
 print([outname '_botfric.png'],figres,'-dpng')
 
 %% Plot full mesh
 % Plot the triangulation with boundaries
 plot(m,'bd',1);
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'m--','linew',bw);
-m_plot(trackx,tracky,'m-','linew',tw);
+m_plot(track(:,1),track(:,2),'m-','linew',tw);
 m_text(-95,40,[num2str(length(m.p)/1e6,3) 'M vertices'],'fontsize',12)
 m_text(-95,38,[num2str(length(m.t)/1e6,3) 'M elements'],'fontsize',12)
 print([outname '_tri+ob.png'],figres,'-dpng')

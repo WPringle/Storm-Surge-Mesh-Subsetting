@@ -1,5 +1,5 @@
-function obj = Extract_Small_Portion( obj, dj_cutoff, proj, nscreen )
-%  obj =  Extract_Small_Portion( obj, dj_cutoff, proj, nscreen )
+function obj = extract_small_portion( obj, dj_cutoff, proj, nscreen )
+%  obj =  extract_small_portion( obj, dj_cutoff, proj, nscreen )
 %  The disconnected small portions of the msh object (containing p and t)
 %  is  returned. 
 %  

@@ -16,17 +16,18 @@ scriptdir="/lcrc/project/HSOFS_Ensemble/HSOFS/scripts/" # where the various bash
 ## Enter script filenames
 vortex_download_script="dl_storm_vortex.sh" 
 make_f15_script="make_f15_vortex_and_write_mesh.m" 
-subset_merge_script="Subset_Fine_and_Merge_to_Coarse.m" 
-plot_mesh_script="Plot_Mesh.m" 
+subset_merge_script="subset_fine_and_merge_to_coarse.m" 
+plot_mesh_script="plot_mesh.m" 
 plot_result_script="plot_max_results.m" 
 job_script="run_storm.slurm" # choose .SGE (qsub) or .slurm (sbatch)
 
 ## Setting some parameters and vortex codes
 # storm names: Florence    Matthew
-vortexcodes=("al062018") # "al142016") # vortex codes
+vortexcodes=("al062018" "al142016") # vortex codes
 meshname="HSOFS" # name of the mesh[.mat] file
+coarsename="WNAT_1km_properties.mat"; # name of the coarse mesh properties[.mat] file
 explicit=true    # true for explicit, false for implicit
-subset=false     # true for doing the mesh subsett + merge
+subset=true      # true for doing the mesh subsett + merge
 nodes=5          # number of computational nodes
 np_per_node=36   # number of processors per computational node
 job_time="3:30:00" # time allowed for job in hh:mm:ss format
@@ -98,21 +99,24 @@ do
    if $subset; then 
       # copy over and edit mesh subset+merge script
       cp $scriptdir$subset_merge_script .     
-      sed -i -- 's/code/'$code'/g' $subset_merge_script 
-   
+      sed -i -- 's/STORMCODE/'$code'/g' $subset_merge_script 
+      sed -i -- 's/MESH/'$meshname'/g' $subset_merge_script 
+      sed -i -- 's/COARSE/'$coarsename'/g' $subset_merge_script 
+      sed -i -- 's/MESH_STORM/'$fn'/g' $subset_merge_script 
       # copy over and edit mesh plotting script
       cp $scriptdir$plot_mesh_script .     
-      sed -i -- 's/code/'$code'/g' $plot_mesh_script
+      sed -i -- 's/STORMCODE/'$code'/g' $plot_mesh_script
+      sed -i -- 's/MESH_STORM/'$fn'/g' $plot_mesh_script 
    fi
       
    cp $scriptdir$plot_result_script .     
    sed -i -- 's/STORMCODE/'$code'/g' $plot_result_script
-   sed -i -- 's/MESH/'$fn'/g' $plot_result_script 
+   sed -i -- 's/MESH_STORM/'$fn'/g' $plot_result_script 
       
    # copy over and edit make fort.15 and write mesh script
    cp $scriptdir$make_f15_script .     
    sed -i -- 's/STORMCODE/'$code'/g' $make_f15_script 
-   sed -i -- 's/MESH/'$fn'/g' $make_f15_script 
+   sed -i -- 's/MESH_STORM/'$fn'/g' $make_f15_script
    sed -i -- 's/EXPLICIT_INT/'$explicit'/g' $make_f15_script
 
    # edit job submission script and submit

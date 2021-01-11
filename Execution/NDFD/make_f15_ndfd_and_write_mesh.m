@@ -37,8 +37,8 @@ wtmh_ndfd = 3;    % NDFD wind time interval [hours]
 if explicit
    % based on CFL of 0.7 making sure that the
    % time step is divisable by minutes
-   minutes_divisor = floor(60/(0.7*min(CalcCFL(m))));
-   DT = 60/minutes_divisor %[s]
+   minutes_divisor = ceil(60/(0.5*sqrt(2)*min(CalcCFL(m))));
+   DT = round(60/minutes_divisor,4) %[s]
 else
    % not sure how to define, just guess atm
    DT = 12 %[s]
@@ -46,7 +46,7 @@ end
 
 % Make f15 data using the following times, constituents and stations
 TS = datetime(ys,ms,ds,hs,0,0) - spinupdays; % simulation start time
-TE = TS + forecastdays; % simulation end time
+TE = datetime(ys,ms,ds,hs,0,0) + forecastdays; % simulation end time
 TSS = datestr(TS)
 TES = datestr(TE)
 
@@ -59,7 +59,7 @@ tpxoh = 'h_tpxo9.v1.nc';
 m = Make_f15(m,TSS,TES,DT,'const',CONST,'tidal_database',tpxoh); 
 
 % metadata
-m.f15.nscreen = floor(24*3600/m.f15.dtdp);
+m.f15.nscreen = round(24*3600/m.f15.dtdp);
 m.f15.rundes = ['Storm Name: ' stormname]; % Run description
 m.f15.runid = [outname '-CS']; % Run description
 m.f15.extraline(1).msg = m.f15.rundes;
@@ -94,10 +94,10 @@ m.f15.outhar_flag = [0 0 0 0];
 m.f15.outge = [0 0 0 0]; 
 m.f15.outgv = [0 0 0 0]; 
 % station elevation output
-m.f15.oute =  [5 0 m.f15.rndy floor(outs*60/m.f15.dtdp)]; 
+m.f15.oute =  [5 0 m.f15.rndy round(outs*60/m.f15.dtdp)]; 
 m.f15.nstae = -128;
 rndy = m.f15.rndy;
-m.f15.rndy = spinupdays;
+m.f15.rndy = spinupdays; % Makes sure number of time steps is correct
 
 % set hotstart output
 m.f15.nhstar = [-5 floor(spinupdays*24*3600/m.f15.dtdp)];
@@ -115,10 +115,10 @@ m.f15.nws = 14; %20;
 m.f15.wtimnc = 3600*wtmh_ndfd; %[s]
 
 % elevation output
-m.f15.oute =  [5 spinupdays m.f15.rndy floor(outs*60/m.f15.dtdp)]; 
-m.f15.outge = [5 spinupdays m.f15.rndy floor(outg*3600/m.f15.dtdp)]; 
+m.f15.oute =  [5 spinupdays m.f15.rndy round(outs*60/m.f15.dtdp)]; 
+m.f15.outge = [5 spinupdays m.f15.rndy round(outg*3600/m.f15.dtdp)]; 
 % met output
-m.f15.outgm = [5 spinupdays m.f15.rndy floor(outg*3600/m.f15.dtdp)]; 
+m.f15.outgm = [5 spinupdays m.f15.rndy round(outg*3600/m.f15.dtdp)]; 
 
 % metadata
 m.f15.runid = [outname '-HS']; % Run description

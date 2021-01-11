@@ -9,14 +9,14 @@ clearvars; clc; close all
 addpath(genpath('~/MATLAB/OceanMesh2D/'))
 addpath('~/datasets/')
 
-outname = 'MESH';
+outname = 'HSOFS_nosubset_al062018';
 load([outname '.mat'])
 
 %% Set integration logical
-explicit = EXPLICIT_INT;
+explicit = true;
 
 %% Set Storm Code
-stormcode = 'STORMCODE';
+stormcode = 'al062018';
 
 % Some constantds
 f22 = 'fort.22'; % ATCF storm data filename
@@ -30,12 +30,21 @@ geofactor = 1;   % geofactor is one to consider Coriolis effect
 %% get the storm start/end times from the downloaded data
 fid = fopen(f22);
 % start
-firstline = fgetl(fid);
+% find from when the storm enters the domain
+lon = -999; lat = -999;
+while lon > max(m.p(:,1)) || lon < min(m.p(:,1)) || ...
+      lat > max(m.p(:,2)) || lat > max(m.p(:,2))
+   firstline = fgetl(fid);
+   lat = str2num(firstline(36:38))/10;
+   lon = str2num(firstline(43:45))/10;
+   if strcmp(firstline(39),'S'); lat = -lat; end
+   if strcmp(firstline(46),'W'); lon = -lon; end
+end
 ys = str2num(firstline(9:12));
 ms = str2num(firstline(13:14));
 ds = str2num(firstline(15:16));
 hs = str2num(firstline(17:18));
-% end
+% end (at end of file)
 while ~feof(fid)
   lastline = fgetl(fid);
 end
@@ -51,8 +60,8 @@ fclose(fid);
 if explicit
    % based on CFL of 0.7 making sure that the
    % time step is divisable by minutes
-   minutes_divisor = ceil(60/(0.5*sqrt(2)*min(CalcCFL(m))));
-   DT = round(60/minutes_divisor,4) %[s]
+   minutes_divisor = floor(60/(0.7*min(CalcCFL(m))));
+   DT = 60/minutes_divisor %[s]
 else
    % not sure how to define, just guess atm
    DT = 12 %[s]
@@ -122,7 +131,7 @@ m.f15.nhstar = [0 0];
 m.f15.ihot = 567;
 m.f15.nramp = 8;
 m.f15.dramp = [0 0 0 0 0 0 0.5 0 spinupdays]; % ramping met up for half a day
-m.f15.nws = 20;
+m.f15.nws = 8; %20;
                %YYYY MM DD HH24 StormNumber BLAdj geofactor
 m.f15.wtimnc = [year(TS) month(TS) day(TS) hour(TS) 1 BLAdj geofactor];
 m.f15.rndy = rndy;

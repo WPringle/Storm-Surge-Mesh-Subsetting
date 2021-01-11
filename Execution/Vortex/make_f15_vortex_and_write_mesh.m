@@ -51,8 +51,8 @@ fclose(fid);
 if explicit
    % based on CFL of 0.7 making sure that the
    % time step is divisable by minutes
-   minutes_divisor = floor(60/(0.7*min(CalcCFL(m))));
-   DT = 60/minutes_divisor %[s]
+   minutes_divisor = ceil(60/(0.5*sqrt(2)*min(CalcCFL(m))));
+   DT = round(60/minutes_divisor,4) %[s]
 else
    % not sure how to define, just guess atm
    DT = 12 %[s]

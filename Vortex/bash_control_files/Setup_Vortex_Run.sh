@@ -18,17 +18,18 @@ vortex_download_script="dl_storm_vortex.sh"
 make_f15_script="make_f15_vortex_and_write_mesh.m" 
 subset_merge_script="Subset_Fine_and_Merge_to_Coarse.m" 
 plot_mesh_script="Plot_Mesh.m" 
+plot_result_script="plot_max_results.m" 
 job_script="run_storm.slurm" # choose .SGE (qsub) or .slurm (sbatch)
 
 ## Setting some parameters and vortex codes
 # storm names: Florence    Matthew
-vortexcodes=("al062018" "al142016") # vortex codes
+vortexcodes=("al062018") # "al142016") # vortex codes
 meshname="HSOFS" # name of the mesh[.mat] file
 explicit=true    # true for explicit, false for implicit
 subset=false     # true for doing the mesh subsett + merge
 nodes=5          # number of computational nodes
 np_per_node=36   # number of processors per computational node
-job_time="2:30:00" # time allowed for job in hh:mm:ss format
+job_time="3:30:00" # time allowed for job in hh:mm:ss format
 
 #################################################################################
 ############## Scripting processes below [do not edit] ##########################
@@ -103,6 +104,10 @@ do
       cp $scriptdir$plot_mesh_script .     
       sed -i -- 's/code/'$code'/g' $plot_mesh_script
    fi
+      
+   cp $scriptdir$plot_result_script .     
+   sed -i -- 's/STORMCODE/'$code'/g' $plot_result_script
+   sed -i -- 's/MESH/'$fn'/g' $plot_result_script 
       
    # copy over and edit make fort.15 and write mesh script
    cp $scriptdir$make_f15_script .     

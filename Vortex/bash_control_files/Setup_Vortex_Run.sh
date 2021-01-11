@@ -25,7 +25,7 @@ job_script="run_storm.slurm" # choose .SGE (qsub) or .slurm (sbatch)
 # storm names: Florence    Matthew
 vortexcodes=("al062018" "al142016") # vortex codes
 meshname="HSOFS" # name of the mesh[.mat] file
-coarsename="WNAT_1km_properties.mat"; # name of the coarse mesh properties[.mat] file
+coarsename="WNAT_1km_properties"; # name of the coarse mesh properties[.mat] file
 explicit=true    # true for explicit, false for implicit
 subset=true      # true for doing the mesh subsett + merge
 nodes=5          # number of computational nodes
@@ -76,9 +76,10 @@ do
    echo "Storm code is: $code" 
    pwd 
 
-   # pre-link the input and exec files
+   # this is the out filename
    fn=$meshname"_"$subsetdir"_"$code
-   ln -s $meshdir$meshname".mat" $fn".mat"
+
+   # pre-link the input and exec files
    ln -s $fn".24" fort.24
    ln -s $fn".14" fort.14
    ln -s $fn".13" fort.13
@@ -96,17 +97,24 @@ do
    sed -i -- 's/STORMCODE/'$code'/g' $vortex_download_script  
   
    # if we are subsetting and merging the coarse mesh with fine mesh
-   if $subset; then 
+   if $subset; then
+      # link the coarse mesh info 
+      ln -s $meshdir$coarsename".mat" .
+      # link the non-subbsetted fine mesh
+      ln -s $meshdir$meshname".mat" .
       # copy over and edit mesh subset+merge script
       cp $scriptdir$subset_merge_script .     
       sed -i -- 's/STORMCODE/'$code'/g' $subset_merge_script 
+      sed -i -- 's/MESH_STORM/'$fn'/g' $subset_merge_script 
       sed -i -- 's/MESH/'$meshname'/g' $subset_merge_script 
       sed -i -- 's/COARSE/'$coarsename'/g' $subset_merge_script 
-      sed -i -- 's/MESH_STORM/'$fn'/g' $subset_merge_script 
       # copy over and edit mesh plotting script
       cp $scriptdir$plot_mesh_script .     
       sed -i -- 's/STORMCODE/'$code'/g' $plot_mesh_script
-      sed -i -- 's/MESH_STORM/'$fn'/g' $plot_mesh_script 
+      sed -i -- 's/MESH_STORM/'$fn'/g' $plot_mesh_script
+   else
+      # just link the original fine mesh as the new mesh
+      ln -s $meshdir$meshname".mat" $fn
    fi
       
    cp $scriptdir$plot_result_script .     
@@ -118,7 +126,7 @@ do
    sed -i -- 's/STORMCODE/'$code'/g' $make_f15_script 
    sed -i -- 's/MESH_STORM/'$fn'/g' $make_f15_script
    sed -i -- 's/EXPLICIT_INT/'$explicit'/g' $make_f15_script
-
+      
    # edit job submission script and submit
    new_job_script="run_"$code".job"
    cp $scriptdir$job_script $new_job_script

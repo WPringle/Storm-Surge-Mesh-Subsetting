@@ -23,7 +23,7 @@ B_filename = 'GEBCO_2020.nc';
 N_filename = 'Gridded_N_values_WOA2018_2005-2017.mat';
 %
 % Input Mesh
-HSOFS = 'MESH';
+fine = 'MESH';
 % Input Coarse Mesh Property
 coarse  = 'COARSE';
 
@@ -45,33 +45,33 @@ small_portion = 0.1; %fraction of the mesh that's considered a small disconnecte
      
 %% Load the track data and determine the high-res region
 try
-   trackfile = [upper(stormcode) '_windswath.shp'];
+   trackfile = [upper(stormcode) '_windswath'];
    shp = m_shaperead(trackfile);
 catch
-   trackfile = [lower(stormcode) '_windswath.shp'];
+   trackfile = [lower(stormcode) '_windswath'];
    shp = m_shaperead(trackfile);
 end
 % Set high-res region to the "wind_swath"-kt wind speed boundary...
-rad = [shp.RADII]; WI = find(rad == wind_swath,1,'last');
-tx = shp(WI).X; ty = shp(WI).Y;
+rad = cell2mat(shp.dbf.RADII); WI = find(rad == wind_swath,1,'last');
+track = shp.ncst{WI};
 % make sure only get the outer polygon component. 
-WI = find(isnan(tx),1,'first');
-track_poly = [tx(1:WI-1); ty(1:WI-1)]';
+WI = find(isnan(track(:,1)),1,'first');
+track_poly = track(1:WI-1,:);
 
 %% Load the outer coarse mesh properties,
-%% the HSOFS mesh and extract the desired subset
+%% the fine mesh and extract the desired subset
 tic
-% Coarse Mesh
-load(WNAT); 
-% Fine HSOFS Mesh
-load(HSOFS);
+% Coarse mesh properties
+load(coarse); 
+% Fine mesh
+load(fine);
 % Extract the subdomain
 ms = extract_subdomain(m,track_poly,0,centroid);
 % Extract the inverse of the subdomain
 mi = extract_subdomain(m,track_poly,1,centroid);
 % Keep the small disconnected portions 
 mi.bd = []; mi.op = [];
-mi = Extract_Small_Portion( mi, small_portion, 0, 1 );
+mi = extract_small_portion( mi, small_portion, 0, 1 );
 % add back small disconnected portions to ms
 ms = cat(ms,mi); 
 % reset mesh properties for ms back to those of original m 
@@ -93,7 +93,7 @@ ms.p = p1;
 ms = ms.clean('passive','proj',0,'con',0);
 %
 toc
-%% Get boundary of the HSOFS subset mesh and subtract from the outer one
+%% Get boundary of the fine subset mesh and subtract from the outer one
 tic
 % get the ms polygonal boundary as a cell
 ms_bound = getBoundaryOfMesh(ms,1);
@@ -117,7 +117,7 @@ for ib = 2:length(AS)
 end
 % make sure ms polygon is clockwise
 [ms_xcw, ms_ycw] = poly2cw(ms_poly_vec(:,1), ms_poly_vec(:,2));
-% Subtract the HSOFS boundary from the outer one
+% Subtract the fine boundary from the outer one
 [xn, yn] = polybool('-', poly_vec(:,1), poly_vec(:,2), ms_xcw, ms_ycw);
 poly_vec = [xn, yn];
 toc
@@ -148,7 +148,7 @@ m.coord  = MAP_COORDS;
 m.mapvar = MAP_VAR_LIST;
 % Make sure to reset bd and op
 m.bd = []; m.op = [];
-% if HSOFS subset contains weirs carry these over...
+% if fine subset contains weirs carry these over...
 if ~isempty(ms.bd) && any(ms.bd.ibtype == 24)
     m = carryoverweirs(m,ms);
 end
@@ -165,12 +165,12 @@ m = make_bc(m,'outer',0,bc_k(1),bc_k(2),2);
 m = interp(m,B_filename,'K',find(isnan(m.b)),'type','depth',...
            'ignoreOL',1,'nan','fill');
 % interpolate the NaN parts of mesh using B_filename data
-m = interp(m,B_filename,'K',find(isnan(m.bx)),'type','slope',....
-           'ignoreOL',1,'nan','fill');
+%m = interp(m,B_filename,'K',find(isnan(m.bx)),'type','slope',....
+%           'ignoreOL',1,'nan','fill');
 % recompute the tau0 (-3 option)
 m = Calc_tau0(m);
 % recompute the internal tide using N_filename data
-m = Calc_IT_Fric(m,N_filename,'cutoff_depth',250,'Cit',2.75);
+%m = Calc_IT_Fric(m,N_filename,'cutoff_depth',250,'Cit',2.75);
 % save the mesh
 save([outname '.mat'],'m','ms_poly_vec');
 toc

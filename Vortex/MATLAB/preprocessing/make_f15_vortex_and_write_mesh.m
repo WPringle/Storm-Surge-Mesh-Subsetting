@@ -9,14 +9,14 @@ clearvars; clc; close all
 addpath(genpath('~/MATLAB/OceanMesh2D/'))
 addpath('~/datasets/')
 
-outname = 'HSOFS_nosubset_al062018';
+outname = 'MESH_STORM';
 load([outname '.mat'])
 
 %% Set integration logical
-explicit = true;
+explicit = EXPLICIT_INT;
 
 %% Set Storm Code
-stormcode = 'al062018';
+stormcode = 'STORMCODE';
 
 % Some constantds
 f22 = 'fort.22'; % ATCF storm data filename
@@ -29,7 +29,6 @@ geofactor = 1;   % geofactor is one to consider Coriolis effect
 
 %% get the storm start/end times from the downloaded data
 fid = fopen(f22);
-% start
 % find from when the storm enters the domain
 lon = -999; lat = -999;
 while lon > max(m.p(:,1)) || lon < min(m.p(:,1)) || ...
@@ -60,8 +59,8 @@ fclose(fid);
 if explicit
    % based on CFL of 0.7 making sure that the
    % time step is divisable by minutes
-   minutes_divisor = floor(60/(0.7*min(CalcCFL(m))));
-   DT = 60/minutes_divisor %[s]
+   minutes_divisor = ceil(60/(0.5*sqrt(2)*min(CalcCFL(m))));
+   DT = round(60/minutes_divisor,4) %[s]
 else
    % not sure how to define, just guess atm
    DT = 12 %[s]
@@ -131,7 +130,7 @@ m.f15.nhstar = [0 0];
 m.f15.ihot = 567;
 m.f15.nramp = 8;
 m.f15.dramp = [0 0 0 0 0 0 0.5 0 spinupdays]; % ramping met up for half a day
-m.f15.nws = 8; %20;
+m.f15.nws = 20;
                %YYYY MM DD HH24 StormNumber BLAdj geofactor
 m.f15.wtimnc = [year(TS) month(TS) day(TS) hour(TS) 1 BLAdj geofactor];
 m.f15.rndy = rndy;

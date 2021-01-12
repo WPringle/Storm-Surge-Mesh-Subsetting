@@ -7,7 +7,6 @@ clearvars; clc;
 %
 % add paths to data and scripts
 addpath(genpath('~/MATLAB/OceanMesh2D/'))
-addpath(genpath('~/MATLAB/m_map/'))
 
 %% Input Setup
 % Input Storm Name
@@ -48,33 +47,33 @@ outname = ['Figs/' outname];
 
 %% Plot mesh subsets
 % Plot the mesh quality
-plot(m,'qual',1,[],bou_buff);
+plot(m,'type','qual','subset',bou_buff);
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'g--','linew',bw);
 m_plot(track(:,1),track(:,2),'g-','linew',tw);
 print([outname '_meshqual.png'],figres,'-dpng')
 
 % Plot the mesh reolution
-plot(m,'resomeshlog',1,[],bou_buff);
+plot(m,'type','resomeshlog','subset',bou_buff);
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'k--','linew',bw);
 m_plot(track(:,1),track(:,2),'k-','linew',tw);
 print([outname '_resomesh.png'],figres,'-dpng')
 
 % Plot the bathy
-plot(m,'b',1,[],bou_buff);
+plot(m,'type','b','subset',bou_buff);
 caxis([-10 100])
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'r--','linew',bw);
 m_plot(track(:,1),track(:,2),'r-','linew',tw);
 print([outname '_bathy.png'],figres,'-dpng')
 
 % Plot the bottom friction
-plot(m,'quad',1,[],bou_buff);
-m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'k--','linew',bw);
-m_plot(track(:,1),track(:,2),'k-','linew',tw);
-print([outname '_botfric.png'],figres,'-dpng')
+%plot(m,'quad',1,[],bou_buff);
+%m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'k--','linew',bw);
+%m_plot(track(:,1),track(:,2),'k-','linew',tw);
+%print([outname '_botfric.png'],figres,'-dpng')
 
 %% Plot full mesh
 % Plot the triangulation with boundaries
-plot(m,'bd',1);
+plot(m,'type','bd');
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'m--','linew',bw);
 m_plot(track(:,1),track(:,2),'m-','linew',tw);
 m_text(-95,40,[num2str(length(m.p)/1e6,3) 'M vertices'],'fontsize',12)

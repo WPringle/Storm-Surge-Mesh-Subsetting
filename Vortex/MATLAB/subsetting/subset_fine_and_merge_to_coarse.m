@@ -59,29 +59,42 @@ track = shp.ncst{WI};
 WI = find(isnan(track(:,1)),1,'first');
 track_poly = track(1:WI-1,:);
 
-%% Load the outer coarse mesh properties,
-%% the fine mesh and extract the desired subset
+%% Load the meshes, extract properties of coarse mesh 
+%% and extract the desired subset of fine mesh
 tic
-% Coarse mesh properties
-load(coarse); 
-% Fine mesh
-load(fine);
-% Add Lambert projection if missing
-if isempty(m.proj)
-   [~,m] = setProj(m,1,'lam',1); 
-end
-% Extract the subdomain
+% Load coarse mesh 
+mc = load(coarse); mc = mc.m;
+% Load fine mesh
+load(fine)
+% Add Lambert projection based on maximum extents of both meshes
+bb = [min(min(m.p)',min(mc.p)') max(max(m.p)',max(mc.p)')];
+m_proj('lam','lon',bb(1,:),'lat',bb(2,:))
+
+% Get coarse mesh properties
+% The outer polygon
+[p2(:,1),p2(:,2)] = m_ll2xy(mc.p(:,1),mc.p(:,2)) ;
+mc.p = p2;
+poly_vec = getBoundaryOfMesh(mc);
+% The edgesize function
+bars = GetBarLengths(mc);
+bm = 0.5*(p2(bars(:,1),:) + p2(bars(:,2),:));
+bl = p2(bars(:,1),:) - p2(bars(:,2),:);
+bl = hypot(bl(:,1),bl(:,2));
+F = scatteredInterpolant(bm(:,1),bm(:,2),bl);
+clear p2 bars bm bl
+
+m.bd = [];
+% Extract the subdomain from fine mesh
 ms = extract_subdomain(m,track_poly,0,centroid);
 % Extract the inverse of the subdomain
 mi = extract_subdomain(m,track_poly,1,centroid);
 % Keep the small disconnected portions 
-mi.bd = []; mi.op = [];
 mi = extract_small_portion( mi, small_portion, 0, 1 );
 % add back small disconnected portions to ms
 ms = cat(ms,mi); 
 % reset mesh properties for ms back to those of original m 
 ms.b = m.b; ms.bx = m.bx; ms.by = m.by; 
-ms.bd = m.bd; ms.op = m.op; ms.f13 = m.f13; 
+ms.bd = m.bd; ms.f13 = m.f13; 
 % get the indice to map the original mesh properties to ms
 ind = ourKNNsearch(m.p',ms.p',1);
 % Map mesh properties
@@ -91,7 +104,7 @@ clear m
 [~,bc] = baryc(ms);
 % remove the parts in deep water
 ms.t(bc > deep_water,:) = [];
-% project the vertices in ms using the WNAT coarse mesh projection
+% project the vertices in ms 
 [p1(:,1),p1(:,2)] = m_ll2xy(ms.p(:,1),ms.p(:,2)) ;
 ms.p = p1;
 % clean the mesh to make sure it is traversable
@@ -120,11 +133,16 @@ for ib = 2:length(AS)
         ms_poly_vec = [ms_poly_vec; ms_bound{AS(ib)}];
     end
 end
+% fine polyshape
+fine_pg = polyshape(ms_poly_vec,'SolidBoundaryOrientation','ccw')
+coarse_pg = polyshape(poly_vec)
 % make sure ms polygon is clockwise
-[ms_xcw, ms_ycw] = poly2cw(ms_poly_vec(:,1), ms_poly_vec(:,2));
+%[ms_xcw, ms_ycw] = poly2cw(ms_poly_vec(:,1), ms_poly_vec(:,2));
 % Subtract the fine boundary from the outer one
-[xn, yn] = polybool('-', poly_vec(:,1), poly_vec(:,2), ms_xcw, ms_ycw);
-poly_vec = [xn, yn];
+%[xn, yn] = polybool('-', poly_vec(:,1), poly_vec(:,2), ms_xcw, ms_ycw);
+%poly_vec = [xn, yn];
+diff_pg = subtract(coarse_pg,fine_pg);
+poly_vec = diff_pg.Vertices;
 toc
 %% Make the delaunay-refinement mesh based on size function and the subtracted polygon
 tic

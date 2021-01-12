@@ -17,6 +17,7 @@ meshdir="\/lcrc\/project\/HSOFS_Ensemble\/HSOFS\/mesh\/" # where mesh data is lo
 vortex_download_script="dl_storm_vortex.sh" 
 make_f15_script="make_f15_vortex_and_write_mesh.m" 
 subset_merge_script="subset_fine_and_merge_to_coarse.m" 
+extract_func="extract_small_portion.m" 
 plot_mesh_script="plot_mesh.m" 
 plot_result_script="plot_max_results.m" 
 job_script="run_storm.slurm" # choose .SGE (qsub) or .slurm (sbatch)
@@ -100,6 +101,7 @@ do
    if $subset; then
       # copy over and edit mesh subset+merge script
       cp $scriptdir$subset_merge_script .     
+      cp $scriptdir$extract_func .     
       sed -i -- 's/MESH_DIR/'$meshdir'/g' $subset_merge_script 
       sed -i -- 's/STORMCODE/'$code'/g' $subset_merge_script 
       sed -i -- 's/MESH_STORM/'$fn'/g' $subset_merge_script 

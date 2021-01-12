@@ -20,7 +20,7 @@ interp=true                       #turn interp on/off
 #newstep=3 #1                      #desired step time for interpolation
 units="min"                        #units of forecast/interpolaton [hour/min] 
 ts=2190                            #start time to interpolate from
-te=3810                            #end time to interpolate to
+te=4170                            #end time to interpolate to
 step=180                           #original step time of interpolation range
 newstep=60                         #desired step time for interpolation
 ####################### Operations below ###########################
@@ -53,7 +53,7 @@ wgrib2 $WINDin"2" -wind_uv $UVin
 
 ### Interpolation....
 cp $UVin $UVout
-if [ $interp ]; then
+if $interp; then
    ## Interpolation of the Step [hours/minutes] forecasts 
    ## after Start time to NewStep forecast
    for i in $(eval echo {$ts..$te..$step}); do
@@ -69,6 +69,14 @@ if [ $interp ]; then
          # extracting out the forecasts we want
          wgrib2 $UVin -match ":$var:10 m above ground:$a:" -grib_out $UVin"1"
          wgrib2 $UVin -match ":$var:10 m above ground:$b:" -grib_out $UVin"2"
+         file=$UVin"2"
+         filesize=$(wc -c "$file" | awk '{print $1}')
+         if [ $filesize -lt 10 ]; then
+            # exit from both loops if the file is essentially empty
+            echo "next forecast time does not exist, breaking out of interpolation"
+            echo $i > last-ndfd-fcst-time.txt
+            break 2
+         fi
          t_start=$((i+newstep))
          t_end=$((j-newstep))
          w1=$step # interpolation weight left
@@ -82,7 +90,7 @@ if [ $interp ]; then
             wgrib2 $UVin"1" -rpn sto_1 -import_grib $UVin"2" -rpn sto_2 \
                -rpn "rcl_1:$w1:*:rcl_2:$w2:*:+:$step:/" -set_ftime "$d1" -append -grib_out $UVout
          done
-      done
+      done 
    done
 fi
 

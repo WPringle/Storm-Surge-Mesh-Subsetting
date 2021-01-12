@@ -19,9 +19,6 @@ module load netcdf-fortran/4.4.4-ojwazvy
 ## data downloading/pre-processing 
 date > run.timing
 
-# Generate the fort.15 files   
-matlab -nosplash -nodesktop -nodisplay < F15SCRIPT
-   
 # download the NAM winds
 ./DLNAM
 
@@ -30,6 +27,9 @@ matlab -nosplash -nodesktop -nodisplay < F15SCRIPT
 
 # process the NDFD winds into usable format
 ./PRNDFD
+
+# Generate the fort.15 files   
+matlab -nosplash -nodesktop -nodisplay < F15SCRIPT
 
 date >> run.timing
 

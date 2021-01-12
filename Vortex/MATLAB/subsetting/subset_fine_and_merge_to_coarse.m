@@ -66,6 +66,10 @@ tic
 load(coarse); 
 % Fine mesh
 load(fine);
+% Add Lambert projection if missing
+if isempty(m.proj)
+   [~,m] = setProj(m,1,'lam',1); 
+end
 % Extract the subdomain
 ms = extract_subdomain(m,track_poly,0,centroid);
 % Extract the inverse of the subdomain

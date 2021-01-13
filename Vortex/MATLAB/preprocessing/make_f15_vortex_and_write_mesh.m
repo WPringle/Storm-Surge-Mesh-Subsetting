@@ -35,7 +35,7 @@ geofactor = 1;   % geofactor is one to consider Coriolis effect
 fid = fopen(f22);
 % find from when the storm enters the domain
 lon = -999; lat = -999;
-while lon > max(m.p(:,1)) || lon < min(m.p(:,1)) || ...
+while lon > max(m.p(:,1)) || lon < -60 || ...
       lat > max(m.p(:,2)) || lat > max(m.p(:,2))
    firstline = fgetl(fid);
    lat = str2num(firstline(36:38))/10;
@@ -134,7 +134,7 @@ m.f15.nhstar = [0 0];
 m.f15.ihot = 567;
 m.f15.nramp = 8;
 m.f15.dramp = [0 0 0 0 0 0 0.5 0 spinupdays]; % ramping met up for half a day
-m.f15.nws = 20;
+m.f15.nws = 8; %20;
                %YYYY MM DD HH24 StormNumber BLAdj geofactor
 m.f15.wtimnc = [year(TS) month(TS) day(TS) hour(TS) 1 BLAdj geofactor];
 m.f15.rndy = rndy;

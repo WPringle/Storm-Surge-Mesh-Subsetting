@@ -43,6 +43,7 @@ bc_points = [-60.0000   45.7;   % the start and end points of [lons, lats;
 wind_swath = 34; %[kt] wind speed at which to set the TC edge (34, 50, or 64)
 deep_water = 250; %[m] the cutoff depth for "deep-water"
 small_portion = 0.1; %fraction of the mesh that's considered a small disconnected portion to keep if cutoff
+bathy_gradient_limit = 0.1; % the allowable gradient of bathymetry
      
 %% Load the track data and determine the high-res region
 try
@@ -54,10 +55,12 @@ catch
 end
 % Set high-res region to the "wind_swath"-kt wind speed boundary...
 rad = cell2mat(shp.dbf.RADII); WI = find(rad == wind_swath,1,'last');
-track = shp.ncst{WI};
+swath_poly = shp.ncst{WI};
 % make sure only get the outer polygon component. 
-WI = find(isnan(track(:,1)),1,'first');
-track_poly = track(1:WI-1,:);
+WI = find(isnan(swath_poly(:,1)),1,'first');
+if ~isempty(WI)
+   swath_poly = swath_poly(1:WI-1,:);
+end
 
 %% Load the meshes, extract properties of coarse mesh 
 %% and extract the desired subset of fine mesh
@@ -85,9 +88,9 @@ clear p2 bars bm bl
 
 m.bd = [];
 % Extract the subdomain from fine mesh
-ms = extract_subdomain(m,track_poly,0,centroid);
+ms = extract_subdomain(m,swath_poly,0,centroid);
 % Extract the inverse of the subdomain
-mi = extract_subdomain(m,track_poly,1,centroid);
+mi = extract_subdomain(m,swath_poly,1,centroid);
 % Keep the small disconnected portions 
 mi = extract_small_portion( mi, small_portion, 0, 1 );
 % add back small disconnected portions to ms
@@ -187,6 +190,8 @@ m = make_bc(m,'outer',0,bc_k(1),bc_k(2),2);
 % interpolate the NaN parts of mesh using B_filename data
 m = interp(m,B_filename,'K',find(isnan(m.b)),'type','depth',...
            'ignoreOL',1,'nan','fill');
+% limit the slope of bathmetry to 0.1 
+m = lim_bathy_slope(m,bathy_gradient_limit,-1);
 % interpolate the NaN parts of mesh using B_filename data
 %m = interp(m,B_filename,'K',find(isnan(m.bx)),'type','slope',....
 %           'ignoreOL',1,'nan','fill');

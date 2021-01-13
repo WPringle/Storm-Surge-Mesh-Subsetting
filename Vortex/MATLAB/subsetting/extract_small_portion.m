@@ -129,7 +129,9 @@ obj.t = t;
 obj = fixmeshandcarry(obj);
 [etbv,vxe] = extdom_edges2( obj.t, obj.p ) ;
 if numel(etbv) > numel(vxe)
-   error('boundary not traversable'); 
+   warning('the output mesh is not traversable')
+   % interior element(s) likely needs deleting using following:
+   % obj = obj.clean('passive','db',0,'con',0,'proj',0);
 end
 if ~proj
     % not projected so get back the lat-lon 

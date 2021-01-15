@@ -63,7 +63,7 @@ m.f15.nscreen = floor(24*3600/m.f15.dtdp);
 m.f15.rundes = ['Storm Name: ' stormname]; % Run description
 m.f15.runid = [outname '-CS']; % Run description
 m.f15.extraline(1).msg = m.f15.rundes;
-m.f15.extraline(6).msg = ['Tide + ' str2num(wtmh_ndfd) '-hrly NAM'];
+m.f15.extraline(6).msg = ['Tide + ' num2str(wtmh_ndfd) '-hrly NAM'];
 
 % ramping
 m.f15.nramp = 1;
@@ -123,7 +123,7 @@ m.f15.outgm = [5 spinupdays m.f15.rndy floor(outg*3600/m.f15.dtdp)];
 % metadata
 m.f15.runid = [outname '-HS']; % Run description
 m.f15.extraline(1).msg = m.f15.rundes;
-m.f15.extraline(6).msg = ['Tide + ' str2num(wtmh_ndfd) '-hrly NDFD forecast'];
+m.f15.extraline(6).msg = ['Tide + ' num2str(wtmh_ndfd) '-hrly NDFD forecast'];
 
 % writing out the hotstart
 write(m,[outname '_HS'],'15');

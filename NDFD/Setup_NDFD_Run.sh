@@ -23,8 +23,7 @@ job_script="run_ndfd.slurm" # choose .SGE (qsub) or .slurm (sbatch)
 #plot_mesh_script="Plot_Mesh.m" 
 
 ## Setting some parameters and storm names
-#stormnames=("BARRY" "IMELDA" "OLGA" "DORIAN" "NESTOR")
-stormnames=("IMELDA")
+stormnames=("BARRY" "IMELDA" "OLGA" "DORIAN" "NESTOR")
 meshname="HSOFS" # name of the mesh[.mat] file
 explicit=true    # true for explicit, false for implicit
 subset=false     # true for doing the mesh subsett + merge
@@ -100,22 +99,31 @@ do
       dsa=07
    elif [ $storm == "OLGA" ]
    then
-      ms=10
-      me=10
-      ds=23
-      de=28
+      # NDFD forecast ini date
+      msi=10
+      dsi=25
+      hsi=06
+      # ARCHIVE start date (10 days earlier)
+      msa=10
+      dsa=15
    elif [ $storm == "DORIAN" ]
    then
-      ms=08
-      me=09
-      ds=24
-      de=10
+      # NDFD forecast ini date
+      msi=09
+      dsi=02
+      hsi=06
+      # ARCHIVE start date (10 days earlier)
+      msa=08
+      dsa=23
    elif [ $storm == "NESTOR" ]
    then
-      ms=10
-      me=10
-      ds=16
-      de=21
+      # NDFD forecast ini date
+      msi=10
+      dsi=18
+      hsi=06
+      # ARCHIVE start date (10 days earlier)
+      msa=10
+      dsa=08
    fi
    ##############################################
 

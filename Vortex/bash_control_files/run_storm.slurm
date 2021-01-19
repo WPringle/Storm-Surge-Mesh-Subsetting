@@ -32,7 +32,7 @@ if SUBSET; then
    date >> run.timing
 
    # plot the merged mesh
-   matlab -nosplash -nodesktop -nodisplay < PLOTF
+   matlab -nosplash -nodesktop -nodisplay < PLOTMESH
 
    date >> run.timing
 fi
@@ -58,6 +58,11 @@ ln -s MESH_STORM_HS.15 fort.15
 
 ## Run My Program
 srun -n NP ./padcirc
+
+date >> run.timing
+
+# Running the make new f15 script
+matlab -nosplash -nodesktop -nodisplay < PLOTRESULTS 
 
 # exit with end date
 date >> run.timing

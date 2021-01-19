@@ -26,9 +26,9 @@ job_script="run_storm.slurm" # choose .SGE (qsub) or .slurm (sbatch)
 # storm names: Florence    Matthew
 vortexcodes=("al062018" "al142016") # vortex codes
 meshname="HSOFS" # name of the mesh[.mat] file
-coarsename="WNAT_1km_properties"; # name of the coarse mesh properties[.mat] file
+coarsename="WNAT_1km"; # name of the coarse mesh properties[.mat] file
 explicit=true    # true for explicit, false for implicit
-subset=true      # true for doing the mesh subsett + merge
+subset=false     # true for doing the mesh subsett + merge
 nodes=5          # number of computational nodes
 np_per_node=36   # number of processors per computational node
 job_time="3:30:00" # time allowed for job in hh:mm:ss format
@@ -142,8 +142,9 @@ do
    sed -i -- 's/DLSTORM/'$vortex_download_script'/g' $new_job_script  
    sed -i -- 's/SUBSET/'$subset'/g' $new_job_script 
    sed -i -- 's/MERGEFN/'$subset_merge_script'/g' $new_job_script 
-   sed -i -- 's/PLOTF/'$plot_mesh_script'/g' $new_job_script 
+   sed -i -- 's/PLOTMESH/'$plot_mesh_script'/g' $new_job_script 
    sed -i -- 's/MAKEF15/'$make_f15_script'/g' $new_job_script 
+   sed -i -- 's/PLOTRESULTS/'$plot_result_script'/g' $new_job_script 
    # submission based on job scheduler
    scheduler=${job_script: -3}
    if [ $scheduler = "SGE" ]; then 

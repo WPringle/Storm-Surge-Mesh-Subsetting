@@ -35,8 +35,8 @@ geofactor = 1;   % geofactor is one to consider Coriolis effect
 fid = fopen(f22);
 % find from when the storm enters the domain
 lon = -999; lat = -999;
-while lon > max(m.p(:,1)) || lon < -60 || ...
-      lat > max(m.p(:,2)) || lat > max(m.p(:,2))
+while lon > -60 || lon < min(m.p(:,1)) || ...
+      lat > max(m.p(:,2)) || lat < min(m.p(:,2))
    firstline = fgetl(fid);
    lat = str2num(firstline(36:38))/10;
    lon = str2num(firstline(43:45))/10;

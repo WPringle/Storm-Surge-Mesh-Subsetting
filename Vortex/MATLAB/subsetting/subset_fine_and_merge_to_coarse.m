@@ -137,15 +137,11 @@ for ib = 2:length(AS)
     end
 end
 % fine polyshape
-fine_pg = polyshape(ms_poly_vec,'SolidBoundaryOrientation','ccw')
+fine_pg = polyshape(ms_poly_vec);
 coarse_pg = polyshape(poly_vec)
-% make sure ms polygon is clockwise
-%[ms_xcw, ms_ycw] = poly2cw(ms_poly_vec(:,1), ms_poly_vec(:,2));
-% Subtract the fine boundary from the outer one
-%[xn, yn] = polybool('-', poly_vec(:,1), poly_vec(:,2), ms_xcw, ms_ycw);
-%poly_vec = [xn, yn];
 diff_pg = subtract(coarse_pg,fine_pg);
 poly_vec = diff_pg.Vertices;
+poly_vec(end+1,:) = [NaN NaN]; % append NaN to end to avoid error
 toc
 %% Make the delaunay-refinement mesh based on size function and the subtracted polygon
 tic

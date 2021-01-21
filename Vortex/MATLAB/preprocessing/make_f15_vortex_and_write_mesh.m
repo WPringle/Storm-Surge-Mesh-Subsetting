@@ -30,12 +30,13 @@ outg = 3;        % global elevation output interval [hours]
 outs = 12;       % station elevation output interval [min]
 BLAdj = 0.9;     % wind speed adjustment factor to the boundary layer
 geofactor = 1;   % geofactor is one to consider Coriolis effect
+maxlon = -63;    % maximum longitude allowed for start of storm
 
 %% get the storm start/end times from the downloaded data
 fid = fopen(f22);
 % find from when the storm enters the domain
 lon = -999; lat = -999;
-while lon > -60 || lon < min(m.p(:,1)) || ...
+while lon > maxlon || lon < min(m.p(:,1)) || ...
       lat > max(m.p(:,2)) || lat < min(m.p(:,2))
    firstline = fgetl(fid);
    lat = str2num(firstline(36:38))/10;

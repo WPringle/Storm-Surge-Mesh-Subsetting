@@ -43,6 +43,7 @@ bc_points = [-60.0000   45.7;   % the start and end points of [lons, lats;
 wind_swath = 34; %[kt] wind speed at which to set the TC edge (34, 50, or 64)
 deep_water = 250; %[m] the cutoff depth for "deep-water"
 small_portion = 0.1; %fraction of the mesh that's considered a small disconnected portion to keep if cutoff
+KCP = false;  % keep collinear points when making polyshape?
 bathy_gradient_limit = 0.1; % the allowable gradient of bathymetry
      
 %% Load the track data and determine the high-res region
@@ -137,18 +138,31 @@ for ib = 2:length(AS)
     end
 end
 % fine polyshape
-fine_pg = polyshape(ms_poly_vec);
-coarse_pg = polyshape(poly_vec)
+fine_pg = polyshape(ms_poly_vec,'KeepCollinearPoints',KCP);
+% coarse polyshape
+coarse_pg = polyshape(poly_vec,'KeepCollinearPoints',KCP);
+% the substracted polygon (fine substracted from coarse)
 diff_pg = subtract(coarse_pg,fine_pg);
 poly_vec = diff_pg.Vertices;
 poly_vec(end+1,:) = [NaN NaN]; % append NaN to end to avoid error
+% remove vertices not in coarse or fine polygons
+[~,Id] = setdiff(poly_vec,[fine_pg.Vertices; coarse_pg.Vertices],'rows');
+Id = Id(~isnan(poly_vec(Id,1)));
+poly_vec(Id,:) = [];
+% turn into node edge (automatically removes less than 3 edge polygons) 
+[node,edge] = getnan2(poly_vec,0,3);
+%x = node(:,1); y = node(:,2);
+%x = x(edge); y = y(edge);
+%xt = diff(x,[],2);
+%yt = diff(y,[],2);
+%dd = hypot(xt,yt);
+%disp(min(dd)*6378e3) % display minimum distance between vertices
 toc
 %% Make the delaunay-refinement mesh based on size function and the subtracted polygon
 tic
 opts.iter = 100;
 opts.kind = 'delaunay';
 opts.ref1 = 'preserve';
-[node,edge] = getnan2(poly_vec);
 % make the delaunay refinement mesh
 [pc,etri,tc,tnum] = refine2_om(node,edge,[],opts,@(p)F(p));  
 % smooth the mesh 

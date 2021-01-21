@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plot_Mesh.m                                                             %
 % Plot the merge mesh                                                     %
-% By William Pringle, Oct 2020                                            %
+% By William Pringle, Oct 2020 - Jan 2021                                 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clearvars; clc;
 %
@@ -12,6 +12,7 @@ addpath(genpath('~/MATLAB/OceanMesh2D/'))
 % Input Storm Name
 stormcode = 'STORMCODE';
 % Input Storm Track
+maxlon = -63;
 try
    trackfile = [upper(stormcode) '_pts'];
    shp = m_shaperead(trackfile);
@@ -20,7 +21,7 @@ catch
    shp = m_shaperead(trackfile);
 end
 track = cell2mat(shp.ncst);
-track(track(:,1) > -60,:) = [];
+track(track(:,1) > maxlon,:) = [];
 
 % Parameters
 buff = 1.0;       % the buffer for the plot
@@ -59,8 +60,7 @@ m_plot(track(:,1),track(:,2),'k-','linew',tw);
 print([outname '_resomesh.png'],figres,'-dpng')
 
 % Plot the bathy
-plot(m,'type','b','subset',bou_buff);
-caxis([-10 100])
+plot(m,'type','b','subset',bou_buff,'colormap',[11 -10 100]);
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'r--','linew',bw);
 m_plot(track(:,1),track(:,2),'r-','linew',tw);
 print([outname '_bathy.png'],figres,'-dpng')

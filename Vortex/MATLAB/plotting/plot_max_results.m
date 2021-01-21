@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Plot_MaxResults.m                                                             %
-% Plot the max results                                                     %
-% By William Pringle, Jan 2021 -                                           %
+% plot_max_results.m                                                      %
+% Plot the maxmum simulation fields                                       %
+% By William Pringle, Jan 2021 -                                          %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clearvars; clc;
 %
@@ -12,6 +12,7 @@ addpath(genpath('~/MATLAB/OceanMesh2D/'))
 %% Set Storm Code
 stormcode = 'STORMCODE';
 % Input Storm Track
+maxlon = -63;
 try
    trackfile = [upper(stormcode) '_pts'];
    shp = m_shaperead(trackfile);
@@ -20,7 +21,7 @@ catch
    shp = m_shaperead(trackfile);
 end
 track = cell2mat(shp.ncst);
-track(track(:,1) > -60,:) = [];
+track(track(:,1) > maxlon,:) = [];
 
 % Parameters
 buff = 1.0;              % the buffer for the plot
@@ -42,7 +43,7 @@ disp(bou_buff)
 
 % Make figure directory and save in there
 mkdir('Figs/')
-outname = 'MESH';
+outname = 'MESH_STORM';
 outname = ['Figs/' outname];
 
 % filenames

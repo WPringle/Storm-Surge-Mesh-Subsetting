@@ -11,10 +11,11 @@
 datadir="/lcrc/project/HSOFS_Ensemble/HSOFS/data/" # where station location data is located 
 execdir="/lcrc/project/HSOFS_Ensemble/HSOFS/executables/" # where the ADCIRC-related executable files are located
 scriptdir="/lcrc/project/HSOFS_Ensemble/HSOFS/scripts/" # where the various bash and MATLAB scripts are located
-meshdir="\/lcrc\/project\/HSOFS_Ensemble\/HSOFS\/mesh\/" # where mesh data is located [NOTE: this one must use back- slash before any forward slashes because it is used in a sed command]
+meshdir="\/lcrc\/project\/HSOFS_Ensemble\/HSOFS\/mesh\/" # where mesh data is located [NOTE: this one must use back-slash before any forward slashes because it is used in a sed command]
 
 ## Enter script filenames
-vortex_download_script="dl_storm_vortex.sh" 
+gis_download_script="dl_storm_gis.sh" 
+atcf_download_script="dl_storm_atcf.sh" 
 make_f15_script="make_f15_vortex_and_write_mesh.m" 
 subset_merge_script="subset_fine_and_merge_to_coarse.m" 
 extract_func="extract_small_portion.m" 
@@ -93,9 +94,11 @@ do
    cp $scriptdir"run_adcprep-15.sh" .
    sed -i -- 's/NP/'$np'/g' run_adcprep*.sh  
    
-   # copy over and configure the ALCF download script
-   cp $scriptdir$vortex_download_script .     
-   sed -i -- 's/STORMCODE/'$code'/g' $vortex_download_script  
+   # copy over and configure the GIS and ALCF download scripts
+   cp $scriptdir$gis_download_script .     
+   sed -i -- 's/STORMCODE/'$code'/g' $gis_download_script  
+   cp $scriptdir$atcf_download_script .     
+   sed -i -- 's/STORMCODE/'$code'/g' $atcf_download_script  
   
    # if we are subsetting and merging the coarse mesh with fine mesh
    if $subset; then
@@ -139,7 +142,8 @@ do
    sed -i -- 's/NTPN/'$np_per_node'/g' $new_job_script 
    sed -i -- 's/HH:MM:SS/'$job_time'/g' $new_job_script 
    sed -i -- 's/MESH_STORM/'$fn'/g' $new_job_script 
-   sed -i -- 's/DLSTORM/'$vortex_download_script'/g' $new_job_script  
+   sed -i -- 's/DLGIS/'$gis_download_script'/g' $new_job_script  
+   sed -i -- 's/DLATCF/'$atcf_download_script'/g' $new_job_script  
    sed -i -- 's/SUBSET/'$subset'/g' $new_job_script 
    sed -i -- 's/MERGEFN/'$subset_merge_script'/g' $new_job_script 
    sed -i -- 's/PLOTMESH/'$plot_mesh_script'/g' $new_job_script 

@@ -31,7 +31,7 @@ bgc = [166 132 97]/255;  % background color
 figres = '-r300';        % figure resolution
 cmin = 0;                % colormap minimum 
 emax = 3;                % elevation colormap maximum
-wmax = 30;               % wind speed colormap maximum
+wmax = 50;               % wind speed colormap maximum
 
 % Get the bbox from storm track (for now)
 bou = [min(track)' max(track)'];
@@ -91,7 +91,7 @@ m_plot(track(:,1),track(:,2),'k-','linew',tw);
 ax = gca;
 ax.Color = bgc;
 m_grid()
-cmocean('speed')
+cmocean('speed',10)
 caxis([cmin wmax])
 cb = colorbar;
 cb.Label.String = 'wind speed [m/s]';

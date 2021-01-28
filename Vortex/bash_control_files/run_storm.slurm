@@ -11,17 +11,20 @@
 #SBATCH --time=HH:MM:SS
 
 ## set up environment
-module load matlab
 module load mvapich2
-module load netcdf
 module load netcdf-fortran/4.4.4-ojwazvy
+module load matlab
+module load python
+module load anaconda
+# loading our virtual env
+source activate pyaos
 
 ## Setting up inputs
 date > run.timing
 
-# Download storm track and vortex information
-./DLSTORM
-
+# Download storm track GIS information
+./DLGIS
+   
 date >> run.timing
 
 # Doing the subset and merge if required
@@ -39,6 +42,11 @@ fi
    
 # Running the make new f15 script
 matlab -nosplash -nodesktop -nodisplay < MAKEF15 
+
+date >> run.timing
+
+# Download storm ATCF file
+./DLATCF
 
 date >> run.timing
 

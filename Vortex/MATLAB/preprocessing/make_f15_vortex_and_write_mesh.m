@@ -22,8 +22,7 @@ explicit = EXPLICIT_INT;
 %% Set Storm Code
 stormcode = 'STORMCODE';
 
-% Some constantds
-f22 = 'fort.22'; % ATCF storm data filename
+% Some constants
 spinupdays = 10; % spinup time [days]
 rampdays = 5;    % ramping time [days]
 outg = 3;        % global elevation output interval [hours]
@@ -32,31 +31,31 @@ BLAdj = 0.9;     % wind speed adjustment factor to the boundary layer
 geofactor = 1;   % geofactor is one to consider Coriolis effect
 maxlon = -63;    % maximum longitude allowed for start of storm
 
-%% get the storm start/end times from the downloaded data
-fid = fopen(f22);
-% find from when the storm enters the domain
-lon = -999; lat = -999;
-while lon > maxlon || lon < min(m.p(:,1)) || ...
-      lat > max(m.p(:,2)) || lat < min(m.p(:,2))
-   firstline = fgetl(fid);
-   lat = str2num(firstline(36:38))/10;
-   lon = str2num(firstline(43:45))/10;
-   if strcmp(firstline(39),'S'); lat = -lat; end
-   if strcmp(firstline(46),'W'); lon = -lon; end
+%% Get the storm start/end times from the downloaded GIS track
+% Input Storm Track
+try
+   trackfile = [upper(stormcode) '_pts'];
+   shp = m_shaperead(trackfile);
+catch
+   trackfile = [lower(stormcode) '_pts'];
+   shp = m_shaperead(trackfile);
 end
-ys = str2num(firstline(9:12));
-ms = str2num(firstline(13:14));
-ds = str2num(firstline(15:16));
-hs = str2num(firstline(17:18));
-% end (at end of file)
-while ~feof(fid)
-  lastline = fgetl(fid);
-end
-ye = str2num(lastline(9:12));
-me = str2num(lastline(13:14));
-de = str2num(lastline(15:16));
-he = str2num(lastline(17:18));
-fclose(fid);
+track = cell2mat(shp.ncst);
+% Find where first enters domain (lon is less than our maxlon variable)
+inside = find(track(:,1) < maxlon,1,'first');
+% This is our start-date
+ys = shp.dbf.YEAR{inside};
+ms = str2num(shp.dbf.MONTH{inside});
+ds = shp.dbf.DAY{inside};
+hs = str2num(shp.dbf.HHMM{inside}(1:2));
+ts = [num2str(ys) shp.dbf.MONTH{inside} num2str(ds) shp.dbf.HHMM{inside}(1:2)];
+% Replace start date in the atcf downloader script
+system(['sed -i -- s/STARTDATE/' ts '/g dl_storm_atcf.sh']);
+% End of track is our end-date
+ye = shp.dbf.YEAR{end};
+me = str2num(shp.dbf.MONTH{end});
+de = shp.dbf.DAY{end};
+he = str2num(shp.dbf.HHMM{inside}(1:2));
 
 %% make the cold start
 
@@ -135,7 +134,7 @@ m.f15.nhstar = [0 0];
 m.f15.ihot = 567;
 m.f15.nramp = 8;
 m.f15.dramp = [0 0 0 0 0 0 0.5 0 spinupdays]; % ramping met up for half a day
-m.f15.nws = 8; %20;
+m.f15.nws = 20;
                %YYYY MM DD HH24 StormNumber BLAdj geofactor
 m.f15.wtimnc = [year(TS) month(TS) day(TS) hour(TS) 1 BLAdj geofactor];
 m.f15.rndy = rndy;

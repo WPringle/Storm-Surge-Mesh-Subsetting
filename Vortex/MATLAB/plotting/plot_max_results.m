@@ -30,7 +30,8 @@ tw = 2;                  % track line width
 bgc = [166 132 97]/255;  % background color
 figres = '-r300';        % figure resolution
 cmin = 0;                % colormap minimum 
-cmax = 3;                % colormap maximum
+emax = 3;                % elevation colormap maximum
+wmax = 30;               % wind speed colormap maximum
 
 % Get the bbox from storm track (for now)
 bou = [min(track)' max(track)'];
@@ -48,7 +49,7 @@ outname = ['Figs/' outname];
 
 % filenames
 max_ele = 'maxele.63.nc';
-max_wind = 'maxwind.63.nc';
+max_wind = 'maxwvel.63.nc';
 
 % Reading spatial-temporal info from the max_ele file
 x = ncread(max_ele,'x');
@@ -63,9 +64,10 @@ end
 tss = datetime(tss);
 t = t/3600/24 + tss;
 
-%% Make regional gifs
-figure;
 m_proj('lam','long',bou_buff(1,:),'lat',bou_buff(2,:))
+
+%% Make max ele
+figure;
 height = ncread(max_ele,'zeta_max');
 m_trisurf(ele,x,y,height);
 hold on
@@ -74,8 +76,24 @@ ax = gca;
 ax.Color = bgc;
 m_grid()
 colormap(lansey)
-caxis([cmin cmax])
+caxis([cmin emax])
 cb = colorbar;
 cb.Label.String = 'elevation [m]';
 title(['Maximum Storm Tide - ' outname])
 print([outname '_maxele.png'],figres,'-dpng')
+
+%% Make max wind
+figure;
+height = ncread(max_wind,'wind_max');
+m_trisurf(ele,x,y,height);
+hold on
+m_plot(track(:,1),track(:,2),'k-','linew',tw);
+ax = gca;
+ax.Color = bgc;
+m_grid()
+cmocean('speed')
+caxis([cmin wmax])
+cb = colorbar;
+cb.Label.String = 'wind speed [m/s]';
+title(['Maximum Wind Speed - ' outname])
+print([outname '_maxwind.png'],figres,'-dpng')

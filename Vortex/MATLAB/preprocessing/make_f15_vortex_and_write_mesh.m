@@ -44,18 +44,19 @@ track = cell2mat(shp.ncst);
 % Find where first enters domain (lon is less than our maxlon variable)
 inside = find(track(:,1) < maxlon,1,'first');
 % This is our start-date
-ys = shp.dbf.YEAR{inside};
-ms = str2num(shp.dbf.MONTH{inside});
-ds = shp.dbf.DAY{inside};
-hs = str2num(shp.dbf.HHMM{inside}(1:2));
-ts = [num2str(ys) shp.dbf.MONTH{inside} num2str(ds) shp.dbf.HHMM{inside}(1:2)];
+ts = num2str(shp.dbf.DTG{inside});
+ys = str2num(ts(1:4));
+ms = str2num(ts(5:6));
+ds = str2num(ts(7:8));
+hs = str2num(ts(9:10));
 % Replace start date in the atcf downloader script
 system(['sed -i -- s/STARTDATE/' ts '/g dl_storm_atcf.sh']);
 % End of track is our end-date
-ye = shp.dbf.YEAR{end};
-me = str2num(shp.dbf.MONTH{end});
-de = shp.dbf.DAY{end};
-he = str2num(shp.dbf.HHMM{inside}(1:2));
+te = num2str(shp.dbf.DTG{end});
+ye = str2num(te(1:4));
+me = str2num(te(5:6));
+de = str2num(te(7:8));
+he = str2num(te(9:10));
 
 %% make the cold start
 

@@ -1,17 +1,21 @@
 #!/bin/bash
-# By William Pringle, Dec 2020 - Jan 2021
-# Argonne National Laboratory
-# HSOFS_Ensemble project for NOAA Office of Coast Survey
+#################################################################################
+# This script sets up the run directories and submits job script                #
+# for the desired storm number (in ALXXYYYY format)                             #
+# By William Pringle, Dec 2020 - Feb 2021                                       #
+# Argonne National Laboratory                                                   # 
+# HSOFS_Ensemble project for NOAA Office of Coast Survey                        #
+#################################################################################
 
 #################################################################################
 ############## Edit the input info here #########################################
 #################################################################################
 
 ## Enter full paths of the location of various items
-datadir="/lcrc/project/HSOFS_Ensemble/HSOFS/data/" # where station location data is located 
-execdir="/lcrc/project/HSOFS_Ensemble/HSOFS/executables/" # where the ADCIRC-related executable files are located
-scriptdir="/lcrc/project/HSOFS_Ensemble/HSOFS/scripts/" # where the various bash and MATLAB scripts are located
-meshdir="\/lcrc\/project\/HSOFS_Ensemble\/HSOFS\/mesh\/" # where mesh data is located [NOTE: this one must use back-slash before any forward slashes because it is used in a sed command]
+datadir="data/" # where station location data is located 
+execdir="exec/" # where the ADCIRC-related executable files are located
+scriptdir="common_scripts/" # where the various bash and MATLAB scripts are located
+meshdir="mesh/" # where mesh data is located [NOTE: this one must use back-slash before any forward slashes because it is used in a sed command]
 
 ## Enter script filenames
 gis_download_script="dl_storm_gis.sh" 

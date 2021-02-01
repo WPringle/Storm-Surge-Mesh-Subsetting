@@ -11,13 +11,27 @@
 ############## Edit the input info here #########################################
 #################################################################################
 
-## Enter full paths of the location of various items
+## Setting some parameters and vortex codes
+# storm names: Florence    Matthew
+vortexcodes=("al062018" "al142016") # vortex codes
+meshname="HSOFS" # name of the mesh[.mat] file
+coarsename="WNAT_1km"; # name of the coarse mesh properties[.mat] file
+explicit=true    # true for explicit, false for implicit time stepping 
+subset=true      # true for doing the mesh subset + merge
+nodes=5          # number of computational nodes
+np_per_node=36   # number of processors per computational node
+job_time="3:30:00" # time allowed for job in hh:mm:ss format
+
+# ----------------------------------------------------------------------------- #
+## Do not need to edit following unless you want to rename and move things around
+# ----------------------------------------------------------------------------- #
+# Enter location of various items
 datadir="data/" # where station location data is located 
 execdir="exec/" # where the ADCIRC-related executable files are located
 scriptdir="common_scripts/" # where the various bash and MATLAB scripts are located
 meshdir="mesh/" # where mesh data is located [NOTE: this one must use back-slash before any forward slashes because it is used in a sed command]
 
-## Enter script filenames
+# Enter script filenames
 gis_download_script="dl_storm_gis.sh" 
 atcf_download_script="dl_storm_atcf.sh" 
 make_f15_script="make_f15_vortex_and_write_mesh.m" 
@@ -25,17 +39,6 @@ subset_merge_script="subset_fine_and_merge_to_coarse.m"
 plot_mesh_script="plot_mesh.m" 
 plot_result_script="plot_max_results.m" 
 job_script="run_storm.slurm" # choose .SGE (qsub) or .slurm (sbatch)
-
-## Setting some parameters and vortex codes
-# storm names: Florence    Matthew
-vortexcodes=("al062018" "al142016") # vortex codes
-meshname="HSOFS" # name of the mesh[.mat] file
-coarsename="WNAT_1km"; # name of the coarse mesh properties[.mat] file
-explicit=true    # true for explicit, false for implicit
-subset=false     # true for doing the mesh subsett + merge
-nodes=5          # number of computational nodes
-np_per_node=36   # number of processors per computational node
-job_time="3:30:00" # time allowed for job in hh:mm:ss format
 
 #################################################################################
 ############## Scripting processes below [do not edit] ##########################

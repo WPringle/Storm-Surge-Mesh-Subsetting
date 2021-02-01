@@ -21,6 +21,7 @@ subset=true      # true for doing the mesh subset + merge
 nodes=5          # number of computational nodes
 np_per_node=36   # number of processors per computational node
 job_time="3:30:00" # time allowed for job in hh:mm:ss format
+scheduler="slurm" # choose SGE (qsub) or slurm (sbatch)
 
 # ----------------------------------------------------------------------------- #
 ## Do not need to edit following unless you want to rename and move things around
@@ -28,7 +29,7 @@ job_time="3:30:00" # time allowed for job in hh:mm:ss format
 # Enter location of various items
 datadir="data/" # where station location data is located 
 execdir="exec/" # where the ADCIRC-related executable files are located
-scriptdir="common_scripts/" # where the various bash and MATLAB scripts are located
+scriptdir="ATCF/" # where the various bash and MATLAB scripts are located
 meshdir="mesh/" # where mesh data is located [NOTE: this one must use back-slash before any forward slashes because it is used in a sed command]
 
 # Enter script filenames
@@ -38,11 +39,20 @@ make_f15_script="make_f15_vortex_and_write_mesh.m"
 subset_merge_script="subset_fine_and_merge_to_coarse.m" 
 plot_mesh_script="plot_mesh.m" 
 plot_result_script="plot_max_results.m" 
-job_script="run_storm.slurm" # choose .SGE (qsub) or .slurm (sbatch)
+job_script="run_storm."$scheduler # choose .SGE (qsub) or .slurm (sbatch)
 
 #################################################################################
 ############## Scripting processes below [do not edit] ##########################
 #################################################################################
+
+# Append pwd to the directories
+datadir=$(pwd)"/"$datadir
+execdir=$(pwd)"/"$execdir
+scriptdir=$(pwd)"/"$scriptdir
+meshdir=$(pwd)"/"$meshdir
+# modify meshdir and datadir for sed usage
+meshdir="${meshdir//\//\\/}"
+datadirsed="${datadir//\//\\/}"
 
 # compute total number of processors based on nodes and tasks per node
 np=$(( nodes*$np_per_node ))
@@ -111,16 +121,18 @@ do
       # copy over and edit mesh subset+merge script
       cp $scriptdir$subset_merge_script .     
       sed -i -- 's/MESH_DIR/'$meshdir'/g' $subset_merge_script 
+      sed -i -- 's/DATA_DIR/'$datadirsed'/g' $subset_merge_script 
       sed -i -- 's/STORMCODE/'$code'/g' $subset_merge_script 
       sed -i -- 's/MESH_STORM/'$fn'/g' $subset_merge_script 
-      sed -i -- 's/MESH/'$meshname'/g' $subset_merge_script 
+      sed -i -- 's/FINE/'$meshname'/g' $subset_merge_script 
       sed -i -- 's/COARSE/'$coarsename'/g' $subset_merge_script 
       # copy over and edit mesh plotting script
       cp $scriptdir$plot_mesh_script .     
       sed -i -- 's/STORMCODE/'$code'/g' $plot_mesh_script
       sed -i -- 's/MESH_STORM/'$fn'/g' $plot_mesh_script
    fi
-      
+   
+   # copy over and edit the result plotting script  
    cp $scriptdir$plot_result_script .     
    sed -i -- 's/STORMCODE/'$code'/g' $plot_result_script
    sed -i -- 's/MESH_STORM/'$fn'/g' $plot_result_script 
@@ -154,8 +166,7 @@ do
    sed -i -- 's/PLOTMESH/'$plot_mesh_script'/g' $new_job_script 
    sed -i -- 's/MAKEF15/'$make_f15_script'/g' $new_job_script 
    sed -i -- 's/PLOTRESULTS/'$plot_result_script'/g' $new_job_script 
-   # submission based on job scheduler
-   scheduler=${job_script: -3}
+   ## submission based on job scheduler
    if [ $scheduler = "SGE" ]; then 
       qsub $new_job_script
    else

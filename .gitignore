@@ -3,3 +3,5 @@ exec/aswip
 exec/adcprep
 exec/padcirc
 mesh/HSOFS.mat
+data/*.nc
+data/*.mat

@@ -9,7 +9,7 @@ clearvars; clc;
 %
 % add paths to data and scripts
 addpath(genpath('~/MATLAB/OceanMesh2D'))
-addpath('~/datasets/')
+addpath('DATA_DIR')
 addpath('MESH_DIR')
 %
 % Setting up the projection variables
@@ -24,7 +24,7 @@ B_filename = 'GEBCO_2020.nc';
 N_filename = 'Gridded_N_values_WOA2018_2005-2017.mat';
 %
 % Input Mesh
-fine = 'MESH';
+fine = 'FINE';
 % Input Coarse Mesh Property
 coarse  = 'COARSE';
 

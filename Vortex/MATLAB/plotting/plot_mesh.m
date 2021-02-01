@@ -34,6 +34,7 @@ outname = 'MESH_STORM';
 
 % Load the mesh
 load([outname '.mat'])
+ms_poly_vec = fine_poly.Vertices;
 
 % Get the bbox from the ms subset polygon
 bou = [min(ms_poly_vec)' max(ms_poly_vec)'];

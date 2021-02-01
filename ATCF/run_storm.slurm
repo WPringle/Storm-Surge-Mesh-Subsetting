@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=MESH_STORM
-#SBATCH --account=HSOFS_Ensemble
-#SBATCH --partition=bdwall
+#SBATCH --account=ACCNT
+#SBATCH --partition=PARTN
 #SBATCH --nodes=NODES
 #SBATCH --ntasks-per-node=NTPN
 #SBATCH --output=MESH_STORM.out

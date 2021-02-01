@@ -21,6 +21,8 @@ subset=true      # true for doing the mesh subset + merge
 nodes=5          # number of computational nodes
 np_per_node=36   # number of processors per computational node
 job_time="3:30:00" # time allowed for job in hh:mm:ss format
+account="HSOFS_Ensemble" # account name for job submission
+partition="bdwall" # optional compute partition selection
 scheduler="slurm" # choose SGE (qsub) or slurm (sbatch)
 
 # ----------------------------------------------------------------------------- #
@@ -159,6 +161,8 @@ do
    sed -i -- 's/NTPN/'$np_per_node'/g' $new_job_script 
    sed -i -- 's/HH:MM:SS/'$job_time'/g' $new_job_script 
    sed -i -- 's/MESH_STORM/'$fn'/g' $new_job_script 
+   sed -i -- 's/ACCNT/'$account'/g' $new_job_script 
+   sed -i -- 's/PARTN/'$partition'/g' $new_job_script 
    sed -i -- 's/DLGIS/'$gis_download_script'/g' $new_job_script  
    sed -i -- 's/DLATCF/'$atcf_download_script'/g' $new_job_script  
    sed -i -- 's/SUBSET/'$subset'/g' $new_job_script 

@@ -1,4 +1,4 @@
-# Add the datasources here, includes:
+## Add the following data sources here:
 - elev_sta.151 station location files
 - GEBCO_2020.nc bathymetry (or other file but need to change this in subset script)
 - additional data sources not yet required

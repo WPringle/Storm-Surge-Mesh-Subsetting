@@ -74,3 +74,6 @@ matlab -nosplash -nodesktop -nodisplay < PLOTRESULTS
 
 # exit with end date
 date >> run.timing
+
+# delete the unnecessary PE directories
+rm -r PE*

@@ -174,6 +174,7 @@ m.mapvar = MAP_VAR_LIST;
 %if ~isempty(ms.bd) && any(ms.bd.ibtype == 24)
 %    m = carryoverweirs(m,ms);
 %end
+m = m.clean('passive','djc',0.25,'con',0);
 
 %% Add on open bc, bathy, and recompute global f13 attributes
 tic

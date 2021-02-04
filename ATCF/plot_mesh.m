@@ -36,7 +36,7 @@ outname = 'MESH_STORM';
 load([outname '.mat'])
 ms_poly_vec = fine_poly.Vertices;
 
-% Get the bbox from the ms subset polygon
+% Get the bbox from the ms subdomain polygon
 bou = [min(ms_poly_vec)' max(ms_poly_vec)'];
 
 % Making buffer for plot
@@ -47,21 +47,21 @@ bou_buff(:,2) = bou(:,2) + buff;
 mkdir('Figs/')
 outname = ['Figs/' outname];
 
-%% Plot mesh subsets
+%% Plot mesh subdomains
 % Plot the mesh quality
-plot(m,'type','qual','subset',bou_buff);
+plot(m,'type','qual','subdomain',bou_buff);
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'g--','linew',bw);
 m_plot(track(:,1),track(:,2),'g-','linew',tw);
 print([outname '_meshqual.png'],figres,'-dpng')
 
 % Plot the mesh reolution
-plot(m,'type','resomeshlog','subset',bou_buff);
+plot(m,'type','resomeshlog','subdomain',bou_buff);
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'k--','linew',bw);
 m_plot(track(:,1),track(:,2),'k-','linew',tw);
 print([outname '_resomesh.png'],figres,'-dpng')
 
 % Plot the bathy
-plot(m,'type','b','subset',bou_buff,'colormap',[11 -10 100]);
+plot(m,'type','b','subdomain',bou_buff,'colormap',[11 -10 100]);
 m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'r--','linew',bw);
 m_plot(track(:,1),track(:,2),'r-','linew',tw);
 print([outname '_bathy.png'],figres,'-dpng')

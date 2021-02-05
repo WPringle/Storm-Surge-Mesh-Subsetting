@@ -120,7 +120,10 @@ m.f15.outge = [0 0 0 0];
 m.f15.outgv = [0 0 0 0]; 
 % station elevation output
 m.f15.oute =  [5 0 m.f15.rndy floor(outs*60/m.f15.dtdp)]; 
-m.f15.nstae = -128;
+fid = fopen('elev_stat.151');
+nsta = textscan(fgetl(fid),'%d');
+m.f15.nstae = -nsta{1};
+fclose(fid);
 rndy = m.f15.rndy;
 m.f15.rndy = spinupdays;
 

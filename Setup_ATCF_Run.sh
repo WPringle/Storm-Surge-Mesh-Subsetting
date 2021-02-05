@@ -34,6 +34,9 @@ execdir="exec/" # where the ADCIRC-related executable files are located
 scriptdir="ATCF/" # where the various bash and MATLAB scripts are located
 meshdir="mesh/" # where mesh data is located [NOTE: this one must use back-slash before any forward slashes because it is used in a sed command]
 
+# Enter data names
+stafile="us-east-gulf_sta.128"
+
 # Enter script filenames
 gis_download_script="dl_storm_gis.sh" 
 atcf_download_script="dl_storm_atcf.sh" 
@@ -103,7 +106,7 @@ do
    ln -s $fn".24" fort.24
    ln -s $fn".14" fort.14
    ln -s $fn".13" fort.13
-   ln -s $datadir"elev_stat.151" .
+   ln -s $datadir$stafile elev_stat.151
    ln -s $execdir"adcprep" .
    ln -s $execdir"padcirc" .
    ln -s $execdir"aswip" .

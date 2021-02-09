@@ -39,6 +39,11 @@ if SUBSET; then
 
    date >> run.timing
 fi
+
+# Reading and writing the station data
+if READDATA; then
+   python STADATA write
+fi
    
 # Running the make new f15 script
 matlab -nosplash -nodesktop -nodisplay < MAKEF15 
@@ -50,27 +55,31 @@ date >> run.timing
 
 date >> run.timing
 
-## Setup cold start
+## COLDSTART
+# Prepping coldstart
 ln -s MESH_STORM_CS.15 fort.15
 ./run_adcprep-all.sh
 
-## Run My Program
+# Run the coldstart
 srun -n NP ./padcirc
 
 date >> run.timing
 
-# Setup hot start
+## HOTSTART
+# Prepping hotstart
 rm fort.15
 ln -s MESH_STORM_HS.15 fort.15
 ./run_adcprep-15.sh
 
-## Run My Program
+# Run the hotstart
 srun -n NP ./padcirc
 
 date >> run.timing
 
-# Running the make new f15 script
+# Plotting the figures
 matlab -nosplash -nodesktop -nodisplay < PLOTRESULTS 
+
+python STADATA plot
 
 # exit with end date
 date >> run.timing

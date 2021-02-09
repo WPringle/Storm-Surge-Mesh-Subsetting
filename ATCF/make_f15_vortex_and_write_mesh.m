@@ -96,10 +96,13 @@ m.f15.extraline(6).msg = 'Tide Only';
 m.f15.nramp = 1;
 m.f15.dramp = rampdays;
 
+% rundays
+rndy = m.f15.rndy;
+m.f15.rndy = spinupdays;
+
 % numerical parameters
 m.f15.ics = 22;
 m.f15.elsm = -0.2;
-
 if explicit
   m.f15.im = 511112;
   m.f15.tau0 = -3;
@@ -119,13 +122,21 @@ m.f15.outhar_flag = [0 0 0 0];
 m.f15.outge = [0 0 0 0]; 
 m.f15.outgv = [0 0 0 0]; 
 % station elevation output
-m.f15.oute =  [5 0 m.f15.rndy floor(outs*60/m.f15.dtdp)]; 
 fid = fopen('elev_stat.151');
-nsta = textscan(fgetl(fid),'%d');
-m.f15.nstae = -nsta{1};
-fclose(fid);
-rndy = m.f15.rndy;
-m.f15.rndy = spinupdays;
+if fid > -1
+   nsta = textscan(fgetl(fid),'%d');
+   m.f15.nstae = -nsta{1};
+   m.f15.oute =  [5 0 m.f15.rndy floor(outs*60/m.f15.dtdp)]; 
+   fclose(fid);
+end
+% met station output
+%fid = fopen('met_stat.151');
+%if fid > -1
+%   nsta = textscan(fgetl(fid),'%d');
+%   m.f15.nstam = -nsta{1};
+%   m.f15.outm =  [5 0 m.f15.rndy floor(outs*60/m.f15.dtdp)]; 
+%   fclose(fid);
+%end
 
 % set hotstart output
 m.f15.nhstar = [-5 floor(spinupdays*24*3600/m.f15.dtdp)];
@@ -144,9 +155,15 @@ m.f15.wtimnc = [year(TS) month(TS) day(TS) hour(TS) 1 BLAdj geofactor];
 m.f15.rndy = rndy;
 
 % elevation output
-m.f15.oute =  [5 spinupdays m.f15.rndy floor(outs*60/m.f15.dtdp)]; 
+if m.f15.nstae ~= 0
+   m.f15.oute =  [5 spinupdays m.f15.rndy floor(outs*60/m.f15.dtdp)]; 
+end
 m.f15.outge = [5 spinupdays m.f15.rndy floor(outg*3600/m.f15.dtdp)]; 
-% met output
+% met output - currently has problem because of coldstart has no met
+% and therefore requires full re-prepping for station mapping
+%if m.f15.nstam ~= 0
+%   m.f15.outm =  [5 spinupdays m.f15.rndy floor(outs*60/m.f15.dtdp)]; 
+%end
 m.f15.outgm = [5 spinupdays m.f15.rndy floor(outg*3600/m.f15.dtdp)]; 
 
 % metadata

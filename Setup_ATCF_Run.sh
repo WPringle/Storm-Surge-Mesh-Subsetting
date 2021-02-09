@@ -13,11 +13,12 @@
 
 ## Setting some parameters and vortex codes
 # storm names: Florence    Matthew
-vortexcodes=("al062018" "al142016") # vortex codes
+vortexcodes=("al062018") # "al142016") # vortex codes
 meshname="HSOFS" # name of the mesh[.mat] file
 coarsename="WNAT_1km"; # name of the coarse mesh properties[.mat] file
 explicit=true    # true for explicit, false for implicit time stepping 
-subset=true      # true for doing the mesh subset + merge
+subset=false     # true for doing the mesh subset + merge
+readdata=true    # true for using the python station data reader/writer
 nodes=5          # number of computational nodes
 np_per_node=36   # number of processors per computational node
 job_time="3:30:00" # time allowed for job in hh:mm:ss format
@@ -26,7 +27,7 @@ partition="bdwall" # optional compute partition selection
 scheduler="slurm" # choose SGE (qsub) or slurm (sbatch)
 
 # ----------------------------------------------------------------------------- #
-## Do not need to edit following unless you want to rename and move things around
+# Do not need to edit following unless you want to rename and move things around
 # ----------------------------------------------------------------------------- #
 # Enter location of various items
 datadir="data/" # where station location data is located 
@@ -35,7 +36,7 @@ scriptdir="ATCF/" # where the various bash and MATLAB scripts are located
 meshdir="mesh/" # where mesh data is located [NOTE: this one must use back-slash before any forward slashes because it is used in a sed command]
 
 # Enter data names
-stafile="us-east-gulf_sta.128"
+#stafile="us-east-gulf_sta.128"
 
 # Enter script filenames
 gis_download_script="dl_storm_gis.sh" 
@@ -44,6 +45,7 @@ make_f15_script="make_f15_vortex_and_write_mesh.m"
 subset_merge_script="subset_fine_and_merge_to_coarse.m" 
 plot_mesh_script="plot_mesh.m" 
 plot_result_script="plot_max_results.m" 
+data_reader="read_data.py" 
 job_script="run_storm."$scheduler # choose .SGE (qsub) or .slurm (sbatch)
 
 #################################################################################
@@ -106,7 +108,6 @@ do
    ln -s $fn".24" fort.24
    ln -s $fn".14" fort.14
    ln -s $fn".13" fort.13
-   ln -s $datadir$stafile elev_stat.151
    ln -s $execdir"adcprep" .
    ln -s $execdir"padcirc" .
    ln -s $execdir"aswip" .
@@ -114,7 +115,16 @@ do
    cp $scriptdir"run_adcprep-all.sh" .
    cp $scriptdir"run_adcprep-15.sh" .
    sed -i -- 's/NP/'$np'/g' run_adcprep*.sh  
-   
+  
+   # link the station file or copy over the data reader
+   if $readdata; then
+      cp $scriptdir$data_reader .
+      sed -i -- 's/STORMCODE/'$code'/g' $data_reader  
+      sed -i -- 's/DATA_DIR/'$datadirsed'/g' $data_reader 
+   else
+      ln -s $datadir$stafile elev_stat.151
+   fi
+
    # copy over and configure the GIS and ALCF download scripts
    cp $scriptdir$gis_download_script .     
    sed -i -- 's/STORMCODE/'$code'/g' $gis_download_script  
@@ -173,7 +183,9 @@ do
    sed -i -- 's/PLOTMESH/'$plot_mesh_script'/g' $new_job_script 
    sed -i -- 's/MAKEF15/'$make_f15_script'/g' $new_job_script 
    sed -i -- 's/PLOTRESULTS/'$plot_result_script'/g' $new_job_script 
-   ## submission based on job scheduler
+   sed -i -- 's/READDATA/'$readdata'/g' $new_job_script 
+   sed -i -- 's/STADATA/'$data_reader'/g' $new_job_script 
+   # submission based on job scheduler
    if [ $scheduler = "SGE" ]; then 
       qsub $new_job_script
    else

@@ -18,7 +18,7 @@ meshname="HSOFS" # name of the mesh[.mat] file
 coarsename="WNAT_1km"; # name of the coarse mesh properties[.mat] file
 explicit=true    # true for explicit, false for implicit time stepping 
 subset=false     # true for doing the mesh subset + merge
-readdata=true    # true for using the python station data reader/writer
+readdata=true    # true for using the python station data reader/writer/plotter
 nodes=5          # number of computational nodes
 np_per_node=36   # number of processors per computational node
 job_time="3:30:00" # time allowed for job in hh:mm:ss format
@@ -45,7 +45,8 @@ make_f15_script="make_f15_vortex_and_write_mesh.m"
 subset_merge_script="subset_fine_and_merge_to_coarse.m" 
 plot_mesh_script="plot_mesh.m" 
 plot_result_script="plot_max_results.m" 
-data_reader="read_data.py" 
+plot_sta_script="plot_timeseries.m" 
+sta_data_script="station_data.py" 
 job_script="run_storm."$scheduler # choose .SGE (qsub) or .slurm (sbatch)
 
 #################################################################################
@@ -118,9 +119,9 @@ do
   
    # link the station file or copy over the data reader
    if $readdata; then
-      cp $scriptdir$data_reader .
-      sed -i -- 's/STORMCODE/'$code'/g' $data_reader  
-      sed -i -- 's/DATA_DIR/'$datadirsed'/g' $data_reader 
+      cp $scriptdir$sta_data_script .
+      sed -i -- 's/STORMCODE/'$code'/g' $sta_data_script
+      sed -i -- 's/DATA_DIR/'$datadirsed'/g' $sta_data_script
    else
       ln -s $datadir$stafile elev_stat.151
    fi
@@ -151,6 +152,7 @@ do
    cp $scriptdir$plot_result_script .     
    sed -i -- 's/STORMCODE/'$code'/g' $plot_result_script
    sed -i -- 's/MESH_STORM/'$fn'/g' $plot_result_script 
+   cp $scriptdir$plot_sta_script .     
       
    # copy over and edit make fort.15 and write mesh script
    cp $scriptdir$make_f15_script .     
@@ -183,8 +185,9 @@ do
    sed -i -- 's/PLOTMESH/'$plot_mesh_script'/g' $new_job_script 
    sed -i -- 's/MAKEF15/'$make_f15_script'/g' $new_job_script 
    sed -i -- 's/PLOTRESULTS/'$plot_result_script'/g' $new_job_script 
+   sed -i -- 's/PLOTSTA/'$plot_sta_script'/g' $new_job_script 
    sed -i -- 's/READDATA/'$readdata'/g' $new_job_script 
-   sed -i -- 's/STADATA/'$data_reader'/g' $new_job_script 
+   sed -i -- 's/STADATA/'$sta_data_script'/g' $new_job_script 
    # submission based on job scheduler
    if [ $scheduler = "SGE" ]; then 
       qsub $new_job_script

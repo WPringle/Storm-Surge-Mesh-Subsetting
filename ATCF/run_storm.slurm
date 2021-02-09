@@ -79,7 +79,8 @@ date >> run.timing
 # Plotting the figures
 matlab -nosplash -nodesktop -nodisplay < PLOTRESULTS 
 
-python STADATA plot
+matlab -nosplash -nodesktop -nodisplay < PLOTSTA 
+#python STADATA plot
 
 # exit with end date
 date >> run.timing

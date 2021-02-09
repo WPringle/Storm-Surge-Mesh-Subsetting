@@ -36,11 +36,6 @@ t = t/3600/24 + tss;
 height = ncread(sta_ele,'zeta')';
 staname = string(strtrim(ncread(sta_ele,'station_name')'));
 
-%sta_ele = 'fort_2.61.nc';
-%t2 = ncread(sta_ele,'time');
-%t2 = t2/3600/24 + tss;
-%h2 = ncread(sta_ele,'zeta')';
-
 coops_ts = ['begin_date=' datestr(t(1),'YYYYmmdd HH:00')]
 coops_te = ['end_date=' datestr(t(end),'YYYYmmdd HH:00')]
 
@@ -50,23 +45,16 @@ for ii = 1:size(height,2)
    disp(staname{ii})
    obs_avail = false;
    hold on
-   % download and plot NOAA data, if available 
-   if ~strcmp(staname{ii}(1:2),'UH')
-      % NOAA ID
-      space = strfind(staname{ii},' ');
-      id = staname{ii}(space(2)+1:space(3)-1);
-      coops_sta = ['station=' id];
-      url = [coops_pre coops_ts '&' coops_te '&' coops_tz '&' coops_dat '&' ...
-             coops_for '&' coops_pro '&' coops_uni '&' coops_sta];
-      try 
-        T = webread(url,options);
-        plot(T.DateTime,T.WaterLevel,'k-'); hold on
-        legend(runs)
-        obs_avail = true; 
-      end
+   % NOAA ID
+   coops_sta = ['station=' staname{ii}];
+   url = [coops_pre coops_ts '&' coops_te '&' coops_tz '&' coops_dat '&' ...
+          coops_for '&' coops_pro '&' coops_uni '&' coops_sta];
+   try 
+     T = webread(url,options);
+     plot(T.DateTime,T.WaterLevel,'k-'); hold on
+     obs_avail = true; 
    end
    plot(t,height(:,ii));
-   %plot(t2,h2(:,ii))
    if obs_avail
       legend(runs) 
    else

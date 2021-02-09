@@ -43,10 +43,40 @@ def read_csv(obs_dir, name, label):
     
 	
 def read_fort61(name):
- 
+
     ds = nc.Dataset(name) 
+    h = ds.variables['zeta']
+    stations = ds.variables['station_name']
+    times = ds.variables['time']
+    #datetime = nc.num2date(round_seconds(times),times.units)
+    datetime = set_time(times)
+    #print(datetime)
+    data = []
+    for sta in range(len(stations)):
+       df = pd.Series(h[:,sta],index=datetime)
+       data.append(df)
     # need to make dataframe type
-    return ds
+    return data
+
+def set_time(time):
+    '''
+        Converts time data into a pandas date object.
+
+        Parameters
+        ----------
+        time: netcdf
+            Contains time information.
+
+        Returns
+        -------
+        pandas.DatetimeIndex
+    '''
+    times = nc.num2date(time[:].squeeze(), time.units,
+                     only_use_cftime_datetimes=False,
+                     only_use_python_datetimes=True)
+    time = pd.DatetimeIndex(pd.Series(times)) #, tz=self.location.tz) 
+    return time
+
 	
 def write_sta(table, name):
     """
@@ -57,23 +87,24 @@ def write_sta(table, name):
     table.to_csv(name, header=[table.shape[0],'',''], sep='\t', index=False, columns=['lon','lat','station_code'])    
 
 
-def plot_sta(obs, mod):
+def plot_sta(obs, mod, sta_dat):
     """
       Plots the observed time series versus the simulated one
 
     """
     
     # loop over all the stations and make new figs
-    for ind in range(len(obs)):
-       print("plotting new sta")
-       # plot the obs
-       ax = obs[ind].plot()
+    for ind in range(len(sta_dat)):
+       sta_code = sta_dat.station_code[ind]
+       print("Plotting Station: " + sta_code)
        # plot the mod
-       #mod[ind].plot() 
+       ax = mod[ind].plot() 
+       # plot the obs
+       obs[ind].plot()
        
        # save and close the figure 
        fig = ax.get_figure()
-       fig.savefig(str(ind) + '.png')
+       fig.savefig('Figs/' + sta_code + '.png')
        matplotlib.pyplot.close(fig)
 	
 if __name__ == "__main__":
@@ -93,4 +124,4 @@ if __name__ == "__main__":
        write_sta (wnd_obs_table, 'met_stat.151')    
     elif sys.argv[1] == 'plot':
        ssh_adc = read_fort61 ('fort.61.nc')
-       plot_sta(ssh_obs, ssh_adc) 
+       plot_sta(ssh_obs, ssh_adc, ssh_table) 

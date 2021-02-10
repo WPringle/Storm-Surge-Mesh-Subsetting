@@ -46,7 +46,7 @@ OceanMesh2D:
 ADCIRC V55:
 - Pringle, W. J., Wirasaet, D., Roberts, K. J., and Westerink, J. J., 2020.
       Global Storm Tide Modeling with ADCIRC v55: Unstructured Mesh Design and Performance,
-      Geoscientific Model Development Discussions. https://doi.org/10.5194/gmd-2020-123.
+      Geoscientific Model Development, accepted. https://doi.org/10.5194/gmd-2020-123.
 ```
 
 GALLERY:
@@ -65,12 +65,12 @@ Changelog
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-### Unreleased
+## Unreleased
 
-## Added
+### Added
 
-## Changed
+### Changed
 
-## Fixed
+### Fixed
 
-## Deleted
+### Deleted

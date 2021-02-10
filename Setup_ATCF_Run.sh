@@ -13,11 +13,11 @@
 
 ## Setting some parameters and vortex codes
 # storm names: Florence    Matthew
-vortexcodes=("al062018") # "al142016") # vortex codes
+vortexcodes=("al062018" "al142016") # vortex codes
 meshname="HSOFS" # name of the mesh[.mat] file
 coarsename="WNAT_1km"; # name of the coarse mesh properties[.mat] file
 explicit=true    # true for explicit, false for implicit time stepping 
-subset=false     # true for doing the mesh subset + merge
+subset=true      # true for doing the mesh subset + merge
 readdata=true    # true for using the python station data reader/writer/plotter
 nodes=5          # number of computational nodes
 np_per_node=36   # number of processors per computational node
@@ -152,6 +152,7 @@ do
    cp $scriptdir$plot_result_script .     
    sed -i -- 's/STORMCODE/'$code'/g' $plot_result_script
    sed -i -- 's/MESH_STORM/'$fn'/g' $plot_result_script 
+   sed -i -- 's/DATA_DIR/'$datadirsed'/g' $plot_result_script
    cp $scriptdir$plot_sta_script .     
       
    # copy over and edit make fort.15 and write mesh script

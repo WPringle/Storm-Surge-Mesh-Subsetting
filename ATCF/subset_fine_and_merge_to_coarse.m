@@ -62,9 +62,9 @@ bb = [min(min(m.p)',min(mc.p)') max(max(m.p)',max(mc.p)')];
 m_proj('lam','lon',bb(1,:),'lat',bb(2,:))
 
 % Get mesh boundaries and turn into polyshapes 
-fine_vec = getBoundaryOfMesh(m);
+fine_vec = get_boundary_of_mesh(m);
 fine_poly = polyshape(fine_vec,'KeepCollinearPoints',KCP);
-coarse_vec = getBoundaryOfMesh(mc);
+coarse_vec = get_boundary_of_mesh(mc);
 coarse_poly = polyshape(coarse_vec,'KeepCollinearPoints',KCP);
 clear fine_vec coarse_vec
      
@@ -117,14 +117,14 @@ intersect_vec(end+1,:) = [NaN NaN]; % add NaN to end to avoid inpoly error
 [m,ind] = extract_subdomain(m,intersect_vec,...
             'centroid',centroid,'max_depth',deep_water);
 % Map mesh properties
-m = map_mesh_properties(m,ind);
+m = map_mesh_properties(m,'ind',ind);
 % clean the mesh to remove disjoint nodes and make sure it is traversable
 m = m.clean('passive','proj',0,'con',0);
 clear intersect_poly intersect_vec
 
 %% Perform polygon arithmetic (2)
 % 1) Find new polygon of the fine mesh
-fine_vec = getBoundaryOfMesh(m);
+fine_vec = get_boundary_of_mesh(m);
 fine_poly = polyshape(fine_vec,'KeepCollinearPoints',KCP);
 clear fine_vec
 % 2) Subtract the intersection polygon from the coarse poly

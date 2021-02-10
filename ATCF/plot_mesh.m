@@ -66,11 +66,14 @@ m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'r--','linew',bw);
 m_plot(track(:,1),track(:,2),'r-','linew',tw);
 print([outname '_bathy.png'],figres,'-dpng')
 
-% Plot the bottom friction
-%plot(m,'quad',1,[],bou_buff);
-%m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'k--','linew',bw);
-%m_plot(track(:,1),track(:,2),'k-','linew',tw);
-%print([outname '_botfric.png'],figres,'-dpng')
+% Plot the f13 attributes
+for ii = 1:m.f13.nAttr
+   attname = m.f13.defval.Atr(ii).AttrName; 
+   plot(m,'type',attname,'subdomain',bou_buff);
+   m_plot(ms_poly_vec(:,1),ms_poly_vec(:,2),'k--','linew',bw);
+   m_plot(track(:,1),track(:,2),'k-','linew',tw);
+   print([outname '_' attname '.png'],figres,'-dpng')
+end
 
 %% Plot full mesh
 % Plot the triangulation with boundaries

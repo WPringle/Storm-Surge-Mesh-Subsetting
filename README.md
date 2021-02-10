@@ -53,9 +53,9 @@ GALLERY:
 =========
 
 <p align="center">
-  <img src = "imgs/FlorenceBathy.png"> &nbsp &nbsp &nbsp &nbsp
-  <img src = "imgs/FlorenceMeshReso.png"> &nbsp &nbsp &nbsp &nbsp
-  <img src = "imgs/FlorenceMaxEle.png"> &nbsp &nbsp &nbsp &nbsp
+  <img src = "imgs/Florence_maxele.png"> &nbsp &nbsp &nbsp &nbsp
+  <img src = "imgs/Florence_bathy.png"> &nbsp &nbsp &nbsp &nbsp
+  <img src = "imgs/Florence_meshreso.png"> &nbsp &nbsp &nbsp &nbsp
 </p>
 
 Changelog

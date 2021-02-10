@@ -55,7 +55,7 @@ GALLERY:
 <p align="center">
   <img src = "imgs/Florence_maxele.png"> &nbsp &nbsp &nbsp &nbsp
   <img src = "imgs/Florence_bathy.png"> &nbsp &nbsp &nbsp &nbsp
-  <img src = "imgs/Florence_meshreso.png"> &nbsp &nbsp &nbsp &nbsp
+  <img src = "imgs/Florence_resomesh.png"> &nbsp &nbsp &nbsp &nbsp
 </p>
 
 Changelog

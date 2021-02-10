@@ -23,9 +23,9 @@ Starting Out
 
 NB: currently ATCF one is the most mature and likely to work correctly in the current directory setup
 
-## Probably also need to edit job script located inside one of ATCF, NAM or NDFD directories to make sure the correct modules are loaded for your system 
+### Probably also need to edit job script located inside one of ATCF, NAM or NDFD directories to make sure the correct modules are loaded for your system 
 
-## Look at the readmes inside the data, mesh, and exec directories to see what you need to add in each of these directories
+### Look at the readmes inside the data, mesh, and exec directories to see what you need to add in each of these directories
 
 Requirements
 ==============

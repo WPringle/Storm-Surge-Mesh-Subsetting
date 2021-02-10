@@ -53,11 +53,9 @@ GALLERY:
 =========
 
 <p align="center">
-  <img src = "imgs/VizGilgo.png"> &nbsp &nbsp &nbsp &nbsp
-  <img src = "imgs/Example1.png"> &nbsp &nbsp &nbsp &nbsp
-  <img src = "imgs/nesting.png"> &nbsp &nbsp &nbsp &nbsp
-  <img src = "imgs/ResoNA.png"> &nbsp &nbsp &nbsp &nbsp
-  <img src = "imgs/Globalocean.jpg"> &nbsp &nbsp &nbsp &nbsp
+  <img src = "imgs/FlorenceBathy.png"> &nbsp &nbsp &nbsp &nbsp
+  <img src = "imgs/FlorenceMeshReso.png"> &nbsp &nbsp &nbsp &nbsp
+  <img src = "imgs/FlorenceMaxEle.png"> &nbsp &nbsp &nbsp &nbsp
 </p>
 
 Changelog

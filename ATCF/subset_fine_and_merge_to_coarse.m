@@ -46,7 +46,8 @@ afrac = 0.5;   % max allowable fraction of the fine mesh to append to TC
                % swath and fine mesh intersection polygon if cut off 
 KCP = false;   % keep collinear points when making polyshape?
 bathy_gradient_limit = 0.1; % the allowable gradient of bathymetry
-maxlon = -63;    % maximum longitude allowed for start of storm
+maxlon = -63;    % maximum longitude allowed for storm track
+minlat = +17.5;  % minimum latitude allowed for storm track
 
 %% Load the meshes, compute new projection extents,
 %% get outer mesh boundary polygons
@@ -56,6 +57,8 @@ mc = load(coarse); mc = mc.m;
 load(fine)
 % For now just remove bcs but in future need to keep weirs
 m.bd = []; m.op = []; 
+% Find the minimum CFL of the mesh we need to satisfy
+DT = min(CalcCFL(m));
 
 % Add Lambert projection based on maximum extents of both meshes
 bb = [min(min(m.p)',min(mc.p)') max(max(m.p)',max(mc.p)')];
@@ -87,6 +90,7 @@ end
 % make sure only keep longitudes less than maxlon 
 % (hoping that polyshape cleans up the polygon)
 swath_vec(swath_vec(:,1) > maxlon,1) = maxlon;
+swath_vec(swath_vec(:,2) < minlat,2) = minlat;
 swath_poly = polyshape(swath_vec);
 clear shp swath_vec
 
@@ -193,5 +197,9 @@ m = lim_bathy_slope(m,bathy_gradient_limit,-1);
 m = Calc_tau0(m);
 % recompute the internal tide using N_filename data
 %m = Calc_IT_Fric(m,N_filename,'cutoff_depth',250,'Cit',2.75);
+
+% Make sure CFL satisfies at least that of the original mesh
+m = m.bound_courant_number(DT,1);
+
 % save the mesh
 save([outname '.mat'],'m','fine_poly');

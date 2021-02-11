@@ -29,7 +29,8 @@ outg = 3;        % global elevation output interval [hours]
 outs = 12;       % station elevation output interval [min]
 BLAdj = 0.9;     % wind speed adjustment factor to the boundary layer
 geofactor = 1;   % geofactor is one to consider Coriolis effect
-maxlon = -63;    % maximum longitude allowed for start of storm
+maxlon = -63;    % maximum longitude allowed for storm track
+minlat = +17.5;  % minimum latitude allowed for storm track
 
 %% Get the storm start/end times from the downloaded GIS track
 % Input Storm Track
@@ -41,8 +42,9 @@ catch
    shp = m_shaperead(trackfile);
 end
 track = cell2mat(shp.ncst);
-% Find where first enters domain (lon is less than our maxlon variable)
-inside = find(track(:,1) < maxlon,1,'first');
+% Find where first enters domain 
+% (lon is less than maxlon, lat is more than minlat)
+inside = find(track(:,1) < maxlon & track(:,2) > minlat,1,'first');
 % This is our start-date
 ts = num2str(shp.dbf.DTG{inside});
 ys = str2num(ts(1:4));
@@ -104,15 +106,18 @@ m.f15.rndy = spinupdays;
 m.f15.ics = 22;
 m.f15.elsm = -0.2;
 if explicit
-  m.f15.im = 511112;
-  m.f15.tau0 = -3;
-  m.f15.a00b00c00 = [0 1.0 0];
+   m.f15.im = 511112;
+   m.f15.tau0 = -3;
+   m.f15.a00b00c00 = [0 1.0 0];
 else
-  m = Calc_tau0(m,'opt',DT,'kappa',0.5);
-  m.f15.im = 511113;
-  ind = find(contains({m.f13.defval.Atr(:).AttrName},'primitive'));
-  m.f15.AttrName(ind) = [];
-  m.f15.nwp = length(m.f15.AttrName);
+   m = Calc_tau0(m,'opt',DT,'kappa',0.5);
+   m.f15.im = 511113;
+   ind = find(contains({m.f15.AttrName.name},'primitive'));
+   m.f15.AttrName(ind) = [];
+   m.f15.nwp = length(m.f15.AttrName);
+end
+if any(contains({m.f15.AttrName.name},'mann'))
+   m.f15.taucf = 1e-3; %lower limit for manning's
 end
 
 % tidal harmonic output 

@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:9751401
+station_name,"Lime Tree Bay. St. Croix, VI"
+station_code,9751401
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:9751401:C1
+lon,-64.7538
+lat,17.6947
+depth,
+standard_name,wind_speed
+units,m/s

@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:44041
+station_name,"Jamestown, VA"
+station_code,44041
+sensor,urn:ioos:sensor:wmo:44041::anemometer1
+lon,-76.785
+lat,37.211999999999996
+depth,-3.0

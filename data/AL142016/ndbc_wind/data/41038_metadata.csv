@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41038
+station_name,"Wrightsville Beach Nearshore, NC (ILM2)"
+station_code,41038
+sensor,urn:ioos:sensor:wmo:41038::anemometer1
+lon,-77.715
+lat,34.141
+depth,-2.95

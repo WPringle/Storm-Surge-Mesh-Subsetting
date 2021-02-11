@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:clbf1
+station_name,"Clam Bayou, FL"
+station_code,clbf1
+sensor,urn:ioos:sensor:wmo:clbf1::anemometer1
+lon,-82.686
+lat,27.736
+depth,-11.0

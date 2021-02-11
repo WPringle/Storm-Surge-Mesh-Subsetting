@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41041
+station_name,NORTH EQUATORIAL TWO - 890 NM East of Martinique
+station_code,41041
+sensor,urn:ioos:sensor:wmo:41041::anemometer1
+lon,-46.093
+lat,14.311
+depth,-4.1

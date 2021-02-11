@@ -1,0 +1,10 @@
+,0
+lon,-75.746700000000004
+station_code,8651370
+standard_name,wind_speed
+units,m/s
+depth,
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8651370
+lat,36.183300000000003
+station_name,"Duck, NC"
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8651370:C1

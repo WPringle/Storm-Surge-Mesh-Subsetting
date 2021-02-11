@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8726724
+station_name,"Clearwater Beach, FL"
+station_code,8726724
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8726724:A1
+lon,-82.8317
+lat,27.9783
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

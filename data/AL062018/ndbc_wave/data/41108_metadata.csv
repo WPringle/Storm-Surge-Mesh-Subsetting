@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41108
+station_name,"Wilmington Harbor, NC - (200)"
+station_code,41108
+sensor,urn:ioos:sensor:wmo:41108::summarywav1
+lon,-78.015
+lat,33.721
+depth,

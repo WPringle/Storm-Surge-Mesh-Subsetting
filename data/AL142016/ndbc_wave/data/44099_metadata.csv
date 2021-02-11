@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:44099
+station_name,"Cape Henry, VA (147)"
+station_code,44099
+sensor,urn:ioos:sensor:wmo:44099::summarywav1
+lon,-75.72
+lat,36.914
+depth,

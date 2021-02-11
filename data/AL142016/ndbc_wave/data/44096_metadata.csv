@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:44096
+station_name,"Cape Charles, VA (186)"
+station_code,44096
+sensor,urn:ioos:sensor:wmo:44096::summarywav1
+lon,-75.809
+lat,37.023
+depth,

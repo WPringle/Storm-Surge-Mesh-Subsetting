@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:9751639
+station_name,"Charlotte Amalie, VI"
+station_code,9751639
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:9751639:Y1
+lon,-64.9258
+lat,18.3472
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

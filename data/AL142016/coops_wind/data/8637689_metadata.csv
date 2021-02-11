@@ -1,0 +1,10 @@
+,0
+lon,-76.478800000000007
+station_code,8637689
+standard_name,wind_speed
+units,m/s
+depth,
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8637689
+lat,37.226500000000001
+station_name,"Yorktown USCG Training Center, VA"
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8637689:C1

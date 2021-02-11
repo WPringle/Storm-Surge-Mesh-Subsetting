@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:44072
+station_name,"York Spit, VA"
+station_code,44072
+sensor,urn:ioos:sensor:wmo:44072::anemometer1
+lon,-76.266
+lat,37.201
+depth,-3.0

@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:9759938
+station_name,"Mona Island, PR"
+station_code,9759938
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:9759938:N1
+lon,-67.9385
+lat,18.0899
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

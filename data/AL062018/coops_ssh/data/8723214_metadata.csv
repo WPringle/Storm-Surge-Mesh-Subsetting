@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8723214
+station_name,"Virginia Key, Biscayne Bay, FL"
+station_code,8723214
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8723214:A1
+lon,-80.1617
+lat,25.7317
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

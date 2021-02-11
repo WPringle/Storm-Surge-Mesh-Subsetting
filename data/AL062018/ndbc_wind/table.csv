@@ -1,0 +1,55 @@
+station_name,station_code,sensor,lon,lat,depth
+SOUTH HATTERAS - 225 NM South of Cape Hatteras,41002,urn:ioos:sensor:wmo:41002::anemometer1,-74.921,31.886999999999997,-3.8
+"EDISTO - 41 NM Southeast of Charleston, SC",41004,urn:ioos:sensor:wmo:41004::anemometer1,-79.09899999999999,32.501,-4.1
+"GRAYS REEF - 40 NM Southeast of Savannah, GA",41008,urn:ioos:sensor:wmo:41008::anemometer1,-80.868,31.4,-4.9
+"CANAVERAL 20 NM East of Cape Canaveral, FL",41009,urn:ioos:sensor:wmo:41009::anemometer1,-80.185,28.508000000000003,-4.1
+CANAVERAL EAST - 120NM East of Cape Canaveral,41010,urn:ioos:sensor:wmo:41010::anemometer1,-78.485,28.878,-4.1
+"Frying Pan Shoals, NC",41013,urn:ioos:sensor:wmo:41013::anemometer1,-77.743,33.436,-4.1
+"Sunset Nearshore, NC (SUN2)",41024,urn:ioos:sensor:wmo:41024::anemometer1,-78.477,33.836999999999996,-2.95
+"Diamond Shoals, NC",41025,urn:ioos:sensor:wmo:41025::anemometer1,-75.363,35.025,-4.1
+"Capers Nearshore, SC (CAP2)",41029,urn:ioos:sensor:wmo:41029::anemometer1,-79.624,32.803000000000004,-2.95
+"Fripp Nearshore, SC (FRP2)",41033,urn:ioos:sensor:wmo:41033::anemometer1,-80.406,32.279,-2.95
+"Wrightsville Beach Offshore, NC (ILM3)",41037,urn:ioos:sensor:wmo:41037::anemometer1,-77.362,33.988,-2.95
+"Wrightsville Beach Nearshore, NC (ILM2)",41038,urn:ioos:sensor:wmo:41038::anemometer1,-77.715,34.141,-2.95
+NORTH EQUATORIAL TWO - 890 NM East of Martinique,41041,urn:ioos:sensor:wmo:41041::anemometer1,-46.093,14.311,-4.1
+"NE PUERTO RICO - 170 NM NNE of San Juan, PR",41043,urn:ioos:sensor:wmo:41043::anemometer1,-64.83,21.124000000000002,-3.8
+NE ST MARTIN - 330 NM NE St Martin Is,41044,urn:ioos:sensor:wmo:41044::anemometer1,-58.63,21.581999999999997,-4.1
+"EAST BAHAMAS - 335 NM East of San Salvador Is,  Bahamas",41046,urn:ioos:sensor:wmo:41046::anemometer1,-68.384,23.822,-4.1
+"NE BAHAMAS - 350 NM ENE of Nassau, Bahamas",41047,urn:ioos:sensor:wmo:41047::anemometer1,-71.494,27.514,-4.1
+WEST BERMUDA - 240 NM West of Bermuda,41048,urn:ioos:sensor:wmo:41048::anemometer1,-69.57300000000001,31.831,-4.1
+SOUTH BERMUDA - 300 NM SSE of Bermuda,41049,urn:ioos:sensor:wmo:41049::anemometer1,-62.938,27.49,-3.8
+"South of St. John, VI",41052,urn:ioos:sensor:wmo:41052::anemometer1,-64.763,18.249000000000002,-4.0
+"San Juan, PR",41053,urn:ioos:sensor:wmo:41053::anemometer1,-66.09899999999999,18.474,-4.0
+"Vieques Island, PR",41056,urn:ioos:sensor:wmo:41056::anemometer1,-65.464,18.261,-4.0
+Hatteras Bay (B1),41062,urn:ioos:sensor:wmo:41062::anemometer1,-75.095,35.778,-3.5
+Raleigh Bay (B2),41063,urn:ioos:sensor:wmo:41063::anemometer1,-75.941,34.782,-3.5
+"Onslow Bay Outer, NC (LEJ3)",41064,urn:ioos:sensor:wmo:41064::anemometer1,-76.949,34.207,-2.95
+NTAS - Northwest Tropical Atlantic,41nt0,urn:ioos:sensor:wmo:41nt0::anemometer1,-50.945,14.743,-3.4
+"C10 - WFS Central Buoy, 25m Isobath",42013,urn:ioos:sensor:wmo:42013::anemometer1,-82.92399999999999,27.173000000000002,-3.1
+"C13 - WFS South Buoy, 50m Isobath",42023,urn:ioos:sensor:wmo:42023::anemometer1,-83.086,26.01,-3.1
+"Western Caribbean - 195 NM WSW of Negril, Jamaica",42057,urn:ioos:sensor:wmo:42057::anemometer1,-81.422,16.908,-4.1
+Caribbean Valley - 63 NM WSW of Montserrat,42060,urn:ioos:sensor:wmo:42060::anemometer1,-63.354,16.413,-3.8
+"Southeast of Ponce, PR",42085,urn:ioos:sensor:wmo:42085::anemometer1,-66.532,17.869,-4.0
+"9757809 - Arecibo, PR",arop4,urn:ioos:sensor:wmo:arop4::anemometer1,-66.702,18.48,-6.4
+"APK - Aripeka, FL",arpf1,urn:ioos:sensor:wmo:arpf1::anemometer1,-82.667,28.433000000000003,-11.2
+"BCP - Big Carlos Pass, FL",bgcf1,urn:ioos:sensor:wmo:bgcf1::anemometer1,-81.881,26.404,-17.3
+"Cedar Key, FL",cdrf1,urn:ioos:sensor:wmo:cdrf1::anemometer1,-83.029,29.136,-10.0
+"Strom Thurmond Dam, SC",chds1,urn:ioos:sensor:wmo:chds1::anemometer1,-82.199,33.661,-2.1
+"Clam Bayou, FL",clbf1,urn:ioos:sensor:wmo:clbf1::anemometer1,-82.686,27.736,-11.0
+"Cape Lookout, NC",clkn7,urn:ioos:sensor:wmo:clkn7::anemometer1,-76.525,34.622,-9.8
+"Folly Island, SC",fbis1,urn:ioos:sensor:wmo:fbis1::anemometer1,-79.888,32.685,-9.8
+"FHP - Fred Howard Park, FL",fhpf1,urn:ioos:sensor:wmo:fhpf1::anemometer1,-82.801,28.153000000000002,-9.4
+"Fowey Rock, FL",fwyf1,urn:ioos:sensor:wmo:fwyf1::anemometer1,-80.097,25.590999999999998,-43.9
+Lake Murray SC,lmfs1,urn:ioos:sensor:wmo:lmfs1::anemometer1,-81.271,34.107,-9.0
+"Long Key, FL",lonf1,urn:ioos:sensor:wmo:lonf1::anemometer1,-80.86399999999999,24.844,-6.7
+"Molasses Reef, FL",mlrf1,urn:ioos:sensor:wmo:mlrf1::anemometer1,-80.376,25.011999999999997,-15.8
+"Pulaski Shoals Light, FL",plsf1,urn:ioos:sensor:wmo:plsf1::anemometer1,-82.773,24.693,-17.7
+"Puntas Rincon, PR",ptrp4,urn:ioos:sensor:wmo:ptrp4::anemometer1,-67.251,18.367,-15.0
+"Port Everglades Channel, FL",pvgf1,urn:ioos:sensor:wmo:pvgf1::anemometer1,-80.109,26.092,-3.5
+"St. Augustine, FL",sauf1,urn:ioos:sensor:wmo:sauf1::anemometer1,-81.265,29.857,-7.6
+"Sebastian Inlet State Park North Jetty, FL",sipf1,urn:ioos:sensor:wmo:sipf1::anemometer1,-80.445,27.862,-1.0
+"Sombrero Key, FL",smkf1,urn:ioos:sensor:wmo:smkf1::anemometer1,-81.109,24.628,-6.6
+"Settlement Point, GBI, Bahamas",spgf1,urn:ioos:sensor:wmo:spgf1::anemometer1,-78.995,26.704,-6.6
+"Venice, FL",venf1,urn:ioos:sensor:wmo:venf1::anemometer1,-82.45299999999999,27.072,-11.6
+"Lake Wateree, SC",wats1,urn:ioos:sensor:wmo:wats1::anemometer1,-80.702,34.335,-3.1
+"Whipray Basin, FL",wrbf1,urn:ioos:sensor:wmo:wrbf1::anemometer1,-80.735,25.072,

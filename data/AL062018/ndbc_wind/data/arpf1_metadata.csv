@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:arpf1
+station_name,"APK - Aripeka, FL"
+station_code,arpf1
+sensor,urn:ioos:sensor:wmo:arpf1::anemometer1
+lon,-82.667
+lat,28.433000000000003
+depth,-11.2

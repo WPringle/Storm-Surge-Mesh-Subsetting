@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:9755371
+station_name,"San Juan, La Puntilla, San Juan Bay, PR"
+station_code,9755371
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:9755371:Y1
+lon,-66.1164
+lat,18.4592
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

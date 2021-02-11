@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41053
+station_name,"San Juan, PR"
+station_code,41053
+sensor,urn:ioos:sensor:wmo:41053::summarywav1
+lon,-66.09899999999999
+lat,18.474
+depth,

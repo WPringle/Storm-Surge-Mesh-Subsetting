@@ -1,0 +1,10 @@
+,0
+lon,-82.599500000000006
+station_code,8726412
+standard_name,wind_speed
+units,m/s
+depth,
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8726412
+lat,27.661799999999999
+station_name,"Middle Tampa Bay, FL"
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8726412:C1

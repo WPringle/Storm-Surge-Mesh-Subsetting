@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:42060
+station_name,Caribbean Valley - 63 NM WSW of Montserrat
+station_code,42060
+sensor,urn:ioos:sensor:wmo:42060::anemometer1
+lon,-63.354
+lat,16.413
+depth,-3.8

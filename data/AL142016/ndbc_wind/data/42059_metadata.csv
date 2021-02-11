@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:42059
+station_name,"Eastern Caribbean Sea - 180 NM SSW of Ponce, PR"
+station_code,42059
+sensor,urn:ioos:sensor:wmo:42059::anemometer1
+lon,-67.483
+lat,15.252
+depth,-4.1

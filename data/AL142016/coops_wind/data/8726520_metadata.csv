@@ -1,0 +1,10 @@
+,0
+lon,-82.626900000000006
+station_code,8726520
+standard_name,wind_speed
+units,m/s
+depth,
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8726520
+lat,27.7606
+station_name,"St. Petersburg, Tampa Bay, FL"
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8726520:C1

@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:wrbf1
+station_name,"Whipray Basin, FL"
+station_code,wrbf1
+sensor,urn:ioos:sensor:wmo:wrbf1::anemometer1
+lon,-80.735
+lat,25.072
+depth,

@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41043
+station_name,"NE PUERTO RICO - 170 NM NNE of San Juan, PR"
+station_code,41043
+sensor,urn:ioos:sensor:wmo:41043::anemometer1
+lon,-64.83
+lat,21.124000000000002
+depth,-3.8

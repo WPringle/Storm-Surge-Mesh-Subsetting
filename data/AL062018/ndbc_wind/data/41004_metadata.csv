@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41004
+station_name,"EDISTO - 41 NM Southeast of Charleston, SC"
+station_code,41004
+sensor,urn:ioos:sensor:wmo:41004::anemometer1
+lon,-79.09899999999999
+lat,32.501
+depth,-4.1

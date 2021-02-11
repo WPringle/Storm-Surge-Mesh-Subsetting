@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:clkn7
+station_name,"Cape Lookout, NC"
+station_code,clkn7
+sensor,urn:ioos:sensor:wmo:clkn7::anemometer1
+lon,-76.525
+lat,34.622
+depth,-9.8

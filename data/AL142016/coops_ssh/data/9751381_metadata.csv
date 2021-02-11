@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:9751381
+station_name,"Lameshur Bay, St John, VI"
+station_code,9751381
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:9751381:A1
+lon,-64.7242
+lat,18.3182
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

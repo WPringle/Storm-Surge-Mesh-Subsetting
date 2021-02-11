@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:9754228
+station_name,"Yabucoa Harbor, PR"
+station_code,9754228
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:9754228:A1
+lon,-65.833
+lat,18.0551
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

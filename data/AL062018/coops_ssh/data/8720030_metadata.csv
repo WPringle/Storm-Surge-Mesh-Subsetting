@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8720030
+station_name,"Fernandina Beach, FL"
+station_code,8720030
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8720030:Y1
+lon,-81.4658
+lat,30.6714
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:venf1
+station_name,"Venice, FL"
+station_code,venf1
+sensor,urn:ioos:sensor:wmo:venf1::anemometer1
+lon,-82.45299999999999
+lat,27.072
+depth,-11.6

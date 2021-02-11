@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8720219
+station_name,"Dames Point, FL"
+station_code,8720219
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8720219:A1
+lon,-81.5592
+lat,30.3872
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

@@ -1,0 +1,10 @@
+,0
+lon,-81.549800000000005
+station_code,8720625
+standard_name,water_surface_height_above_reference_datum
+units,meters
+depth,
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8720625
+lat,29.8002
+station_name,"Racy Point, St Johns River, FL"
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8720625:A1

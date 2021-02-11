@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:frfn7
+station_name,"USACE-CHL Field Research Facility, Duck, NC"
+station_code,frfn7
+sensor,urn:ioos:sensor:wmo:frfn7::summarywav1
+lon,-75.73899999999999
+lat,36.19
+depth,

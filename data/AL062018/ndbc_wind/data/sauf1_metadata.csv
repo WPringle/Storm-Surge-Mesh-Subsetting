@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:sauf1
+station_name,"St. Augustine, FL"
+station_code,sauf1
+sensor,urn:ioos:sensor:wmo:sauf1::anemometer1
+lon,-81.265
+lat,29.857
+depth,-7.6

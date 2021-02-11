@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8632200
+station_name,"Kiptopeke, VA"
+station_code,8632200
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8632200:A1
+lon,-75.9884
+lat,37.1652
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:sipf1
+station_name,"Sebastian Inlet State Park North Jetty, FL"
+station_code,sipf1
+sensor,urn:ioos:sensor:wmo:sipf1::anemometer1
+lon,-80.445
+lat,27.862
+depth,-1.0

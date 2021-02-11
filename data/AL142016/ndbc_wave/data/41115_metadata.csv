@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41115
+station_name,"Rincon, Puerto Rico (181)"
+station_code,41115
+sensor,urn:ioos:sensor:wmo:41115::summarywav1
+lon,-67.28
+lat,18.375999999999998
+depth,

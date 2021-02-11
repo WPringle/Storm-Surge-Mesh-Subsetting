@@ -1,0 +1,10 @@
+,0
+lon,-66.702399999999997
+station_code,9757809
+standard_name,wind_speed
+units,m/s
+depth,
+station,urn:ioos:station:NOAA.NOS.CO-OPS:9757809
+lat,18.480499999999999
+station_name,"Arecibo, PR"
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:9757809:C1

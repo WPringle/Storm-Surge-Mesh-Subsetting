@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41113
+station_name,"Cape Canaveral Nearshore, FL (143)"
+station_code,41113
+sensor,urn:ioos:sensor:wmo:41113::summarywav1
+lon,-80.53399999999999
+lat,28.4
+depth,

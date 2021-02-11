@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:9751364
+station_name,"Christiansted Harbor, St Croix, VI"
+station_code,9751364
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:9751364:A1
+lon,-64.6984
+lat,17.7477
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:44056
+station_name,"Duck FRF, NC"
+station_code,44056
+sensor,urn:ioos:sensor:wmo:44056::summarywav1
+lon,-75.715
+lat,36.199
+depth,

@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8638610
+station_name,"Sewells Point, VA"
+station_code,8638610
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8638610:A1
+lon,-76.33
+lat,36.9467
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

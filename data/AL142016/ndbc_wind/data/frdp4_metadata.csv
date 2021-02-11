@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:frdp4
+station_name,"9753216 - Fajardo, PR"
+station_code,frdp4
+sensor,urn:ioos:sensor:wmo:frdp4::anemometer1
+lon,-65.631
+lat,18.335
+depth,-6.4

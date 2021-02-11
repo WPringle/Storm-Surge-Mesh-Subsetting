@@ -1,0 +1,10 @@
+,0
+lon,-81.465800000000002
+station_code,8720030
+standard_name,wind_speed
+units,m/s
+depth,
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8720030
+lat,30.671399999999998
+station_name,"Fernandina Beach, FL"
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8720030:C1

@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41047
+station_name,"NE BAHAMAS - 350 NM ENE of Nassau, Bahamas"
+station_code,41047
+sensor,urn:ioos:sensor:wmo:41047::anemometer1
+lon,-71.494
+lat,27.514
+depth,-4.1

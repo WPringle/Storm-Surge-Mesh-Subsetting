@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:vqsp4
+station_name,"9752619 - Isabel Segunda, Vieques Island, PR"
+station_code,vqsp4
+sensor,urn:ioos:sensor:wmo:vqsp4::anemometer1
+lon,-65.444
+lat,18.153
+depth,-6.4

@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8722670
+station_name,"Lake Worth Pier, Atlantic Ocean, FL"
+station_code,8722670
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8722670:A1
+lon,-80.0342
+lat,26.6128
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

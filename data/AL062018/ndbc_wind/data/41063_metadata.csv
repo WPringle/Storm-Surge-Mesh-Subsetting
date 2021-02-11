@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41063
+station_name,Raleigh Bay (B2)
+station_code,41063
+sensor,urn:ioos:sensor:wmo:41063::anemometer1
+lon,-75.941
+lat,34.782
+depth,-3.5

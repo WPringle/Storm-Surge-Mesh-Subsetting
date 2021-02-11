@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41048
+station_name,WEST BERMUDA - 240 NM West of Bermuda
+station_code,41048
+sensor,urn:ioos:sensor:wmo:41048::wpm1
+lon,-69.57300000000001
+lat,31.831
+depth,

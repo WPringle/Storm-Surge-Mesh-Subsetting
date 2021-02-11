@@ -1,0 +1,10 @@
+,0
+station,urn:ioos:station:NOAA.NOS.CO-OPS:9761115
+station_name,"Barbuda, Antigua and Barbuda"
+station_code,9761115
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:9761115:N1
+lon,-61.8206
+lat,17.5908
+depth,
+standard_name,water_surface_height_above_reference_datum
+units,meters

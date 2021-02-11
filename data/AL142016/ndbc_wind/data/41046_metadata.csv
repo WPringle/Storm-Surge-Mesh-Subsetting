@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41046
+station_name,"EAST BAHAMAS - 335 NM East of San Salvador Is,  Bahamas"
+station_code,41046
+sensor,urn:ioos:sensor:wmo:41046::anemometer1
+lon,-68.384
+lat,23.822
+depth,-4.1

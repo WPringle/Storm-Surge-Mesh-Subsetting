@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41062
+station_name,Hatteras Bay (B1)
+station_code,41062
+sensor,urn:ioos:sensor:wmo:41062::anemometer1
+lon,-75.095
+lat,35.778
+depth,-3.5

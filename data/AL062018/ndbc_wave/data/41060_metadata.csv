@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41060
+station_name,Woods Hole Northwest Tropical Atlantic Wave Station
+station_code,41060
+sensor,urn:ioos:sensor:wmo:41060::wpm1
+lon,-51.016999999999996
+lat,14.824000000000002
+depth,

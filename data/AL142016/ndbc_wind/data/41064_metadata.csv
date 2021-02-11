@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41064
+station_name,"Onslow Bay Outer, NC (LEJ3)"
+station_code,41064
+sensor,urn:ioos:sensor:wmo:41064::anemometer1
+lon,-76.949
+lat,34.207
+depth,-2.95

@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:42013
+station_name,"C10 - WFS Central Buoy, 25m Isobath"
+station_code,42013
+sensor,urn:ioos:sensor:wmo:42013::anemometer1
+lon,-82.92399999999999
+lat,27.173000000000002
+depth,-3.1

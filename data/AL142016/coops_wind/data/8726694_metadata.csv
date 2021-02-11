@@ -1,0 +1,10 @@
+,0
+lon,-82.433300000000003
+station_code,8726694
+standard_name,wind_speed
+units,m/s
+depth,
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8726694
+lat,27.933299999999999
+station_name,"TPA Cruise Terminal 2, FL"
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8726694:C1

@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:41025
+station_name,"Diamond Shoals, NC"
+station_code,41025
+sensor,urn:ioos:sensor:wmo:41025::wpm1
+lon,-75.363
+lat,35.025
+depth,

@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:42089
+station_name,"Little Cayman Research Center, CYM"
+station_code,42089
+sensor,urn:ioos:sensor:wmo:42089::anemometer1
+lon,-80.061
+lat,19.699
+depth,-3.35

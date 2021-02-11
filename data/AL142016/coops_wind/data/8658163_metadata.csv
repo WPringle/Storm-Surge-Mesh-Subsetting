@@ -1,0 +1,10 @@
+,0
+lon,-77.786699999999996
+station_code,8658163
+standard_name,wind_speed
+units,m/s
+depth,
+station,urn:ioos:station:NOAA.NOS.CO-OPS:8658163
+lat,34.213299999999997
+station_name,"Wrightsville Beach, NC"
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:8658163:C1

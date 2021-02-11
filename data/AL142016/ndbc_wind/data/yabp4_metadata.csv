@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:yabp4
+station_name,"9754228 - Yabucoa Harbor, PR"
+station_code,yabp4
+sensor,urn:ioos:sensor:wmo:yabp4::anemometer1
+lon,-65.833
+lat,18.055
+depth,-6.4

@@ -1,0 +1,8 @@
+,0
+station,urn:ioos:station:wmo:44093
+station_name,"Offshore Wind Energy Area, VA (210)"
+station_code,44093
+sensor,urn:ioos:sensor:wmo:44093::summarywav1
+lon,-75.492
+lat,36.872
+depth,

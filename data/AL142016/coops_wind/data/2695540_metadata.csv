@@ -1,0 +1,10 @@
+,0
+lon,-64.703299999999999
+station_code,2695540
+standard_name,wind_speed
+units,m/s
+depth,
+station,urn:ioos:station:NOAA.NOS.CO-OPS:2695540
+lat,32.373399999999997
+station_name,"Bermuda, St. Georges Island, Bermuda"
+sensor,urn:ioos:sensor:NOAA.NOS.CO-OPS:2695540:C1

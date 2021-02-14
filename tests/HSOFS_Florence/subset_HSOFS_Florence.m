@@ -45,8 +45,9 @@ minlat = +17.5;  % minimum latitude allowed for storm track
 
 %% Load the meshes, compute new projection extents,
 %% get outer mesh boundary polygons
-% Load coarse mesh 
+% Load coarse mesh and make the bathy interpolant 
 mc = load(coarse); mc = mc.m;
+coarse_bathy_interpolant = scatteredInterpolant(mc.p(:,1),mc.p(:,2),mc.b);
 % Load fine mesh
 load(fine)
 % For now just remove bcs but in future need to keep weirs
@@ -176,9 +177,8 @@ m = m.clean('passive','djc',0.25,'con',0);
 
 %% Add on open bc, bathy, and recompute global f13 attributes
 tic
-% interpolate the NaN parts of bathymetry on mesh using B_filename data
-m = interp(m,B_filename,'K',find(isnan(m.b)),'type','depth',...
-           'ignoreOL',1,'nan','fill');
+% just get the bathy from the coarse mesh where NaN
+m.b(isnan(m.b)) = coarse_bathy_interpolant(m.p(isnan(m.b),:)); 
 % limit the slope of bathmetry to 0.1 
 m = lim_bathy_slope(m,bathy_gradient_limit,-1);
 % Make sure CFL satisfies at least that of the original mesh

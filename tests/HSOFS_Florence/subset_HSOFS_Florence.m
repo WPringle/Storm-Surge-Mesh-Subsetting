@@ -16,19 +16,14 @@ global MAP_PROJECTION MAP_COORDS MAP_VAR_LIST
 %
 %% Input Setup
 % Input Storm Code
-stormcode = 'STORMCODE';
-% Input Coarse mesh bathy data
-B_filename = 'GEBCO_2020.nc';
-% Input buoyancy frequency values
-N_filename = 'Gridded_N_values_WOA2018_2005-2017.mat';
-%
+stormcode = 'AL062018';
 % Input Mesh
-fine = 'FINE';
+fine = 'HSOFS';
 % Input Coarse Mesh Property
-coarse  = 'COARSE';
+coarse  = 'WNAT_1km';
 
 % Output Mesh Name
-outname = 'MESH_STORM';
+outname = 'HSOFS_Florence';
 
 % Set some parameters
 centroid = 0;  % = 0 [default] inpolygon test is based on whether all vertices
@@ -189,13 +184,8 @@ m = lim_bathy_slope(m,bathy_gradient_limit,-1);
 % Make sure CFL satisfies at least that of the original mesh
 m = m.bound_courant_number(DT,1);
 
-% interpolate the NaN parts of slope on mesh using B_filename data
-%m = interp(m,B_filename,'K',find(isnan(m.bx)),'type','slope',....
-%           'ignoreOL',1,'nan','fill');
 % recompute the tau0 (-3 option)
 m = Calc_tau0(m);
-% recompute the internal tide using N_filename data
-%m = Calc_IT_Fric(m,N_filename,'cutoff_depth',250,'Cit',2.75);
 
 % make the outer bc
 bc_k = ourKNNsearch(m.p',bc_points',1);

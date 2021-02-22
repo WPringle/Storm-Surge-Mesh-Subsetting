@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Plot_Mesh.m                                                             %
-% Plot the merge mesh                                                     %
-% By William Pringle, Oct 2020 - Jan 2021                                 %
+% plot_HSOFS_Florence.m                                                   %
+%  Plot the merged mesh (HSOFS fine mesh at Hurricance Florence landfall) %
+%  By William Pringle, Feb 2021                                           %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clearvars; clc;
 %
@@ -10,27 +10,19 @@ addpath(genpath('~/MATLAB/OceanMesh2D/'))
 
 %% Input Setup
 % Input Storm Name
-stormcode = 'STORMCODE';
-% Input Storm Track
-maxlon = -63;
-try
-   trackfile = [upper(stormcode) '_pts'];
-   shp = m_shaperead(trackfile);
-catch
-   trackfile = [lower(stormcode) '_pts'];
-   shp = m_shaperead(trackfile);
-end
-track = cell2mat(shp.ncst);
-track(track(:,1) > maxlon,:) = [];
-
+stormcode = 'AL062018';
+% Input mesh name/Output plot name
+outname = 'HSOFS_Florence';
 % Parameters
 buff = 1.0;       % the buffer for the plot
 bw = 1;           % boundary line width
 tw = 2;           % track line width
 figres = '-r300'; % figure resolution
 
-% Output Plot Names
-outname = 'MESH_STORM';
+% Input Storm Track
+trackfile = [stormcode '_pts'];
+shp = m_shaperead(trackfile);
+track = cell2mat(shp.ncst);
 
 % Load the mesh
 load([outname '.mat'])

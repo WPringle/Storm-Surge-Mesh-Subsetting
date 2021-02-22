@@ -5,3 +5,6 @@ exec/padcirc
 mesh/HSOFS.mat
 data/*.nc
 data/*.mat
+tests/*/*.mat
+tests/*/run.timing
+tests/*/Figs/

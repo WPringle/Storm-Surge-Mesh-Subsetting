@@ -18,6 +18,9 @@ matlab -nosplash -nodesktop -nodisplay < subset_HSOFS_Florence.m
 date >> run.timing
 
 # plot the merged mesh
-matlab -nosplash -nodesktop -nodisplay < plot_HSFOS_Florence.m
+matlab -nosplash -nodesktop -nodisplay < plot_HSOFS_Florence.m
 
 date >> run.timing
+
+# cleaning up
+rm AL*

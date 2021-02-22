@@ -1,9 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% subset_fine_and_merge_to_coarse.m                                       %
-%    Script to merge subset of a fine mesh to a coarser mesh              %
-%    based on a given wind swath of the Hurricane track                   %
+% subset_HSOFS_Florence.m                                                 %
+%                                                                         % 
+%  Script to merge subset of the fine HSOFS mesh with the coarser         % 
+%  "WNAT_1km" mesh based on the 34kt wind swath for Hurricane Florence    %
 %                                                                         %
-%    By William Pringle Oct 2020 - Feb 2021                               %
+%  By William Pringle Feb 2021                                            %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clearvars; clc;
 %
@@ -50,7 +51,7 @@ mc = load(coarse); mc = mc.m;
 coarse_bathy_interpolant = scatteredInterpolant(mc.p(:,1),mc.p(:,2),mc.b);
 % Load fine mesh
 load(fine)
-% For now just remove bcs but in future need to keep weirs
+% For now just removing bcs
 m.bd = []; m.op = []; 
 % Find the minimum CFL of the mesh we need to satisfy
 DT = min(CalcCFL(m));
@@ -67,13 +68,8 @@ coarse_poly = polyshape(coarse_vec,'KeepCollinearPoints',KCP);
 clear fine_vec coarse_vec
      
 %% Load the track data and determine the high-res region
-try
-   trackfile = [upper(stormcode) '_windswath'];
-   shp = m_shaperead(trackfile);
-catch
-   trackfile = [lower(stormcode) '_windswath'];
-   shp = m_shaperead(trackfile);
-end
+trackfile = [stormcode '_windswath'];
+shp = m_shaperead(trackfile);
 % Set high-res region to the "wind_swath"-kt wind speed boundary...
 rad = cell2mat(shp.dbf.RADII); WI = find(rad == wind_swath,1,'last');
 swath_vec = shp.ncst{WI};

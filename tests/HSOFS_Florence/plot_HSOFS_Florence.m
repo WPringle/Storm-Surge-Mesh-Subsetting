@@ -6,7 +6,7 @@
 clearvars; clc;
 %
 % add paths to data and scripts
-addpath(genpath('~/MATLAB/OceanMesh2D/'))
+addpath(genpath('OM2DHOME'))
 
 %% Input Setup
 % Input Storm Name

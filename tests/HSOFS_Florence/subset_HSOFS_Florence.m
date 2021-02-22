@@ -9,7 +9,7 @@
 clearvars; clc;
 %
 % add paths to data and scripts
-addpath(genpath('~/MATLAB/OceanMesh2D'))
+addpath(genpath('OM2DHOME'))
 addpath('../../mesh/')
 %
 % Setting up the projection variables

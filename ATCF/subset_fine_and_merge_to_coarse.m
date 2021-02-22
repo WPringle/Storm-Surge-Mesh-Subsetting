@@ -182,14 +182,14 @@ m = m.clean('passive','djc',0.25,'con',0);
 
 %% Add on open bc, bathy, and recompute global f13 attributes
 tic
-% make the outer bc
-bc_k = ourKNNsearch(m.p',bc_points',1);
-m = make_bc(m,'outer',0,bc_k(1),bc_k(2),2);
 % interpolate the NaN parts of bathymetry on mesh using B_filename data
 m = interp(m,B_filename,'K',find(isnan(m.b)),'type','depth',...
            'ignoreOL',1,'nan','fill');
 % limit the slope of bathmetry to 0.1 
 m = lim_bathy_slope(m,bathy_gradient_limit,-1);
+% Make sure CFL satisfies at least that of the original mesh
+m = m.bound_courant_number(DT,1);
+
 % interpolate the NaN parts of slope on mesh using B_filename data
 %m = interp(m,B_filename,'K',find(isnan(m.bx)),'type','slope',....
 %           'ignoreOL',1,'nan','fill');
@@ -198,8 +198,9 @@ m = Calc_tau0(m);
 % recompute the internal tide using N_filename data
 %m = Calc_IT_Fric(m,N_filename,'cutoff_depth',250,'Cit',2.75);
 
-% Make sure CFL satisfies at least that of the original mesh
-m = m.bound_courant_number(DT,1);
+% make the outer bc
+bc_k = ourKNNsearch(m.p',bc_points',1);
+m = make_bc(m,'outer',0,bc_k(1),bc_k(2),2);
 
 % save the mesh
 save([outname '.mat'],'m','fine_poly');

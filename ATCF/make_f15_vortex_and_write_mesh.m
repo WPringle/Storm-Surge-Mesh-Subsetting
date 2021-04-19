@@ -59,6 +59,8 @@ ye = str2num(te(1:4));
 me = str2num(te(5:6));
 de = str2num(te(7:8));
 he = str2num(te(9:10));
+% Replace end date in the atcf downloader script
+system(['sed -i -- s/ENDDATE/' te '/g dl_storm_atcf.sh']);
 
 %% make the cold start
 

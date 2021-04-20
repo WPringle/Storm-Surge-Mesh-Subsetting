@@ -23,6 +23,8 @@ def main(storm_code,start_date,end_date):
     #storm_code="al062018" #NHC storm code
     #start_date = datetime(2018,9,11,6)
     #end_date = datetime(2018,9,17,18)
+   
+    number_of_perturbations = 3
 
     # getting best track
     BT = BestTrackForcing(storm_code, start_date=start_date, end_date=end_date)
@@ -33,8 +35,10 @@ def main(storm_code,start_date,end_date):
     # Computing Holland B and validation times from BT 
     Holland_B = compute_Holland_B(BT)
     Storm_VT = compute_VT_hours(BT)
-    print(Holland_B)
-    print(Storm_VT)
+    Storm_Strength = intensity_class(compute_Vmax_initial(BT)) 
+    #print(Holland_B)
+    #print(Storm_VT)
+    #print(Storm_Strength)
     
     # extracting original dataframe   
     df_original = BT.df
@@ -43,15 +47,13 @@ def main(storm_code,start_date,end_date):
     # Vmax using the same Holland B parameter,  
     # writing each to a new fort.22
     variable_list = ["max_sustained_wind_speed"]
-    number_of_perturbations = 3
-    Initial_Vmax = intensity_class(df_original[vmax_var].iloc[0]) #The initial Vmax which defines the mean absolute errors
     for var in variable_list:
        print(var)
        # Make the random pertubations based on the mean errors 
        # Interpolate from the given VT to the Storm_VT 
        #print(mean_absolute_errors[var][Initial_Vmax])
-       xp = mean_absolute_errors[var][Initial_Vmax].index
-       yp = mean_absolute_errors[var][Initial_Vmax].values.flat
+       xp = mean_absolute_errors[var][Storm_Strength].index
+       yp = mean_absolute_errors[var][Storm_Strength].values.flat
        base_errors = interp(Storm_VT,xp,yp)
        #print(base_errors)
        for idx in range(1,number_of_perturbations+1):
@@ -65,7 +67,7 @@ def main(storm_code,start_date,end_date):
            if var == vmax_var:
                # In case of Vmax need to change the central pressure
                # incongruence with it (obeying Holland B relationship)
-               print(df_modified[var])
+               df_modified[pc_var] = compute_pc_from_Vmax(df_modified[var],Holland_B)
            # reset the dataframe
            BT._df = df_modified  
            # write out the modified fort.22
@@ -74,25 +76,37 @@ def main(storm_code,start_date,end_date):
 ################################################################
 ## Sub functions and dictionaries...
 ################################################################
+# get the validation time of storm in hours 
 def compute_VT_hours(BT_test):
     VT = (BT_test.datetime - BT_test.start_date) / timedelta(hours=1)
     return VT
+# the initial Vmax which defines the mean absolute errors
+def compute_Vmax_initial(BT_test):    
+    vmax_ini = BT_test._df[vmax_var].iloc[0] 
+    return vmax_ini
 # some constants
 rho_air = 1.15 # density of air [kg/m3]
 Pb = 1013.0    # background pressure [mbar]
 kts2ms = 0.514444444 # kts to m/s
-mbar2pa = 100 # mbar to Pa
-e1 = exp(1.0) # e
+mbar2pa = 100  # mbar to Pa
+pa2mbar = 0.01 # Pa to mbar
+e1 = exp(1.0)  # e
 # variable names
-p_var = "central_pressure" 
+pc_var = "central_pressure" 
 vmax_var = "max_sustained_wind_speed" 
 # Compute Holland B at each time snap
 def compute_Holland_B(BT_test):
     df_test = BT_test._df 
     Vmax = df_test[vmax_var]*kts2ms  
-    DelP = (Pb - df_test[p_var])*mbar2pa 
+    DelP = (Pb - df_test[pc_var])*mbar2pa 
     B = Vmax*Vmax*rho_air*e1/DelP
     return B 
+# Compute central pressure from Vmax based on Holland B
+def compute_pc_from_Vmax(Vmax_kts,B):
+    Vmax = Vmax_kts*kts2ms  
+    DelP = Vmax*Vmax*rho_air*e1/B
+    pc = Pb - DelP*pa2mbar
+    return pc
 # physical bounds of different variables
 lower_bound = {
     "max_sustained_wind_speed": 25,      #[kt]

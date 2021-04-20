@@ -30,6 +30,12 @@ def main(storm_code,start_date,end_date):
     # write out original fort.22
     BT.write("original.22",overwrite=True)
    
+    # Computing Holland B and validation times from BT 
+    Holland_B = compute_Holland_B(BT)
+    Storm_VT = compute_VT_hours(BT)
+    print(Holland_B)
+    print(Storm_VT)
+    
     # extracting original dataframe   
     df_original = BT.df
 
@@ -37,17 +43,8 @@ def main(storm_code,start_date,end_date):
     # Vmax using the same Holland B parameter,  
     # writing each to a new fort.22
     variable_list = ["max_sustained_wind_speed"]
-    p_var = "central_pressure" 
-    vmax_var = "max_sustained_wind_speed" 
-    rho_air = 1.15 # density of air [kg/m3]
-    Pb = 1013.0    # background pressure [mbar]
-    kts2ms = 0.514444444 # kts to m/s
-    mbar2pa = 100 # mbar to Pa
-    e1 = exp(1.0) # e 
     number_of_perturbations = 3
     Initial_Vmax = intensity_class(df_original[vmax_var].iloc[0]) #The initial Vmax which defines the mean absolute errors
-    print(Initial_Vmax)
-    Storm_VT = (df_original["datetime"] - BT.start_date) / timedelta(hours=1)
     for var in variable_list:
        print(var)
        # Make the random pertubations based on the mean errors 
@@ -69,11 +66,6 @@ def main(storm_code,start_date,end_date):
                # In case of Vmax need to change the central pressure
                # incongruence with it (obeying Holland B relationship)
                print(df_modified[var])
-               #Vmax = df_original[vmax_var]*kts2ms  
-               #DelP = (Pb - df_modified[var])*mbar2pa 
-               #print(DelP)
-               #Holland_B = Vmax*Vmax*rho_air*e1/DelP
-               #print(Holland_B)
            # reset the dataframe
            BT._df = df_modified  
            # write out the modified fort.22
@@ -82,6 +74,25 @@ def main(storm_code,start_date,end_date):
 ################################################################
 ## Sub functions and dictionaries...
 ################################################################
+def compute_VT_hours(BT_test):
+    VT = (BT_test.datetime - BT_test.start_date) / timedelta(hours=1)
+    return VT
+# some constants
+rho_air = 1.15 # density of air [kg/m3]
+Pb = 1013.0    # background pressure [mbar]
+kts2ms = 0.514444444 # kts to m/s
+mbar2pa = 100 # mbar to Pa
+e1 = exp(1.0) # e
+# variable names
+p_var = "central_pressure" 
+vmax_var = "max_sustained_wind_speed" 
+# Compute Holland B at each time snap
+def compute_Holland_B(BT_test):
+    df_test = BT_test._df 
+    Vmax = df_test[vmax_var]*kts2ms  
+    DelP = (Pb - df_test[p_var])*mbar2pa 
+    B = Vmax*Vmax*rho_air*e1/DelP
+    return B 
 # physical bounds of different variables
 lower_bound = {
     "max_sustained_wind_speed": 25,      #[kt]

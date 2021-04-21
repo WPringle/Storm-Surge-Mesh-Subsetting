@@ -8,8 +8,9 @@ e.g., Make it more intense or larger in size
 
 By William Pringle, Mar 2021 - 
 """
-
+from argparse import ArgumentParser
 from datetime import datetime, timedelta
+from dateutil.parser import parse as parse_date
 from adcircpy.forcing.winds.best_track import BestTrackForcing
 from copy import deepcopy
 from math import exp, inf
@@ -154,23 +155,27 @@ mean_absolute_errors = {
 }
 
 if __name__ == '__main__':
+    argument_parser = ArgumentParser()
+    argument_parser.add_argument('number_of_perturbations',
+                                 help='number of perturbations')
+    argument_parser.add_argument('storm_code',
+                                 help='storm name/code')
+    argument_parser.add_argument('start_date', nargs='?',
+                                 help='start date')
+    argument_parser.add_argument('end_date', nargs='?', help='end date')
+    arguments = argument_parser.parse_args()
+
     # Parse number of perturbations
-    try:
-       num = int(argv[1])
-    except IndexError:
-       print("Number of perturbations must be supplied as first argument on the command line")
-       raise
+    num = arguments.number_of_perturbations
+    if num is not None:
+        num = int(num)
     # Parse storm code
-    try:
-       stormcode = argv[2]
-    except IndexError:
-       print("Storm name/code must be supplied as second argument on the command line")
-       raise
-    start_date=None
-    end_date=None
-    if len(argv) > 3:
-       start_date=datetime.strptime(argv[3], '%Y%m%d%H')
-    if len(argv) > 4:
-       end_date=datetime.strptime(argv[4], '%Y%m%d%H')
+    stormcode = arguments.storm_code
+    start_date = arguments.start_date
+    if start_date is not None:
+        start_date = parse_date(start_date)
+    end_date = arguments.end_date
+    if end_date is not None:
+        end_date = parse_date(end_date)
     # Enter function
     main(num,stormcode,start_date,end_date)

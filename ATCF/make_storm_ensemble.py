@@ -37,7 +37,7 @@ def main(number_of_perturbations,storm_code,start_date,end_date):
     Storm_Strength = intensity_class(compute_Vmax_initial(BT)) 
     #print(Holland_B)
     #print(Storm_VT)
-    #print(Storm_Strength)
+    print(Storm_Strength)
     
     # extracting original dataframe   
     df_original = BT.df
@@ -81,7 +81,7 @@ def compute_VT_hours(BT_test):
     return VT
 # the initial Vmax which defines the mean absolute errors
 def compute_Vmax_initial(BT_test):    
-    vmax_ini = BT_test._df[vmax_var].iloc[0] 
+    vmax_ini = BT_test.df[vmax_var].iloc[0] 
     return vmax_ini
 # some constants
 rho_air = 1.15 # density of air [kg/m3]
@@ -95,7 +95,7 @@ pc_var = "central_pressure"
 vmax_var = "max_sustained_wind_speed" 
 # Compute Holland B at each time snap
 def compute_Holland_B(BT_test):
-    df_test = BT_test._df 
+    df_test = BT_test.df 
     Vmax = df_test[vmax_var]*kts2ms  
     DelP = (Pb - df_test[pc_var])*mbar2pa 
     B = Vmax*Vmax*rho_air*e1/DelP

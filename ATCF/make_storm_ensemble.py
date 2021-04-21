@@ -18,13 +18,12 @@ from pandas import DataFrame
 from random import gauss
 from numpy import interp
 
-def main(storm_code,start_date,end_date):
+def main(number_of_perturbations,storm_code,start_date,end_date):
     #Example: 
+    #number_of_perturbations = 3
     #storm_code="al062018" #NHC storm code
     #start_date = datetime(2018,9,11,6)
     #end_date = datetime(2018,9,17,18)
-   
-    number_of_perturbations = 3
 
     # getting best track
     BT = BestTrackForcing(storm_code, start_date=start_date, end_date=end_date)
@@ -155,17 +154,23 @@ mean_absolute_errors = {
 }
 
 if __name__ == '__main__':
+    # Parse number of perturbations
+    try:
+       num = int(argv[1])
+    except IndexError:
+       print("Number of perturbations must be supplied as first argument on the command line")
+       raise
     # Parse storm code
     try:
-       stormcode = argv[1]
+       stormcode = argv[2]
     except IndexError:
-       print("Storm name/code must be supplied on the command line")
+       print("Storm name/code must be supplied as second argument on the command line")
        raise
     start_date=None
     end_date=None
-    if len(argv) > 2:
-       start_date=datetime.strptime(argv[2], '%Y%m%d%H')
     if len(argv) > 3:
-       end_date=datetime.strptime(argv[3], '%Y%m%d%H')
+       start_date=datetime.strptime(argv[3], '%Y%m%d%H')
+    if len(argv) > 4:
+       end_date=datetime.strptime(argv[4], '%Y%m%d%H')
     # Enter function
-    main(stormcode,start_date,end_date)
+    main(num,stormcode,start_date,end_date)

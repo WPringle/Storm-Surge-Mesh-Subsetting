@@ -23,7 +23,7 @@ def main(number_of_perturbations,variable_list,storm_code,start_date,end_date):
     #Example: 
     #number_of_perturbations = 3
     #variable_list = ["max_sustained_wind_speed",
-    #                 "radius_of_maximum_wind_speed"]
+    #                 "radius_of_maximum_winds"]
     #storm_code="al062018" #NHC storm code
     #start_date = datetime(2018,9,11,6)
     #end_date = datetime(2018,9,17,18)
@@ -50,6 +50,8 @@ def main(number_of_perturbations,variable_list,storm_code,start_date,end_date):
     # writing each to a new fort.22
     for var in variable_list:
        print(var)
+       print(min(df_original[var]))
+       print(max(df_original[var]))
        # Make the random pertubations based on the mean errors 
        # Interpolate from the given VT to the Storm_VT 
        #print(mean_absolute_errors[var][Initial_Vmax])
@@ -65,11 +67,10 @@ def main(number_of_perturbations,variable_list,storm_code,start_date,end_date):
                alpha = gauss(0,1)/0.7979 #mean_abs_error = 0.7979*sigma
                # add the error to the variable with bounds to some physical constraints
                print("Random gaussian variable = " + str(alpha))
-               df_modified[var] = perturb_bound(df_modified[var] + base_errors*alpha,var)
            elif random_variable_type[var] == 'range':
-               alpha = random(0.5,1.5) 
+               alpha = random(-0.5,0.5) 
                print("Random number in range = " + str(alpha))
-               df_modified[var] = perturb_bound(df_modified[var]*alpha,var)
+           df_modified[var] = perturb_bound(df_modified[var] + base_errors*alpha,var)
            if var == vmax_var:
                # In case of Vmax need to change the central pressure
                # incongruence with it (obeying Holland B relationship)
@@ -117,20 +118,20 @@ def compute_pc_from_Vmax(df_test,B):
 # random variable types (Gaussian or just a range)
 random_variable_type = {
     "max_sustained_wind_speed": "gauss",
-    "radius_of_maximum_wind_speed": "range",
+    "radius_of_maximum_winds": "gauss",
     "cross_track": "gauss",
     "along_track": "guass"
 }
 # physical bounds of different variables
 lower_bound = {
-    "max_sustained_wind_speed": 25,      #[kt]
-    "radius_of_maximum_wind_speed": 1,   #[nm]
+    "max_sustained_wind_speed": 25, #[kt]
+    "radius_of_maximum_winds": 5,   #[nm]
     "cross_track": -inf,
     "along_track": -inf
 }
 upper_bound = {
-    "max_sustained_wind_speed": 165,     #[kt]
-    "radius_of_maximum_wind_speed": 200, #[nm]
+    "max_sustained_wind_speed": 165,#[kt]
+    "radius_of_maximum_winds": 200, #[nm]
     "cross_track": +inf,
     "along_track": +inf
 }
@@ -150,14 +151,24 @@ def intensity_class(x):
     return "50-95kt" #medium
 # Index of absolute errors (forecast times [hrs)]
 VT=[0, 12, 24, 36, 48, 72, 96, 120] 
-# Mean absolute errors for Vmax based on initial intensity
+# Mean absolute Vmax errors based on initial intensity
 Vmax_weak_errors = DataFrame(data=[1.45, 4.01, 6.17, 8.42, 10.46, 14.28, 18.26, 19.91],index=VT,columns=["mean error [kt]"]) 
 Vmax_medium_errors = DataFrame(data=[2.26, 5.75, 8.54, 9.97, 11.28, 13.11, 13.46, 12.62],index=VT,columns=["mean error [kt]"]) 
 Vmax_strong_errors = DataFrame(data=[2.80, 7.94, 11.53, 13.27, 12.66, 13.41, 13.46, 13.55],index=VT,columns=["mean error [kt]"]) 
-# Mean absolute errors for Rmax based on initial intensity
-Rmax_weak_errors = DataFrame(data=[1.45, 4.01, 6.17, 8.42, 10.46, 14.28, 18.26, 19.91],index=VT,columns=["mean error [nm]"]) 
-Rmax_medium_errors = DataFrame(data=[2.26, 5.75, 8.54, 9.97, 11.28, 13.11, 13.46, 12.62],index=VT,columns=["mean error [nm]"]) 
-Rmax_strong_errors = DataFrame(data=[2.80, 7.94, 11.53, 13.27, 12.66, 13.41, 13.46, 13.55],index=VT,columns=["mean error [nm]"]) 
+# RMW errors based on initial size
+RMW_small_errors = DataFrame(data=[-1.0, -4.0, -6.0, -8.0, -10.0, -14.0, -18.0, -20.0],
+                                  [1.0, 4.0, 6.0, 8.0, 10.0, 14.0, 18.0, 20.0],
+                             index=VT,columns=["minimum error [nm]", "maximum error [nm]"]) 
+RMW_medium_errors = DataFrame(data=[1.0, 4.0, 6.0, 8.0, 10.0, 14.0, 18.0, 20.0],index=VT,columns=["mean error [nm]"]) 
+RMW_large_errors = DataFrame(data=[1.0, 4.0, 6.0, 8.0, 10.0, 14.0, 18.0, 20.0],index=VT,columns=["mean error [nm]"]) 
+# Mean absolute cross-track errors based on initial intensity
+ct_weak_errors = DataFrame(data=[1.45, 4.01, 6.17, 8.42, 10.46, 14.28, 18.26, 19.91],index=VT,columns=["mean error [nm]"]) 
+ct_medium_errors = DataFrame(data=[2.26, 5.75, 8.54, 9.97, 11.28, 13.11, 13.46, 12.62],index=VT,columns=["mean error [nm]"]) 
+ct_strong_errors = DataFrame(data=[2.80, 7.94, 11.53, 13.27, 12.66, 13.41, 13.46, 13.55],index=VT,columns=["mean error [nm]"]) 
+# Mean absolute along-track errors based on initial intensity
+at_weak_errors = DataFrame(data=[1.45, 4.01, 6.17, 8.42, 10.46, 14.28, 18.26, 19.91],index=VT,columns=["mean error [nm]"]) 
+at_medium_errors = DataFrame(data=[2.26, 5.75, 8.54, 9.97, 11.28, 13.11, 13.46, 12.62],index=VT,columns=["mean error [nm]"]) 
+at_strong_errors = DataFrame(data=[2.80, 7.94, 11.53, 13.27, 12.66, 13.41, 13.46, 13.55],index=VT,columns=["mean error [nm]"]) 
 # Dictionary of mean absolute errors by variable
 mean_absolute_errors = {
     "max_sustained_wind_speed": {
@@ -165,9 +176,21 @@ mean_absolute_errors = {
         "50-95kt": Vmax_medium_errors, 
         ">95kt":   Vmax_strong_errors
     },
-    "radius_of_maximum_wind_speed": "N/A",
-    "cross_track": "N/A",
-    "along_track": "N/A"
+    "radius_of_maximum_winds": {
+        "<15nm": RMW_small_errors,  
+        "15-35nm": RMW_medium_errors, 
+        ">35nm":   RMW_large_errors
+    },
+    "cross_track": {
+        "<50kt": ct_weak_errors,  
+        "50-95kt": ct_medium_errors, 
+        ">95kt":   ct_strong_errors
+    },
+    "along_track": {
+        "<50kt": at_weak_errors,  
+        "50-95kt": at_medium_errors, 
+        ">95kt":   at_strong_errors
+    }
 }
 
 if __name__ == '__main__':
@@ -195,8 +218,8 @@ if __name__ == '__main__':
         end_date = parse_date(end_date)
     # hardcoding variable list for now
     #variables = ["max_sustained_wind_speed",
-    #             "radius_of_maximum_wind_speed"]
+    #             "radius_of_maximum_winds"]
     variables = ["max_sustained_wind_speed"]
-    #variables = ["radius_of_maximum_wind_speed"]
+    #variables = ["radius_of_maximum_winds"]
     # Enter function
     main(num,variables,stormcode,start_date,end_date)

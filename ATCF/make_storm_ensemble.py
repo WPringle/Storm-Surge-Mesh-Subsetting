@@ -245,6 +245,12 @@ forecast_errors = {
 }
 
 if __name__ == '__main__':
+    ##################################
+    # Example calls from command line for 2018 Hurricane Florence:
+    # - python3 make_storm_ensemble.py 3 al062018 2018-09-11-06 2018-09-17-06 
+    # - python3 make_storm_ensemble.py 5 Florence2018 2018-09-11-06
+    ##################################
+    # Implement argument parsing
     argument_parser = ArgumentParser()
     argument_parser.add_argument('number_of_perturbations',
                                  help='number of perturbations')

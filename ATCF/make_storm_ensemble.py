@@ -52,8 +52,8 @@ def main(number_of_perturbations,variable_list,storm_code,start_date,end_date):
     # Get the initial intensity and size  
     storm_strength = intensity_class(compute_initial(BT,vmax_var)) 
     storm_size = size_class(compute_initial(BT,rmw_var)) 
-    print(storm_strength)
-    print(storm_size)
+    print("Initial storm strength: " + storm_strength)
+    print("Intial storm size: " + storm_size)
     
     # extracting original dataframe   
     df_original = BT.df
@@ -63,8 +63,8 @@ def main(number_of_perturbations,variable_list,storm_code,start_date,end_date):
     # writing each to a new fort.22
     for var in variable_list:
        print(var)
-       print(min(df_original[var]))
-       print(max(df_original[var]))
+       #print(min(df_original[var]))
+       #print(max(df_original[var]))
        # Make the random pertubations based on the historical forecast errors 
        # Interpolate from the given VT to the storm_VT 
        #print(forecast_errors[var][Initial_Vmax])

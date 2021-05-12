@@ -32,9 +32,9 @@ from math import exp, inf
 from sys import argv
 from pandas import DataFrame
 from random import random, gauss
-from numpy import interp, transpose
+from numpy import interp, transpose, floor, sign
 from pyproj import Proj
-import shapely.geometry as shp
+from shapely.geometry import LineString
 
 def main(number_of_perturbations,variable_list,storm_code,start_date,end_date):
     #Example: 
@@ -92,13 +92,14 @@ def main(number_of_perturbations,variable_list,storm_code,start_date,end_date):
                alpha = gauss(0,1)/0.7979 #mean_abs_error = 0.7979*sigma
                # add the error to the variable with bounds to some physical constraints
                print("Random gaussian variable = " + str(alpha))
-               df_modified[var] = perturb_bound( df_modified[var] + 
+               df_modified = perturb_bound( df_modified, 
                    base_errors[0]*alpha, var )
            elif random_variable_type[var] == 'range':
                alpha = random() 
                print("Random number in [0,1) = " + str(alpha))
-               df_modified[var] = perturb_bound( df_modified[var] +
-                   base_errors[0]*alpha + base_errors[1]*(1.0-alpha), var )
+               # subtract the error from the variable with physical constraint bounds
+               df_modified = perturb_bound( df_modified,
+                   -(base_errors[0]*(1.0-alpha) + base_errors[1]*alpha), var )
            if var == vmax_var:
                # In case of Vmax need to change the central pressure
                # incongruence with it (obeying Holland B relationship)
@@ -151,7 +152,7 @@ random_variable_type = {
     "max_sustained_wind_speed": "gauss",
     "radius_of_maximum_winds": "range",
     "cross_track": "gauss",
-    "along_track": "guass"
+    "along_track": "gauss"
 }
 # physical bounds of different variables
 lower_bound = {
@@ -167,11 +168,18 @@ upper_bound = {
     "along_track": +inf
 }
 # perturbing the variable with physical bounds
-def perturb_bound(test_list,var):
-    LB = lower_bound[var]
-    UB = upper_bound[var]
-    bounded_result = [min(UB,max(ele, LB)) for ele in test_list]
-    return bounded_result
+def perturb_bound(df_,perturbation,var):
+    if var == "along_track":
+       print("along_track: do nothing")
+    elif var == "cross_track":
+       print("cross_track: do nothing")
+    else:
+       test_list = df_[var] + perturbation
+       LB = lower_bound[var]
+       UB = upper_bound[var]
+       bounded_result = [min(UB,max(ele, LB)) for ele in test_list]
+       df_[var] = bounded_result
+    return df_
 # Category for Vmax based intensity
 def intensity_class(vmax):
   if vmax < 50:
@@ -263,7 +271,7 @@ def utm_proj_from_lon(lon_mean):
     :usage   lon, lat      = myProj(xutm, yutm, inverse=True)
     
     """
-    zone =  np.floor( ( lon_mean + 180 ) / 6) + 1
+    zone =  floor( ( lon_mean + 180 ) / 6) + 1
     #print("Zone is " + str(zone))
     myProj        = Proj("+proj=utm +zone="+str(zone)+"K, +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
     return myProj
@@ -291,7 +299,7 @@ def interpolate_along_track(track_coords,along_track_errors):
 
     # convert along_track 
     along_track_error = along_track_error*nm2m
-    along_sign = int(np.sign(along_track_error))
+    along_sign = int(sign(along_track_error))
     along_error = abs(along_track_error)
     #print(along_error)
 
@@ -308,7 +316,7 @@ def interpolate_along_track(track_coords,along_track_errors):
             x_utm, y_utm = myProj(track_coords[ind][0], track_coords[ind][1], inverse=False)
             pts.append((x_utm,y_utm))
         # make the temporary line segment 
-        line_segment = shp.LineString([pts[pp] for pp in range(0,len(pts))])
+        line_segment = LineString([pts[pp] for pp in range(0,len(pts))])
         # interpolate a distance "along_error" along the line
         pnew = line_segment.interpolate(along_error)
         # get back lat-lon
@@ -349,11 +357,10 @@ if __name__ == '__main__':
     if end_date is not None:
         end_date = parse_date(end_date)
     # hardcoding variable list for now
-    #variables = ["max_sustained_wind_speed",
-    #             "radius_of_maximum_winds",
-    #             "along_track"]
+    variables = ["max_sustained_wind_speed",
+                 "radius_of_maximum_winds"]
     #variables = ["max_sustained_wind_speed"]
     #variables = ["radius_of_maximum_winds"]
-    variables = ["along_track"]
+    #variables = ["along_track"]
     # Enter function
     main(num,variables,stormcode,start_date,end_date)

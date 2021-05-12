@@ -32,7 +32,7 @@ from math import exp, inf
 from sys import argv
 from pandas import DataFrame
 from random import random, gauss
-from numpy import interp, transpose, floor, sign
+from numpy import where, interp, transpose, floor, sign
 from pyproj import Proj
 from shapely.geometry import LineString
 
@@ -93,7 +93,7 @@ def main(number_of_perturbations,variable_list,storm_code,start_date,end_date):
                # add the error to the variable with bounds to some physical constraints
                print("Random gaussian variable = " + str(alpha))
                df_modified = perturb_bound( df_modified, 
-                   base_errors[0]*alpha, var )
+                   base_errors[0]*alpha, var , storm_VT)
            elif random_variable_type[var] == 'range':
                alpha = random() 
                print("Random number in [0,1) = " + str(alpha))
@@ -168,9 +168,9 @@ upper_bound = {
     "along_track": +inf
 }
 # perturbing the variable with physical bounds
-def perturb_bound(df_,perturbation,var):
+def perturb_bound(df_,perturbation, var, VT = None):
     if var == "along_track":
-       print("along_track: do nothing")
+       df_ = interpolate_along_track(df_, VT.values, perturbation) 
     elif var == "cross_track":
        print("cross_track: do nothing")
     else:
@@ -276,39 +276,45 @@ def utm_proj_from_lon(lon_mean):
     myProj        = Proj("+proj=utm +zone="+str(zone)+"K, +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
     return myProj
 
-def interpolate_along_track(track_coords,along_track_errors): 
+def interpolate_along_track(df_,VT,along_track_errors): 
     """
-    interpolate_along_track(track_coords,along_track_errors)
+    interpolate_along_track(df_,VT,along_track_errors)
     """
     # Parameters
-    extrap_rat = 10  # extrapolation ratio
-    nm2m = 1852      # nautical miles to meters
-
+    interp_pts = 5  # number of pts along line for each interpolation
+    nm2m = 1852     # nautical miles to meters
+   
+    # Get the coordinates of the track 
+    track_coords = df_[["longitude","latitude"]].values.tolist()
     ## Extrapolating the track for negative errors at beginning
     ## and positive errors at end of track
     # append point to the beginning for going in negative direction
-    p1 = track_coords[0]
-    p2 = track_coords[1]
-    b = (p1[0]-extrap_rat*(p2[0]-p1[0]), p1[1]-extrap_rat*(p2[1]-p1[1]) )
-    track_coords.insert(0,b)
-    # append point to the end going in positive direction
-    p1 = track_coords[-2]
-    p2 = track_coords[-1]
-    b = (p1[0]+extrap_rat*(p2[0]-p1[0]), p1[1]+extrap_rat*(p2[1]-p1[1]) )
-    track_coords.append(b)
-
-    # convert along_track 
-    along_track_error = along_track_error*nm2m
-    along_sign = int(sign(along_track_error))
-    along_error = abs(along_track_error)
-    #print(along_error)
+    for ii in range(0,len(VT)):
+       if VT[ii] == 0 and VT[ii+1] > 0:
+           # append point to the beginning for going in negative direction
+           p1 = track_coords[ii]
+           p2 = track_coords[ii+1]
+           ps = [ p1[0]-interp_pts*(p2[0]-p1[0]), p1[1]-interp_pts*(p2[1]-p1[1]) ] 
+       if VT[ii] == VT[-1] and VT[ii-1] < VT[-1]:
+           # append point to the end going in positive direction
+           p1 = track_coords[ii-1]
+           p2 = track_coords[ii]
+           pe = [ p1[0]+interp_pts*(p2[0]-p1[0]), p1[1]+interp_pts*(p2[1]-p1[1]) ]
+    track_coords.insert(0,ps)
+    track_coords.append(pe)
+    #print(track_coords)
+    #print(along_track_errors)
 
     # loop over all coordinates
+    lon_new = list()
+    lat_new = list()
     for ii in range(1,len(track_coords)-1):
         # get the utm projection for middle longitude
         myProj = utm_proj_from_lon(track_coords[ii][0])
+        along_error = along_track_errors[ii-1]*nm2m
+        along_sign =  int(sign(along_error))
         pts = list()
-        for jj in range(0, along_sign*10, along_sign):
+        for jj in range(0, along_sign*interp_pts, along_sign):
             ind = ii + jj
             if ind < 0 or ind > len(track_coords)-1:
                 continue
@@ -318,13 +324,19 @@ def interpolate_along_track(track_coords,along_track_errors):
         # make the temporary line segment 
         line_segment = LineString([pts[pp] for pp in range(0,len(pts))])
         # interpolate a distance "along_error" along the line
-        pnew = line_segment.interpolate(along_error)
+        pnew = line_segment.interpolate(abs(along_error))
         # get back lat-lon
         lon, lat = myProj(pnew.coords[0][0], pnew.coords[0][1], inverse=True)
-        print(track_coords[ii-1:ii+2])
-        print([lon,lat]) 
-
-    return lon, lat   
+        #print(track_coords[ii-1:ii+2])
+        #print(along_error/111e3)
+        #print(new_coords]) 
+        lon_new.append(lon)
+        lat_new.append(lat)
+    #print([lon_new, lat_new])
+   
+    df_["longitude"] = lon_new 
+    df_["latitude"]  = lat_new 
+    return df_
 
 if __name__ == '__main__':
     ##################################
@@ -358,7 +370,8 @@ if __name__ == '__main__':
         end_date = parse_date(end_date)
     # hardcoding variable list for now
     variables = ["max_sustained_wind_speed",
-                 "radius_of_maximum_winds"]
+                 "radius_of_maximum_winds",
+                 "along_track"]
     #variables = ["max_sustained_wind_speed"]
     #variables = ["radius_of_maximum_winds"]
     #variables = ["along_track"]

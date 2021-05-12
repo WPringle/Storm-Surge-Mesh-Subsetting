@@ -83,7 +83,7 @@ def main(number_of_perturbations,variable_list,storm_code,start_date,end_date):
        yp = forecast_errors[var][storm_classification].values
        base_errors = [ interp(storm_VT,xp,yp[:,ncol]) 
                        for ncol in range(len(yp[0])) ]
-       print(base_errors)
+       #print(base_errors)
        for idx in range(1,number_of_perturbations+1):
            # make a deepcopy to preserve the original dataframe 
            df_modified = deepcopy(df_original)

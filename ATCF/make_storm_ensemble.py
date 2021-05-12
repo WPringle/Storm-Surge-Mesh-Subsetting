@@ -5,16 +5,21 @@ perturb different parameters (e.g., intensity, size)
 to generate an ensemble; and write out each ensemble
 member to the fort.22 ATCF storm format file. 
 
-- max_sustained_wind_speed (Vmax) is made weaker/stronger
+- "max_sustained_wind_speed" (Vmax) is made weaker/stronger
   based on random gaussian distribution with sigma scaled by
   historical mean absolute errors. central_pressure (pc) 
   is then changed proportionally based on Holland B
 
-- radius_of_maximum_winds (Rmax) is made small/larger
+- "radius_of_maximum_winds" (Rmax) is made small/larger
   based on random number in a range bounded by 15% and 85%
   CDF of historical forecast errors. 
 
-- cross-track/along track to do...
+- "along_track" variable is used to move the coordinate of 
+  the tropical cyclone center at each forecast time up/down 
+  the given track based on a random gaussian distribution with
+  sigma scaled by historical mean absolute errors. 
+
+- "cross_track" to do...
 
 By William Pringle, Mar 2021 -
 """
@@ -28,6 +33,8 @@ from sys import argv
 from pandas import DataFrame
 from random import random, gauss
 from numpy import interp, transpose
+from pyproj import Proj
+import shapely.geometry as shp
 
 def main(number_of_perturbations,variable_list,storm_code,start_date,end_date):
     #Example: 
@@ -76,7 +83,7 @@ def main(number_of_perturbations,variable_list,storm_code,start_date,end_date):
        yp = forecast_errors[var][storm_classification].values
        base_errors = [ interp(storm_VT,xp,yp[:,ncol]) 
                        for ncol in range(len(yp[0])) ]
-       #print(base_errors)
+       print(base_errors)
        for idx in range(1,number_of_perturbations+1):
            # make a deepcopy to preserve the original dataframe 
            df_modified = deepcopy(df_original)
@@ -244,6 +251,73 @@ forecast_errors = {
     }
 }
 
+def utm_proj_from_lon(lon_mean):
+    """
+    utm_from_lon - UTM zone for a longitude
+    Not right for some polar regions (Norway, Svalbard, Antartica)
+    :param float lon: longitude
+    :return: UTM zone number
+    :rtype: int
+    
+    :usage   x_utm,y_utm   = myProj(lon, lat  , inverse=False)
+    :usage   lon, lat      = myProj(xutm, yutm, inverse=True)
+    
+    """
+    zone =  np.floor( ( lon_mean + 180 ) / 6) + 1
+    #print("Zone is " + str(zone))
+    myProj        = Proj("+proj=utm +zone="+str(zone)+"K, +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
+    return myProj
+
+def interpolate_along_track(track_coords,along_track_errors): 
+    """
+    interpolate_along_track(track_coords,along_track_errors)
+    """
+    # Parameters
+    extrap_rat = 10  # extrapolation ratio
+    nm2m = 1852      # nautical miles to meters
+
+    ## Extrapolating the track for negative errors at beginning
+    ## and positive errors at end of track
+    # append point to the beginning for going in negative direction
+    p1 = track_coords[0]
+    p2 = track_coords[1]
+    b = (p1[0]-extrap_rat*(p2[0]-p1[0]), p1[1]-extrap_rat*(p2[1]-p1[1]) )
+    track_coords.insert(0,b)
+    # append point to the end going in positive direction
+    p1 = track_coords[-2]
+    p2 = track_coords[-1]
+    b = (p1[0]+extrap_rat*(p2[0]-p1[0]), p1[1]+extrap_rat*(p2[1]-p1[1]) )
+    track_coords.append(b)
+
+    # convert along_track 
+    along_track_error = along_track_error*nm2m
+    along_sign = int(np.sign(along_track_error))
+    along_error = abs(along_track_error)
+    #print(along_error)
+
+    # loop over all coordinates
+    for ii in range(1,len(track_coords)-1):
+        # get the utm projection for middle longitude
+        myProj = utm_proj_from_lon(track_coords[ii][0])
+        pts = list()
+        for jj in range(0, along_sign*10, along_sign):
+            ind = ii + jj
+            if ind < 0 or ind > len(track_coords)-1:
+                continue
+            # get the x,y utm coordinate for this line string
+            x_utm, y_utm = myProj(track_coords[ind][0], track_coords[ind][1], inverse=False)
+            pts.append((x_utm,y_utm))
+        # make the temporary line segment 
+        line_segment = shp.LineString([pts[pp] for pp in range(0,len(pts))])
+        # interpolate a distance "along_error" along the line
+        pnew = line_segment.interpolate(along_error)
+        # get back lat-lon
+        lon, lat = myProj(pnew.coords[0][0], pnew.coords[0][1], inverse=True)
+        print(track_coords[ii-1:ii+2])
+        print([lon,lat]) 
+
+    return lon, lat   
+
 if __name__ == '__main__':
     ##################################
     # Example calls from command line for 2018 Hurricane Florence:
@@ -275,9 +349,11 @@ if __name__ == '__main__':
     if end_date is not None:
         end_date = parse_date(end_date)
     # hardcoding variable list for now
-    variables = ["max_sustained_wind_speed",
-                 "radius_of_maximum_winds"]
+    #variables = ["max_sustained_wind_speed",
+    #             "radius_of_maximum_winds",
+    #             "along_track"]
     #variables = ["max_sustained_wind_speed"]
     #variables = ["radius_of_maximum_winds"]
+    variables = ["along_track"]
     # Enter function
     main(num,variables,stormcode,start_date,end_date)

@@ -40,7 +40,7 @@ from math import exp, inf, sqrt
 from sys import argv
 from pandas import DataFrame
 from random import random, gauss
-from numpy import where, interp, transpose, floor, sign
+from numpy import where, interp, transpose, floor, sign, insert, append
 from pyproj import Proj
 from shapely.geometry import LineString
 
@@ -294,56 +294,61 @@ def interpolate_along_track(df_,VT,along_track_errors):
     :inputs -    dataframe df_: ATCF dataframe containing track info
     :                  list VT: the forecast validation times [hours]
     :  list along_track_errors: along-track errors for each forecast time (VT)
-    :return - dataframe df_: updated ATCF dataframe with different longitude latitude locations based on interpolated errors along track  
+    :return -    dataframe df_: updated ATCF dataframe with different longitude latitude locations based on interpolated errors along track  
     """
     # Parameters
-    interp_pts = 5  # number of pts along line for each interpolation
+    interp_pts = 5  # maximum number of pts along line for each interpolation
     nm2m = 1852     # nautical miles to meters
    
     # Get the coordinates of the track 
     track_coords = df_[["longitude","latitude"]].values.tolist()
     ## Extrapolating the track for negative errors at beginning
     ## and positive errors at end of track
-    # append point to the beginning for going in negative direction
-    for ii in range(0,len(VT)):
-       if VT[ii] == 0 and VT[ii+1] > 0:
+    for idx in range(0,len(VT)):
+       if VT[idx] == 0 and VT[idx+1] > 0:
            # append point to the beginning for going in negative direction
-           p1 = track_coords[ii]
-           p2 = track_coords[ii+1]
+           p1 = track_coords[idx]
+           p2 = track_coords[idx+1]
            ps = [ p1[0]-interp_pts*(p2[0]-p1[0]), p1[1]-interp_pts*(p2[1]-p1[1]) ] 
-       if VT[ii] == VT[-1] and VT[ii-1] < VT[-1]:
+       if VT[idx] == VT[-1] and VT[idx-1] < VT[-1]:
            # append point to the end going in positive direction
-           p1 = track_coords[ii-1]
-           p2 = track_coords[ii]
+           p1 = track_coords[idx-1]
+           p2 = track_coords[idx]
            pe = [ p1[0]+interp_pts*(p2[0]-p1[0]), p1[1]+interp_pts*(p2[1]-p1[1]) ]
     track_coords.insert(0,ps)
     track_coords.append(pe)
+    # adding pseudo-VT times to the ends
+    VT = insert(VT,0,VT[0]-6)
+    VT = append(VT,VT[-1]+6)
     #print(track_coords)
+    #print(VT)
     #print(along_track_errors)
 
     # loop over all coordinates
     lon_new = list()
     lat_new = list()
-    for ii in range(1,len(track_coords)-1):
+    for idx in range(1,len(track_coords)-1):
         # get the utm projection for middle longitude
-        myProj = utm_proj_from_lon(track_coords[ii][0])
-        along_error = along_track_errors[ii-1]*nm2m
+        myProj = utm_proj_from_lon(track_coords[idx][0])
+        along_error = along_track_errors[idx-1]*nm2m
         along_sign =  int(sign(along_error))
         pts = list()
-        for jj in range(0, along_sign*interp_pts, along_sign):
-            ind = ii + jj
+        ind = idx 
+        while len(pts) < interp_pts:
             if ind < 0 or ind > len(track_coords)-1:
-                continue
-            # get the x,y utm coordinate for this line string
-            x_utm, y_utm = myProj(track_coords[ind][0], track_coords[ind][1], inverse=False)
-            pts.append((x_utm,y_utm))
+               break # reached end of line
+            if ind == idx or VT[ind] != VT[ind-along_sign]:
+               # get the x,y utm coordinate for this line string
+               x_utm, y_utm = myProj(track_coords[ind][0], track_coords[ind][1], inverse=False)
+               pts.append((x_utm,y_utm))
+            ind = ind + along_sign
         # make the temporary line segment 
         line_segment = LineString([pts[pp] for pp in range(0,len(pts))])
         # interpolate a distance "along_error" along the line
         pnew = line_segment.interpolate(abs(along_error))
         # get back lat-lon
         lon, lat = myProj(pnew.coords[0][0], pnew.coords[0][1], inverse=True)
-        #print(track_coords[ii-1:ii+2])
+        #print(track_coords[idx-1:idx+2])
         #print(along_error/111e3)
         #print(new_coords]) 
         lon_new.append(lon)

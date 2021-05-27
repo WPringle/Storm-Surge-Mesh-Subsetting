@@ -1,34 +1,42 @@
 #! /usr/bin/env python3
 """
-Script to extract an ATCF best track dataset; randomly 
-perturb different parameters (e.g., intensity, size)
-to generate an ensemble; and write out each ensemble
-member to the fort.22 ATCF storm format file. 
+Script to: 
+(1) extract an ATCF best track dataset; 
+(2) randomly perturb different parameters (e.g., intensity, 
+size, track coordinates) to generate an ensemble; and 
+(3) write out each ensemble member to the fort.22 ATCF 
+tropical cyclone vortex format file. 
 
+Variables that can be perturbed:
 - "max_sustained_wind_speed" (Vmax) is made weaker/stronger
   based on random gaussian distribution with sigma scaled by
   historical mean absolute errors. central_pressure (pc) 
   is then changed proportionally based on Holland B
 
 - "radius_of_maximum_winds" (Rmax) is made small/larger
-  based on random number in a range bounded by 15% and 85%
-  CDF of historical forecast errors. 
+  based on random number in a range bounded by the 15th and 
+  85th percentile CDF of historical forecast errors. 
 
-- "along_track" variable is used to move the coordinate of 
-  the tropical cyclone center at each forecast time up/down 
-  the given track based on a random gaussian distribution with
-  sigma scaled by historical mean absolute errors. 
+- "along_track" variable is used to offset the coordinate of 
+  the tropical cyclone center at each forecast time forward or
+  backward along the given track based on a random gaussian 
+  distribution with sigma scaled by historical mean absolute 
+  errors. 
 
-- "cross_track" to do...
+- "cross_track" variable is used to offset the coordinate of 
+  the tropical cyclone center at each forecast time a certain
+  perpendicular distance from the given track based on a 
+  random gaussian distribution with sigma scaled by historical
+  mean absolute errors. 
 
-By William Pringle, Mar 2021 -
+By William Pringle, Mar-May 2021
 """
 from argparse import ArgumentParser
 from datetime import datetime, timedelta
 from dateutil.parser import parse as parse_date
 from adcircpy.forcing.winds.best_track import BestTrackForcing
 from copy import deepcopy
-from math import exp, inf
+from math import exp, inf, sqrt
 from sys import argv
 from pandas import DataFrame
 from random import random, gauss
@@ -39,8 +47,10 @@ from shapely.geometry import LineString
 def main(number_of_perturbations,variable_list,storm_code,start_date,end_date):
     #Example: 
     #number_of_perturbations = 3
-    #variable_list = ["max_sustained_wind_speed",
-    #                 "radius_of_maximum_winds"]
+    #variablelist = ["max_sustained_wind_speed",
+    #                "radius_of_maximum_winds",
+    #                "along_track",
+    #                "cross_track"]
     #storm_code="al062018" #NHC storm code
     #start_date = datetime(2018,9,11,6)
     #end_date = datetime(2018,9,17,18)
@@ -172,7 +182,7 @@ def perturb_bound(df_,perturbation, var, VT = None):
     if var == "along_track":
        df_ = interpolate_along_track(df_, VT.values, perturbation) 
     elif var == "cross_track":
-       print("cross_track: do nothing")
+       df_ = offset_track(df_, VT.values, perturbation) 
     else:
        test_list = df_[var] + perturbation
        LB = lower_bound[var]
@@ -278,7 +288,13 @@ def utm_proj_from_lon(lon_mean):
 
 def interpolate_along_track(df_,VT,along_track_errors): 
     """
-    interpolate_along_track(df_,VT,along_track_errors)
+    interpolate_along_track(df_,VT,along_track_errros)
+    Offsets points by a given error/distance by interpolating along the track 
+
+    :inputs -    dataframe df_: ATCF dataframe containing track info
+    :                  list VT: the forecast validation times [hours]
+    :  list along_track_errors: along-track errors for each forecast time (VT)
+    :return - dataframe df_: updated ATCF dataframe with different longitude latitude locations based on interpolated errors along track  
     """
     # Parameters
     interp_pts = 5  # number of pts along line for each interpolation
@@ -338,6 +354,104 @@ def interpolate_along_track(df_,VT,along_track_errors):
     df_["latitude"]  = lat_new 
     return df_
 
+def get_offset(x1,y1,x2,y2,d):
+    """
+    get_offset(x1,y1,x2,y2,d)
+      - get the perpendicular offset to the line (x1,y1) -> (x2,y2) by a distance of d 
+    """
+    if x1 == x2:
+        dx = d
+        dy = 0
+    elif y1 == y2:
+        dy = d
+        dx = 0
+    else: 
+        # if z is the distance to your parallel curve,
+        # then your delta-x and delta-y calculations are:
+        #   z**2 = x**2 + y**2
+        #   y = pslope * x
+        #   z**2 = x**2 + (pslope * x)**2
+        #   z**2 = x**2 + pslope**2 * x**2
+        #   z**2 = (1 + pslope**2) * x**2
+        #   z**2 / (1 + pslope**2) = x**2
+        #   z / (1 + pslope**2)**0.5 = x
+            
+        # tangential slope approximation
+        slope = (y2 - y1) / (x2 - x1)      
+        # normal slope
+        pslope = -1/slope  # (might be 1/slope depending on direction of travel)
+        psign = ((pslope > 0) == (x1 > x2)) * 2 - 1
+        dx = psign * d / sqrt(1 + pslope**2)
+        dy = pslope * dx
+    return dx,dy
+
+def offset_track(df_,VT,cross_track_errors):
+    """
+    offset_track(df_,VT,cross_track_errors)
+      - Offsets points by a given perpendicular error/distance from the original track 
+
+    :inputs -    dataframe df_: ATCF dataframe containing track info
+    :                  list VT: the forecast validation times [hours]
+    :  list cross_track_errors: cross-track errors [nm] for each forecast time (VT)
+    :return -    dataframe df_: updated ATCF dataframe with different longitude latitude locations based on perpendicular offsets set by the cross_track_errors 
+    """
+    # Parameters
+    nm2m = 1852     # nautical miles to meters
+    
+    # Get the coordinates of the track 
+    track_coords = df_[["longitude","latitude"]].values.tolist()
+    
+    # loop over all coordinates
+    lon_new = list()
+    lat_new = list()
+    for idx in range(0,len(track_coords)):
+        # get the current cross_track_error
+        cross_error = cross_track_errors[idx]*nm2m
+        # get the utm projection for the reference coordinate
+        myProj = utm_proj_from_lon(track_coords[idx][0])
+        # get the location of the original reference coordinate
+        x_ref, y_ref = myProj(track_coords[idx][0], track_coords[idx][1], inverse=False)
+        
+        # get the index of the previous forecasted coordinate   
+        idx_p = idx-1
+        while idx_p >= 0:
+            if VT[idx_p] < VT[idx]:
+               break
+            idx_p = idx_p - 1 
+        if idx_p < 0: # beginning of track
+           idx_p = idx
+        # get previous projected coordinate 
+        x_p, y_p = myProj(track_coords[idx_p][0], track_coords[idx_p][1], inverse=False)
+        # get the perpendicular offset based on the line connecting from the previous coordinate to the current coordinate
+        dx_p,dy_p = get_offset(x_p,y_p,x_ref,y_ref,cross_error)
+         
+        # get the index of the next forecasted coordinate   
+        idx_n = idx+1
+        while idx_n < len(track_coords):
+            if VT[idx_n] > VT[idx]:
+               break
+            idx_n = idx_n + 1 
+        if idx_n == len(track_coords): #end of track
+           idx_n = idx
+        # get previous projected coordinate 
+        x_n, y_n = myProj(track_coords[idx_n][0], track_coords[idx_n][1], inverse=False)
+        # get the perpendicular offset based on the line connecting from the current coordinate to the next coordinate
+        dx_n,dy_n = get_offset(x_ref,y_ref,x_n,y_n,cross_error)
+
+        # get the perpendicular offset based on the average of the forward and backward piecewise track lines adjusted so that the distance matches the actual cross_error
+        dx = 0.5*(dx_p + dx_n)
+        dy = 0.5*(dy_p + dy_n)
+        alpha = abs(cross_error)/sqrt(dx**2 + dy**2)
+
+        # compute the next point and retrieve back the lat-lon geographic coordinate
+        lon, lat = myProj(x_ref + alpha*dx, y_ref + alpha*dy, inverse=True)
+        lon_new.append(lon)
+        lat_new.append(lat)
+   
+    df_["longitude"] = lon_new 
+    df_["latitude"]  = lat_new 
+    return df_
+
 if __name__ == '__main__':
     ##################################
     # Example calls from command line for 2018 Hurricane Florence:
@@ -371,9 +485,7 @@ if __name__ == '__main__':
     # hardcoding variable list for now
     variables = ["max_sustained_wind_speed",
                  "radius_of_maximum_winds",
-                 "along_track"]
-    #variables = ["max_sustained_wind_speed"]
-    #variables = ["radius_of_maximum_winds"]
-    #variables = ["along_track"]
+                 "along_track",
+                 "cross_track"]
     # Enter function
     main(num,variables,stormcode,start_date,end_date)

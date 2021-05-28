@@ -1,6 +1,6 @@
 #!/bin/bash
 # run adcprep
-./adcprep << EOF
+./adcprep <<EOF
 NP
 4
 fort.14

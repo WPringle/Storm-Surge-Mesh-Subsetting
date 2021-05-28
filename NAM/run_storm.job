@@ -12,8 +12,8 @@ module load netcdf
 module load matlab
 
 # run through the spinup and forecast
-$np > run.timing
-date >> run.timing
+$np >run.timing
+date >>run.timing
 
 ## Setup cold start
 rm *.inv
@@ -26,7 +26,7 @@ ln -s HSOFS_120m_v1_Barry_CS.15 fort.15
 # download winds
 #./dl_arch-nam.sh
 
-date >> run.timing
+date >>run.timing
 
 ## Run My Program
 mpiexec -n $np ./padcirc
@@ -39,4 +39,4 @@ ln -s HSOFS_120m_v1_Barry_HS.15 fort.15
 # Run My Program
 mpiexec -n $np ./padcirc
 
-date >> run.timing
+date >>run.timing

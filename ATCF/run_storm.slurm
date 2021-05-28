@@ -20,40 +20,40 @@ module load anaconda
 source activate pyaos
 
 ## Setting up inputs
-date > run.timing
+date >run.timing
 
 # Download storm track GIS information
 ./DLGIS
-   
-date >> run.timing
+
+date >>run.timing
 
 # Doing the subset and merge if required
 if SUBSET; then
-   # run the merging script
-   matlab -nosplash -nodesktop -nodisplay < MERGEFN 
+  # run the merging script
+  matlab -nosplash -nodesktop -nodisplay <MERGEFN
 
-   date >> run.timing
+  date >>run.timing
 
-   # plot the merged mesh
-   matlab -nosplash -nodesktop -nodisplay < PLOTMESH
+  # plot the merged mesh
+  matlab -nosplash -nodesktop -nodisplay <PLOTMESH
 
-   date >> run.timing
+  date >>run.timing
 fi
 
 # Reading and writing the station data
 if READDATA; then
-   python STADATA write
+  python STADATA write
 fi
-   
-# Running the make new f15 script
-matlab -nosplash -nodesktop -nodisplay < MAKEF15 
 
-date >> run.timing
+# Running the make new f15 script
+matlab -nosplash -nodesktop -nodisplay <MAKEF15
+
+date >>run.timing
 
 # Download storm ATCF file
 ./DLATCF
 
-date >> run.timing
+date >>run.timing
 
 ## COLDSTART
 # Prepping coldstart
@@ -63,7 +63,7 @@ ln -s MESH_STORM_CS.15 fort.15
 # Run the coldstart
 srun -n NP ./padcirc
 
-date >> run.timing
+date >>run.timing
 
 ## HOTSTART
 # Prepping hotstart
@@ -74,16 +74,16 @@ ln -s MESH_STORM_HS.15 fort.15
 # Run the hotstart
 srun -n NP ./padcirc
 
-date >> run.timing
+date >>run.timing
 
 # Plotting the figures
-matlab -nosplash -nodesktop -nodisplay < PLOTRESULTS 
+matlab -nosplash -nodesktop -nodisplay <PLOTRESULTS
 
-matlab -nosplash -nodesktop -nodisplay < PLOTSTA 
+matlab -nosplash -nodesktop -nodisplay <PLOTSTA
 #python STADATA plot
 
 # exit with end date
-date >> run.timing
+date >>run.timing
 
 # delete the unnecessary PE directories
 rm -r PE*

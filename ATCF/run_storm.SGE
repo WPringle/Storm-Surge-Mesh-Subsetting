@@ -10,30 +10,30 @@ module load netcdf
 module load matlab
 
 ## Setting up inputs
-date > run.timing
+date >run.timing
 
 # Download storm track and vortex information
 ./dl_storm_vortex.sh
 
-date >> run.timing
+date >>run.timing
 
 # Doing the subset and merge if required
 if SUBSET; then
-   # run the merging script
-   matlab -nosplash -nodesktop -nodisplay < MERGEFN 
+  # run the merging script
+  matlab -nosplash -nodesktop -nodisplay <MERGEFN
 
-   date >> run.timing
+  date >>run.timing
 
-   # plot the merged mesh
-   matlab -nosplash -nodesktop -nodisplay < PLOTF
+  # plot the merged mesh
+  matlab -nosplash -nodesktop -nodisplay <PLOTF
 
-   date >> run.timing
+  date >>run.timing
 fi
-   
-# Running the make new f15 script
-matlab -nosplash -nodesktop -nodisplay < MAKEF15 
 
-date >> run.timing
+# Running the make new f15 script
+matlab -nosplash -nodesktop -nodisplay <MAKEF15
+
+date >>run.timing
 
 ## Setup cold start
 ln -s MESH_STORM_CS.15 fort.15
@@ -42,7 +42,7 @@ ln -s MESH_STORM_CS.15 fort.15
 ## Run My Program
 mpiexec -n NP ./padcirc
 
-date >> run.timing
+date >>run.timing
 
 # Setup hot start
 rm fort.15
@@ -52,4 +52,4 @@ ln -s MESH_STORM_HS.15 fort.15
 ## Run My Program
 mpiexec -n NP ./padcirc
 
-date >> run.timing
+date >>run.timing

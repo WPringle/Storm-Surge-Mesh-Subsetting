@@ -1,15 +1,15 @@
 #!/bin/bash
 
 ## the parameters
-code="STORMCODE"      #NHC storm code
-ts="STARTDATE"        #yyyymmddHH format for start date
-te="ENDDATE"          #yyyymmddHH format for end date
+code="STORMCODE" #NHC storm code
+ts="STARTDATE"   #yyyymmddHH format for start date
+te="ENDDATE"     #yyyymmddHH format for end date
 
 ## download ATCF file into fort.22 using adcircpy
 best_track_file --save-path fort.22 --start-date $ts --end-date $te $code
 
 ## this is the ensemble generation
-python3 make_storm_ensemble.py $code $ts $te 
+python3 make_storm_ensemble.py $code $ts $te
 
 ## make sure ATCF format is correct for GAHM
 # ASWIP option descriptor

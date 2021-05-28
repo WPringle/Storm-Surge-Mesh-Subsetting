@@ -29,7 +29,9 @@ Variables that can be perturbed:
   random gaussian distribution with sigma scaled by historical
   mean absolute errors. 
 
-By William Pringle, Mar-May 2021
+By William Pringle, Argonne National Laboratory, Mar-May 2021
+   Zach Burnett, NOS/NOAA
+   Saeed Moghimi, NOS/NOAA
 """
 from argparse import ArgumentParser
 from copy import deepcopy

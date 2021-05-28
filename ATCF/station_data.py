@@ -5,10 +5,10 @@ import os
 import sys
 
 import matplotlib
-import netCDF4   as nc
-import pandas    as pd
+import netCDF4 as nc
+import pandas as pd
 
-matplotlib.use("Agg")  # so we don't need X-server
+matplotlib.use('Agg')  # so we don't need X-server
 
 
 def read_csv(obs_dir, name, label):
@@ -65,7 +65,7 @@ def read_fort61(name):
 
 
 def set_time(time):
-    '''
+    """
         Converts time data into a pandas date object.
 
         Parameters
@@ -76,10 +76,13 @@ def set_time(time):
         Returns
         -------
         pandas.DatetimeIndex
-    '''
-    times = nc.num2date(time[:].squeeze(), time.units,
-                        only_use_cftime_datetimes=False,
-                        only_use_python_datetimes=True)
+    """
+    times = nc.num2date(
+        time[:].squeeze(),
+        time.units,
+        only_use_cftime_datetimes=False,
+        only_use_python_datetimes=True,
+    )
     time = pd.DatetimeIndex(pd.Series(times))  # , tz=self.location.tz)
     return time
 
@@ -90,8 +93,13 @@ def write_sta(table, name):
     
     """
 
-    table.to_csv(name, header=[table.shape[0], '', ''], sep='\t',
-                 index=False, columns=['lon', 'lat', 'station_code'])
+    table.to_csv(
+        name,
+        header=[table.shape[0], '', ''],
+        sep='\t',
+        index=False,
+        columns=['lon', 'lat', 'station_code'],
+    )
 
 
 def plot_sta(obs, mod, sta_dat):
@@ -103,7 +111,7 @@ def plot_sta(obs, mod, sta_dat):
     # loop over all the stations and make new figs
     for ind in range(len(sta_dat)):
         sta_code = sta_dat.station_code[ind]
-        print("Plotting Station: " + sta_code)
+        print('Plotting Station: ' + sta_code)
         # plot the mod
         ax = mod[ind].plot()
         # plot the obs
@@ -115,7 +123,7 @@ def plot_sta(obs, mod, sta_dat):
         matplotlib.pyplot.close(fig)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
     obs_dir = 'DATA_DIR'
     name = 'STORMCODE'

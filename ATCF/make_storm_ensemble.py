@@ -62,24 +62,24 @@ def main(number_of_perturbations, variable_list, storm_code, start_date,
                           end_date=end_date)
 
     # write out original fort.22
-    BT.write("original.22", overwrite=True)
+    BT.write('original.22', overwrite=True)
 
-    # Computing Holland B and validation times from BT 
+    # Computing Holland B and validation times from BT
     Holland_B = compute_Holland_B(BT)
     storm_VT = compute_VT_hours(BT)
     # print(Holland_B)
     # print(Storm_VT)
-    # Get the initial intensity and size  
+    # Get the initial intensity and size
     storm_strength = intensity_class(compute_initial(BT, vmax_var))
     storm_size = size_class(compute_initial(BT, rmw_var))
-    print("Initial storm strength: " + storm_strength)
-    print("Intial storm size: " + storm_size)
+    print('Initial storm strength: ' + storm_strength)
+    print('Intial storm size: ' + storm_size)
 
-    # extracting original dataframe   
+    # extracting original dataframe
     df_original = BT.df
 
-    # modifying the central pressure while subsequently changing 
-    # Vmax using the same Holland B parameter,  
+    # modifying the central pressure while subsequently changing
+    # Vmax using the same Holland B parameter,
     # writing each to a new fort.22
     for var in variable_list:
         print(var)
@@ -88,14 +88,14 @@ def main(number_of_perturbations, variable_list, storm_code, start_date,
         # Make the random pertubations based on the historical forecast errors
         # Interpolate from the given VT to the storm_VT
         # print(forecast_errors[var][Initial_Vmax])
-        if var == "radius_of_maximum_winds":
+        if var == 'radius_of_maximum_winds':
             storm_classification = storm_size
         else:
             storm_classification = storm_strength
         xp = forecast_errors[var][storm_classification].index
         yp = forecast_errors[var][storm_classification].values
-        base_errors = [interp(storm_VT, xp, yp[:, ncol])
-                       for ncol in range(len(yp[0]))]
+        base_errors = [interp(storm_VT, xp, yp[:, ncol]) for ncol in
+                       range(len(yp[0]))]
         # print(base_errors)
         for idx in range(1, number_of_perturbations + 1):
             # make a deepcopy to preserve the original dataframe
@@ -105,19 +105,20 @@ def main(number_of_perturbations, variable_list, storm_code, start_date,
                 alpha = gauss(0,
                               1) / 0.7979  # mean_abs_error = 0.7979*sigma
                 # add the error to the variable with bounds to some physical constraints
-                print("Random gaussian variable = " + str(alpha))
+                print('Random gaussian variable = ' + str(alpha))
                 df_modified = perturb_bound(df_modified,
                                             base_errors[0] * alpha, var,
                                             storm_VT)
             elif random_variable_type[var] == 'range':
                 alpha = random()
-                print("Random number in [0,1) = " + str(alpha))
+                print('Random number in [0,1) = ' + str(alpha))
                 # subtract the error from the variable with physical constraint bounds
-                df_modified = perturb_bound(df_modified,
-                                            -(base_errors[0] * (
-                                                    1.0 - alpha) +
-                                              base_errors[1] * alpha),
-                                            var)
+                df_modified = perturb_bound(
+                    df_modified,
+                    perturbation=-(base_errors[0] * (1.0 - alpha) +
+                                   base_errors[1] * alpha),
+                    var=var,
+                )
             if var == vmax_var:
                 # In case of Vmax need to change the central pressure
                 # incongruence with it (obeying Holland B relationship)
@@ -126,13 +127,13 @@ def main(number_of_perturbations, variable_list, storm_code, start_date,
             # reset the dataframe
             BT._df = df_modified
             # write out the modified fort.22
-            BT.write(var + "_" + str(idx) + ".22", overwrite=True)
+            BT.write(var + '_' + str(idx) + '.22', overwrite=True)
 
 
 ################################################################
 ## Sub functions and dictionaries...
 ################################################################
-# get the validation time of storm in hours 
+# get the validation time of storm in hours
 def compute_VT_hours(BT_test):
     VT = (BT_test.datetime - BT_test.start_date) / timedelta(hours=1)
     return VT
@@ -154,10 +155,10 @@ nm2sm = 1.150781  # nautical miles to statute miles
 sm2nm = 0.868976  # statute miles to nautical miles
 e1 = exp(1.0)  # e
 # variable names
-pc_var = "central_pressure"
-pb_var = "background_pressure"
-vmax_var = "max_sustained_wind_speed"
-rmw_var = "radius_of_maximum_winds"
+pc_var = 'central_pressure'
+pb_var = 'background_pressure'
+vmax_var = 'max_sustained_wind_speed'
+rmw_var = 'radius_of_maximum_winds'
 
 
 # Compute Holland B at each time snap
@@ -179,31 +180,31 @@ def compute_pc_from_Vmax(df_test, B):
 
 # random variable types (Gaussian or just a range)
 random_variable_type = {
-    "max_sustained_wind_speed": "gauss",
-    "radius_of_maximum_winds": "range",
-    "cross_track": "gauss",
-    "along_track": "gauss"
+    'max_sustained_wind_speed': 'gauss',
+    'radius_of_maximum_winds': 'range',
+    'cross_track': 'gauss',
+    'along_track': 'gauss',
 }
 # physical bounds of different variables
 lower_bound = {
-    "max_sustained_wind_speed": 25,  # [kt]
-    "radius_of_maximum_winds": 5,  # [nm]
-    "cross_track": -inf,
-    "along_track": -inf
+    'max_sustained_wind_speed': 25,  # [kt]
+    'radius_of_maximum_winds': 5,  # [nm]
+    'cross_track': -inf,
+    'along_track': -inf,
 }
 upper_bound = {
-    "max_sustained_wind_speed": 165,  # [kt]
-    "radius_of_maximum_winds": 200,  # [nm]
-    "cross_track": +inf,
-    "along_track": +inf
+    'max_sustained_wind_speed': 165,  # [kt]
+    'radius_of_maximum_winds': 200,  # [nm]
+    'cross_track': +inf,
+    'along_track': +inf,
 }
 
 
 # perturbing the variable with physical bounds
 def perturb_bound(df_, perturbation, var, VT=None):
-    if var == "along_track":
+    if var == 'along_track':
         df_ = interpolate_along_track(df_, VT.values, perturbation)
-    elif var == "cross_track":
+    elif var == 'cross_track':
         df_ = offset_track(df_, VT.values, perturbation)
     else:
         test_list = df_[var] + perturbation
@@ -217,11 +218,11 @@ def perturb_bound(df_, perturbation, var, VT=None):
 # Category for Vmax based intensity
 def intensity_class(vmax):
     if vmax < 50:
-        return "<50kt"  # weak
+        return '<50kt'  # weak
     elif vmax > 95:
-        return ">95kt"  # strong
+        return '>95kt'  # strong
     else:
-        return "50-95kt"  # medium
+        return '50-95kt'  # medium
 
 
 # Category for Rmax based size
@@ -229,15 +230,15 @@ def size_class(rmw_nm):
     # convert from nautical miles to statute miles
     rmw_sm = rmw_nm * nm2sm
     if rmw_sm < 15:
-        return "<15sm"  # very small
+        return '<15sm'  # very small
     elif rmw_sm < 25:
-        return "15-25sm"  # small
+        return '15-25sm'  # small
     elif rmw_sm < 35:
-        return "25-35sm"  # medium
+        return '25-35sm'  # medium
     elif rmw_sm < 45:
-        return "35-45sm"  # large
+        return '35-45sm'  # large
     else:
-        return ">45sm"  # very large
+        return '>45sm'  # very large
 
 
 # Index of absolute errors (forecast times [hrs)]
@@ -245,96 +246,140 @@ VT = [0, 12, 24, 36, 48, 72, 96, 120]  # no 60-hr data
 VTR = [0, 12, 24, 36, 48, 60, 72, 96, 120]  # has 60-hr data (for Rmax)
 # Mean absolute Vmax errors based on initial intensity
 Vmax_weak_errors = DataFrame(
-    data=[1.45, 4.01, 6.17, 8.42, 10.46, 14.28, 18.26, 19.91], index=VT,
-    columns=["mean error [kt]"])
+    data=[1.45, 4.01, 6.17, 8.42, 10.46, 14.28, 18.26, 19.91],
+    index=VT,
+    columns=['mean error [kt]'],
+)
 Vmax_medium_errors = DataFrame(
-    data=[2.26, 5.75, 8.54, 9.97, 11.28, 13.11, 13.46, 12.62], index=VT,
-    columns=["mean error [kt]"])
+    data=[2.26, 5.75, 8.54, 9.97, 11.28, 13.11, 13.46, 12.62],
+    index=VT,
+    columns=['mean error [kt]'],
+)
 Vmax_strong_errors = DataFrame(
     data=[2.80, 7.94, 11.53, 13.27, 12.66, 13.41, 13.46, 13.55],
-    index=VT, columns=["mean error [kt]"])
+    index=VT,
+    columns=['mean error [kt]'],
+)
 # RMW errors bound based on initial size
-RMW_vsmall_errors = DataFrame(data=sm2nm * transpose([[0.0, -13.82,
-                                                       -19.67, -21.37,
-                                                       -26.31, -32.71,
-                                                       -39.12, -46.80,
-                                                       -52.68],
-                                                      [0.0, 1.27, 0.22,
-                                                       1.02, 0.00,
-                                                       -2.59, -5.18,
-                                                       -7.15, -12.91]]),
-                              index=VTR, columns=["minimum error [nm]",
-                                                  "maximum error [nm]"])
-RMW_small_errors = DataFrame(data=sm2nm * transpose([[0.0, -10.47,
-                                                      -14.54, -20.35,
-                                                      -23.88, -21.78,
-                                                      -19.68, -24.24,
-                                                      -28.30],
-                                                     [0.0, 4.17, 6.70,
-                                                      6.13, 6.54, 6.93,
-                                                      7.32, 9.33,
-                                                      8.03]]),
-                             index=VTR, columns=["minimum error [nm]",
-                                                 "maximum error [nm]"])
-RMW_medium_errors = DataFrame(data=sm2nm * transpose(
-    [[0.0, -8.57, -13.41, -10.87, -9.26, -9.34, -9.42, -7.41, -7.40],
-     [0.0, 8.21, 10.62, 13.93, 15.62, 16.04, 16.46, 16.51, 16.70]]),
-                              index=VTR, columns=["minimum error [nm]",
-                                                  "maximum error [nm]"])
-RMW_large_errors = DataFrame(data=sm2nm * transpose(
-    [[0.0, -10.66, -7.64, -5.68, -3.25, -1.72, -0.19, 3.65, 2.59],
-     [0.0, 14.77, 17.85, 22.07, 27.60, 27.08, 26.56, 26.80, 28.30]]),
-                             index=VTR, columns=["minimum error [nm]",
-                                                 "maximum error [nm]"])
-RMW_vlarge_errors = DataFrame(data=sm2nm * transpose(
-    [[0.0, -15.36, -10.37, 3.14, 12.10, 12.21, 12.33, 6.66, 7.19],
-     [0.0, 21.43, 29.96, 37.22, 39.27, 39.10, 38.93, 34.40, 35.93]]),
-                              index=VTR, columns=["minimum error [nm]",
-                                                  "maximum error [nm]"])
+RMW_vsmall_errors = DataFrame(
+    data=sm2nm
+         * transpose(
+        [
+            [0.0, -13.82, -19.67, -21.37, -26.31, -32.71, -39.12,
+             -46.80, -52.68],
+            [0.0, 1.27, 0.22, 1.02, 0.00, -2.59, -5.18, -7.15, -12.91],
+        ]
+    ),
+    index=VTR,
+    columns=['minimum error [nm]', 'maximum error [nm]'],
+)
+RMW_small_errors = DataFrame(
+    data=sm2nm
+         * transpose(
+        [
+            [0.0, -10.47, -14.54, -20.35, -23.88, -21.78, -19.68,
+             -24.24, -28.30],
+            [0.0, 4.17, 6.70, 6.13, 6.54, 6.93, 7.32, 9.33, 8.03],
+        ]
+    ),
+    index=VTR,
+    columns=['minimum error [nm]', 'maximum error [nm]'],
+)
+RMW_medium_errors = DataFrame(
+    data=sm2nm
+         * transpose(
+        [
+            [0.0, -8.57, -13.41, -10.87, -9.26, -9.34, -9.42, -7.41,
+             -7.40],
+            [0.0, 8.21, 10.62, 13.93, 15.62, 16.04, 16.46, 16.51,
+             16.70],
+        ]
+    ),
+    index=VTR,
+    columns=['minimum error [nm]', 'maximum error [nm]'],
+)
+RMW_large_errors = DataFrame(
+    data=sm2nm
+         * transpose(
+        [
+            [0.0, -10.66, -7.64, -5.68, -3.25, -1.72, -0.19, 3.65,
+             2.59],
+            [0.0, 14.77, 17.85, 22.07, 27.60, 27.08, 26.56, 26.80,
+             28.30],
+        ]
+    ),
+    index=VTR,
+    columns=['minimum error [nm]', 'maximum error [nm]'],
+)
+RMW_vlarge_errors = DataFrame(
+    data=sm2nm
+         * transpose(
+        [
+            [0.0, -15.36, -10.37, 3.14, 12.10, 12.21, 12.33, 6.66,
+             7.19],
+            [0.0, 21.43, 29.96, 37.22, 39.27, 39.10, 38.93, 34.40,
+             35.93],
+        ]
+    ),
+    index=VTR,
+    columns=['minimum error [nm]', 'maximum error [nm]'],
+)
 # Mean absolute cross-track errors based on initial intensity
 ct_weak_errors = DataFrame(
-    data=[1.45, 4.01, 6.17, 8.42, 10.46, 14.28, 18.26, 19.91], index=VT,
-    columns=["mean error [nm]"])
+    data=[1.45, 4.01, 6.17, 8.42, 10.46, 14.28, 18.26, 19.91],
+    index=VT,
+    columns=['mean error [nm]'],
+)
 ct_medium_errors = DataFrame(
-    data=[2.26, 5.75, 8.54, 9.97, 11.28, 13.11, 13.46, 12.62], index=VT,
-    columns=["mean error [nm]"])
+    data=[2.26, 5.75, 8.54, 9.97, 11.28, 13.11, 13.46, 12.62],
+    index=VT,
+    columns=['mean error [nm]'],
+)
 ct_strong_errors = DataFrame(
     data=[2.80, 7.94, 11.53, 13.27, 12.66, 13.41, 13.46, 13.55],
-    index=VT, columns=["mean error [nm]"])
+    index=VT,
+    columns=['mean error [nm]'],
+)
 # Mean absolute along-track errors based on initial intensity
 at_weak_errors = DataFrame(
-    data=[1.45, 4.01, 6.17, 8.42, 10.46, 14.28, 18.26, 19.91], index=VT,
-    columns=["mean error [nm]"])
+    data=[1.45, 4.01, 6.17, 8.42, 10.46, 14.28, 18.26, 19.91],
+    index=VT,
+    columns=['mean error [nm]'],
+)
 at_medium_errors = DataFrame(
-    data=[2.26, 5.75, 8.54, 9.97, 11.28, 13.11, 13.46, 12.62], index=VT,
-    columns=["mean error [nm]"])
+    data=[2.26, 5.75, 8.54, 9.97, 11.28, 13.11, 13.46, 12.62],
+    index=VT,
+    columns=['mean error [nm]'],
+)
 at_strong_errors = DataFrame(
     data=[2.80, 7.94, 11.53, 13.27, 12.66, 13.41, 13.46, 13.55],
-    index=VT, columns=["mean error [nm]"])
+    index=VT,
+    columns=['mean error [nm]'],
+)
 # Dictionary of historical forecast errors by variable
 forecast_errors = {
-    "max_sustained_wind_speed": {
-        "<50kt": Vmax_weak_errors,
-        "50-95kt": Vmax_medium_errors,
-        ">95kt": Vmax_strong_errors
+    'max_sustained_wind_speed': {
+        '<50kt': Vmax_weak_errors,
+        '50-95kt': Vmax_medium_errors,
+        '>95kt': Vmax_strong_errors,
     },
-    "radius_of_maximum_winds": {
-        "<15sm": RMW_vsmall_errors,
-        "15-25sm": RMW_small_errors,
-        "25-35sm": RMW_medium_errors,
-        "35-45sm": RMW_large_errors,
-        ">45sm": RMW_vlarge_errors
+    'radius_of_maximum_winds': {
+        '<15sm': RMW_vsmall_errors,
+        '15-25sm': RMW_small_errors,
+        '25-35sm': RMW_medium_errors,
+        '35-45sm': RMW_large_errors,
+        '>45sm': RMW_vlarge_errors,
     },
-    "cross_track": {
-        "<50kt": ct_weak_errors,
-        "50-95kt": ct_medium_errors,
-        ">95kt": ct_strong_errors
+    'cross_track': {
+        '<50kt': ct_weak_errors,
+        '50-95kt': ct_medium_errors,
+        '>95kt': ct_strong_errors,
     },
-    "along_track": {
-        "<50kt": at_weak_errors,
-        "50-95kt": at_medium_errors,
-        ">95kt": at_strong_errors
-    }
+    'along_track': {
+        '<50kt': at_weak_errors,
+        '50-95kt': at_medium_errors,
+        '>95kt': at_strong_errors,
+    },
 }
 
 
@@ -352,8 +397,10 @@ def utm_proj_from_lon(lon_mean):
     """
     zone = floor((lon_mean + 180) / 6) + 1
     # print("Zone is " + str(zone))
-    myProj = Proj("+proj=utm +zone=" + str(
-        zone) + "K, +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
+    myProj = Proj(
+        '+proj=utm +zone=' + str(
+            zone) + 'K, +ellps=WGS84 +datum=WGS84 +units=m +no_defs'
+    )
     return myProj
 
 
@@ -371,8 +418,8 @@ def interpolate_along_track(df_, VT, along_track_errors):
     interp_pts = 5  # maximum number of pts along line for each interpolation
     nm2m = 1852  # nautical miles to meters
 
-    # Get the coordinates of the track 
-    track_coords = df_[["longitude", "latitude"]].values.tolist()
+    # Get the coordinates of the track
+    track_coords = df_[['longitude', 'latitude']].values.tolist()
     ## Extrapolating the track for negative errors at beginning
     ## and positive errors at end of track
     for idx in range(0, len(VT)):
@@ -412,12 +459,13 @@ def interpolate_along_track(df_, VT, along_track_errors):
                 break  # reached end of line
             if ind == idx or VT[ind] != VT[ind - along_sign]:
                 # get the x,y utm coordinate for this line string
-                x_utm, y_utm = myProj(track_coords[ind][0],
-                                      track_coords[ind][1],
-                                      inverse=False)
+                x_utm, y_utm = myProj(
+                    track_coords[ind][0], track_coords[ind][1],
+                    inverse=False
+                )
                 pts.append((x_utm, y_utm))
             ind = ind + along_sign
-        # make the temporary line segment 
+        # make the temporary line segment
         line_segment = LineString(
             [pts[pp] for pp in range(0, len(pts))])
         # interpolate a distance "along_error" along the line
@@ -432,8 +480,8 @@ def interpolate_along_track(df_, VT, along_track_errors):
         lat_new.append(lat)
     # print([lon_new, lat_new])
 
-    df_["longitude"] = lon_new
-    df_["latitude"] = lat_new
+    df_['longitude'] = lon_new
+    df_['latitude'] = lat_new
     return df_
 
 
@@ -482,8 +530,8 @@ def offset_track(df_, VT, cross_track_errors):
     # Parameters
     nm2m = 1852  # nautical miles to meters
 
-    # Get the coordinates of the track 
-    track_coords = df_[["longitude", "latitude"]].values.tolist()
+    # Get the coordinates of the track
+    track_coords = df_[['longitude', 'latitude']].values.tolist()
 
     # loop over all coordinates
     lon_new = list()
@@ -497,7 +545,7 @@ def offset_track(df_, VT, cross_track_errors):
         x_ref, y_ref = myProj(track_coords[idx][0],
                               track_coords[idx][1], inverse=False)
 
-        # get the index of the previous forecasted coordinate   
+        # get the index of the previous forecasted coordinate
         idx_p = idx - 1
         while idx_p >= 0:
             if VT[idx_p] < VT[idx]:
@@ -505,13 +553,13 @@ def offset_track(df_, VT, cross_track_errors):
             idx_p = idx_p - 1
         if idx_p < 0:  # beginning of track
             idx_p = idx
-        # get previous projected coordinate 
+        # get previous projected coordinate
         x_p, y_p = myProj(track_coords[idx_p][0],
                           track_coords[idx_p][1], inverse=False)
         # get the perpendicular offset based on the line connecting from the previous coordinate to the current coordinate
         dx_p, dy_p = get_offset(x_p, y_p, x_ref, y_ref, cross_error)
 
-        # get the index of the next forecasted coordinate   
+        # get the index of the next forecasted coordinate
         idx_n = idx + 1
         while idx_n < len(track_coords):
             if VT[idx_n] > VT[idx]:
@@ -519,7 +567,7 @@ def offset_track(df_, VT, cross_track_errors):
             idx_n = idx_n + 1
         if idx_n == len(track_coords):  # end of track
             idx_n = idx
-        # get previous projected coordinate 
+        # get previous projected coordinate
         x_n, y_n = myProj(track_coords[idx_n][0],
                           track_coords[idx_n][1], inverse=False)
         # get the perpendicular offset based on the line connecting from the current coordinate to the next coordinate
@@ -536,23 +584,22 @@ def offset_track(df_, VT, cross_track_errors):
         lon_new.append(lon)
         lat_new.append(lat)
 
-    df_["longitude"] = lon_new
-    df_["latitude"] = lat_new
+    df_['longitude'] = lon_new
+    df_['latitude'] = lat_new
     return df_
 
 
 if __name__ == '__main__':
     ##################################
     # Example calls from command line for 2018 Hurricane Florence:
-    # - python3 make_storm_ensemble.py 3 al062018 2018-09-11-06 2018-09-17-06 
+    # - python3 make_storm_ensemble.py 3 al062018 2018-09-11-06 2018-09-17-06
     # - python3 make_storm_ensemble.py 5 Florence2018 2018-09-11-06
     ##################################
     # Implement argument parsing
     argument_parser = ArgumentParser()
     argument_parser.add_argument('number_of_perturbations',
                                  help='number of perturbations')
-    argument_parser.add_argument('storm_code',
-                                 help='storm name/code')
+    argument_parser.add_argument('storm_code', help='storm name/code')
     argument_parser.add_argument('start_date', nargs='?',
                                  help='start date')
     argument_parser.add_argument('end_date', nargs='?', help='end date')
@@ -572,9 +619,11 @@ if __name__ == '__main__':
     if end_date is not None:
         end_date = parse_date(end_date)
     # hardcoding variable list for now
-    variables = ["max_sustained_wind_speed",
-                 "radius_of_maximum_winds",
-                 "along_track",
-                 "cross_track"]
+    variables = [
+        'max_sustained_wind_speed',
+        'radius_of_maximum_winds',
+        'along_track',
+        'cross_track',
+    ]
     # Enter function
     main(num, variables, stormcode, start_date, end_date)

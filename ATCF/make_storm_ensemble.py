@@ -97,7 +97,7 @@ def main(
     storm_size = size_class(compute_initial(best_track, rmw_var))
 
     print(f'Initial storm strength: {storm_strength}')
-    print(f'Intial storm size: {storm_size}')
+    print(f'Initial storm size: {storm_size}')
 
     # extracting original dataframe
     df_original = best_track.df

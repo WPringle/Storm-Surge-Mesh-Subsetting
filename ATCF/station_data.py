@@ -1,43 +1,59 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+from datetime import datetime
 import os
+from os import PathLike
+from pathlib import Path
 import sys
 
 import matplotlib
 import netCDF4 as nc
+import numpy
+from pandas import DataFrame, Series
 import pandas as pd
 
 matplotlib.use('Agg')  # so we don't need X-server
 
 
-def read_csv(obs_dir, name, label):
+def read_csv(
+        obs_dir: PathLike,
+        name: str,
+        label: str
+) -> (DataFrame, [DataFrame]):
     """
     
 
     
     """
+    if not isinstance(obs_dir, Path):
+        obs_dir = Path(obs_dir)
+
     outt = os.path.join(obs_dir, name, label)
     outd = os.path.join(outt, 'data')
     if not os.path.exists(outd):
         sys.exit('ERROR', outd)
 
-    table = pd.read_csv(os.path.join(outt, 'table.csv')).set_index(
-        'station_name')
+    table = pd.read_csv(
+        os.path.join(outt, 'table.csv'),
+    ).set_index('station_name')
     table['station_code'] = table['station_code'].astype('str')
     stations = table['station_code']
 
     data = []
-    metadata = []
     for ista in range(len(stations)):
         sta = stations[ista]
         fname8 = os.path.join(outd, sta) + '.csv'
-        df = pd.read_csv(fname8, parse_dates=['date_time']).set_index(
-            'date_time')
+        df = pd.read_csv(
+            fname8,
+            parse_dates=['date_time'],
+        ).set_index('date_time')
 
         fmeta = os.path.join(outd, sta) + '_metadata.csv'
-        meta = pd.read_csv(fmeta, header=0,
-                           names=['names', 'info']).set_index('names')
+        meta = pd.read_csv(
+            fmeta,
+            header=0,
+            names=['names', 'info'],
+        ).set_index('names')
 
         meta_dict = meta.to_dict()['info']
         meta_dict['lon'] = float(meta_dict['lon'])
@@ -48,7 +64,7 @@ def read_csv(obs_dir, name, label):
     return table, data
 
 
-def read_fort61(name):
+def read_fort61(name: PathLike) -> [Series]:
     ds = nc.Dataset(name)
     h = ds.variables['zeta']
     stations = ds.variables['station_name']
@@ -64,7 +80,7 @@ def read_fort61(name):
     return data
 
 
-def set_time(time):
+def set_time(time: numpy.ndarray) -> pd.DatetimeIndex:
     """
         Converts time data into a pandas date object.
 
@@ -77,6 +93,7 @@ def set_time(time):
         -------
         pandas.DatetimeIndex
     """
+
     times = nc.num2date(
         time[:].squeeze(),
         time.units,
@@ -84,10 +101,11 @@ def set_time(time):
         only_use_python_datetimes=True,
     )
     time = pd.DatetimeIndex(pd.Series(times))  # , tz=self.location.tz)
+
     return time
 
 
-def write_sta(table, name):
+def write_sta(table: DataFrame, name: PathLike):
     """
     Writes out the table into the ADCIRC .151 format for station outputs
     
@@ -102,7 +120,11 @@ def write_sta(table, name):
     )
 
 
-def plot_sta(obs, mod, sta_dat):
+def plot_sta(
+        obs: [datetime],
+        mod: [Series],
+        sta_dat: DataFrame,
+):
     """
       Plots the observed time series versus the simulated one
 
@@ -124,7 +146,6 @@ def plot_sta(obs, mod, sta_dat):
 
 
 if __name__ == '__main__':
-
     obs_dir = 'DATA_DIR'
     name = 'STORMCODE'
     name = name.upper()  # capital

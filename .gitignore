@@ -8,3 +8,4 @@ data/*.mat
 tests/*/*.mat
 tests/*/run.timing
 tests/*/Figs/
+tests/*/outputs

@@ -137,8 +137,8 @@ def main(
                     alpha = -1.0
                 elif perturbation_index == 2:
                     alpha = +1.0
-                #alpha = gauss(0, 1) / 0.7979
                 # mean_abs_error = 0.7979 * sigma
+                #alpha = gauss(0, 1) / 0.7979
 
                 print(f'Random gaussian variable = {alpha}')
 
@@ -179,7 +179,6 @@ def main(
 
             # write out the modified fort.22
             best_track.write(
-                #output_directory / f'{variable}_{perturbation_index}.22',
                 output_directory / f'{variable}_{alpha}.22',
                 overwrite=True,
             )

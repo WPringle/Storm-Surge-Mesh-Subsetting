@@ -6,17 +6,17 @@
 clearvars; clc; close all
 %
 % add paths to data and scripts
-addpath('~/MATLAB/OceanMesh2D/m_map/')
-addpath('outputs')
+addpath('MMAPHOME/')
 
 %%%% edit here
 style = ["x-",".-"];
 variables = ["along_track" "cross_track" "max_sustained_wind_speed" "radius_of_maximum_winds"];
 direc = 'outputs/';
+addpath(direc)
 %%%%
 
 %%%%%%% Setting up the domain and plotting 
-m_proj('utm','lon',[-83 -60],'lat',[25 45])
+m_proj('utm','lon',[-86 -60],'lat',[24 44])
 
 for var = variables
    disp(['Plotting ' var{1} ' track perturbation'])

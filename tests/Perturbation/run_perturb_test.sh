@@ -23,7 +23,7 @@ ln -s ../../ATCF/make_storm_ensemble.py .
 date >run.timing
 ## run the make_ensemble script
                     #no. ensembles #stormname/code #start-date #end-date
-python3 make_storm_ensemble.py 3 Florence2018 2018-09-11-06 2018-09-17-06
+python3 make_storm_ensemble.py 2 Florence2018 2018-09-11-00 #2018-09-17-06
 
 date >>run.timing
 

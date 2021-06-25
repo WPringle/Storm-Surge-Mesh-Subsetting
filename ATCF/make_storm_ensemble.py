@@ -133,7 +133,11 @@ def main(
 
             # get the random perturbation sample
             if random_variable_type[variable] == 'gauss':
-                alpha = gauss(0, 1) / 0.7979
+                if perturbation_index == 1:
+                    alpha = -1.0
+                elif perturbation_index == 2:
+                    alpha = +1.0
+                #alpha = gauss(0, 1) / 0.7979
                 # mean_abs_error = 0.7979 * sigma
 
                 print(f'Random gaussian variable = {alpha}')
@@ -146,7 +150,11 @@ def main(
                     validation_time=storm_VT,
                 )
             elif random_variable_type[variable] == 'range':
-                alpha = random()
+                if perturbation_index == 1:
+                    alpha = 0.25
+                elif perturbation_index == 2:
+                    alpha = 0.75
+                #alpha = random()
 
                 print(f'Random number in [0,1) = {alpha}')
 
@@ -171,7 +179,8 @@ def main(
 
             # write out the modified fort.22
             best_track.write(
-                output_directory / f'{variable}_{perturbation_index}.22',
+                #output_directory / f'{variable}_{perturbation_index}.22',
+                output_directory / f'{variable}_{alpha}.22',
                 overwrite=True,
             )
 
@@ -379,33 +388,33 @@ RMW_vlarge_errors = DataFrame(
 )
 # Mean absolute cross-track errors based on initial intensity
 ct_weak_errors = DataFrame(
-    data=[1.45, 4.01, 6.17, 8.42, 10.46, 14.28, 18.26, 19.91],
+    data=[4.98, 16.16, 23.10, 28.95, 38.03, 56.88, 92.95, 119.67],
     index=VT,
     columns=['mean error [nm]'],
 )
 ct_medium_errors = DataFrame(
-    data=[2.26, 5.75, 8.54, 9.97, 11.28, 13.11, 13.46, 12.62],
+    data=[2.89, 11.58, 16.83, 21.10, 27.76, 47.51, 68.61, 103.45],
     index=VT,
     columns=['mean error [nm]'],
 )
 ct_strong_errors = DataFrame(
-    data=[2.80, 7.94, 11.53, 13.27, 12.66, 13.41, 13.46, 13.55],
+    data=[1.85, 7.79, 12.68, 17.92, 25.01, 40.48, 60.69, 79.98],
     index=VT,
     columns=['mean error [nm]'],
 )
 # Mean absolute along-track errors based on initial intensity
 at_weak_errors = DataFrame(
-    data=[1.45, 4.01, 6.17, 8.42, 10.46, 14.28, 18.26, 19.91],
+    data=[6.33, 17.77, 26.66, 37.75, 51.07, 69.22, 108.59, 125.01],
     index=VT,
     columns=['mean error [nm]'],
 )
 at_medium_errors = DataFrame(
-    data=[2.26, 5.75, 8.54, 9.97, 11.28, 13.11, 13.46, 12.62],
+    data=[3.68, 12.74, 19.43, 27.51, 37.28, 57.82, 80.15, 108.07],
     index=VT,
     columns=['mean error [nm]'],
 )
 at_strong_errors = DataFrame(
-    data=[2.80, 7.94, 11.53, 13.27, 12.66, 13.41, 13.46, 13.55],
+    data=[2.35, 8.57, 14.64, 23.36, 33.59, 49.26, 70.90, 83.55],
     index=VT,
     columns=['mean error [nm]'],
 )

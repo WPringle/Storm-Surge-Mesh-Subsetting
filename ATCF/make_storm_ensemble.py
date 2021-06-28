@@ -579,7 +579,10 @@ def get_offset(
     get_offset(x1,y1,x2,y2,d)
       - get the perpendicular offset to the line (x1,y1) -> (x2,y2) by a distance of d 
     """
-    if x1 == x2:
+    if x1 == x2 and y1 == y2:
+        dx = 0
+        dy = 0
+    elif x1 == x2:
         dx = d
         dy = 0
     elif y1 == y2:

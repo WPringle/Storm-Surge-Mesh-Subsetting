@@ -63,7 +63,7 @@ if __name__ == '__main__':
     # set the inputs / parameters
     storm_duration = 5 #[days]
     coarse_mesh = 'WNAT_1km'
-    fine_mesh = 'HSOFS_2016'
+    fine_mesh = 'HSOFS'
     depths = [150] #[m] (d_{ref})
     isotachs = [34, 50, 64] #[kt]
 
@@ -74,8 +74,8 @@ if __name__ == '__main__':
     output_directory = directory / 'Florence' / 'data'
     get_vortex_track(output_directory,storm,start_date,storm_duration,isotachs)
     # Execute the subset and merging for different isotachs and cutoff depths
-    #output_directory = directory / 'Florence' / 'mesh'
-    #subset_merge_mesh(output_directory,coarse_mesh,fine_mesh,storm,depths,isotachs) 
+    output_directory = directory / 'Florence' / 'mesh'
+    subset_merge_mesh(output_directory,coarse_mesh,fine_mesh,storm,depths,isotachs) 
     
     ## Sandy 2012
     storm = 'Sandy2012'
@@ -84,8 +84,8 @@ if __name__ == '__main__':
     output_directory = directory / 'Sandy' / 'data'
     get_vortex_track(output_directory,storm,start_date,storm_duration,isotachs)
     ## Execute the subset and merging for different isotachs and cutoff depths
-    #output_directory = directory / 'Sandy' / 'mesh'
-    #subset_merge_mesh(output_directory,coarse_mesh,fine_mesh,storm,depths,isotachs) 
+    output_directory = directory / 'Sandy' / 'mesh'
+    subset_merge_mesh(output_directory,coarse_mesh,fine_mesh,storm,depths,isotachs) 
     
     ## Irma 2017
     storm = 'Irma2017'
@@ -94,15 +94,15 @@ if __name__ == '__main__':
     output_directory = directory / 'Irma' / 'data'
     get_vortex_track(output_directory,storm,start_date,storm_duration,isotachs)
     # Execute the subset and merging for different isotachs and cutoff depths
-    #output_directory = directory / 'Irma' / 'mesh'
-    #subset_merge_mesh(output_directory,coarse_mesh,fine_mesh,storm,depths,isotachs) 
+    output_directory = directory / 'Irma' / 'mesh'
+    subset_merge_mesh(output_directory,coarse_mesh,fine_mesh,storm,depths,isotachs) 
     
     ## Matthew 2016
-    #storm = 'Matthew2016'
-    #start_date = parse_date('2016-10-05 00:00')
+    storm = 'Matthew2016'
+    start_date = parse_date('2016-10-05 00:00')
     # Get the track data and wind swaths 
-    #output_directory = directory / 'Matthew' / 'data'
-    #get_vortex_track(output_directory,storm,start_date,storm_duration,isotachs)
+    output_directory = directory / 'Matthew' / 'data'
+    get_vortex_track(output_directory,storm,start_date,storm_duration,isotachs)
     # Execute the subset and merging for different isotachs and cutoff depths
-    #output_directory = directory / 'Matthew' / 'mesh'
-    #subset_merge_mesh(output_directory,coarse_mesh,fine_mesh,storm,depths,isotachs) 
+    output_directory = directory / 'Matthew' / 'mesh'
+    subset_merge_mesh(output_directory,coarse_mesh,fine_mesh,storm,depths,isotachs) 

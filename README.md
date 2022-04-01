@@ -23,9 +23,11 @@ Starting Out
 
 1) Look at the `readmes` inside the `data/`, `mesh/`, and `exec/` directories to see what you might want to add to these directories in preparation. 
 
-2) With python and MATLAB loaded execute: `python besttrack_subset_merge.py`
+2) Modify `besttrack_subset_merge.py` for the hurricane (four examples included), wind swath isotach and reference depth used for subsetting. Also confirm fine and coarse mesh names. 
 
-3) Use `CoupledModelDriver` to set-up the simulation. 
+3) With python environment and MATLAB loaded, execute: `python besttrack_subset_merge.py`
+
+4) Use `CoupledModelDriver` to set-up the simulation. 
 
 Requirements
 ==============

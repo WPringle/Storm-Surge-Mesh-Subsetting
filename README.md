@@ -44,7 +44,7 @@ Python package:
 - [CoupledModelDriver](https://github.com/noaa-ocs-modeling/CoupledModelDriver)
 
 FORTRAN code:
-- [adcirc-cg](https://github.com/adcirc/adcirc-cg)
+- [adcirc](https://github.com/adcirc/)
 
 References
 ==============

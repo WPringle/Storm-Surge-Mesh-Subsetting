@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41008
-station_name,"GRAYS REEF - 40 NM Southeast of Savannah, GA"
-station_code,41008
-sensor,urn:ioos:sensor:wmo:41008::wpm1
-lon,-80.868
-lat,31.4
-depth,

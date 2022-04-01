@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41159
-station_name,"Onslow Bay Outer, NC (217)"
-station_code,41159
-sensor,urn:ioos:sensor:wmo:41159::summarywav1
-lon,-76.946
-lat,34.213
-depth,

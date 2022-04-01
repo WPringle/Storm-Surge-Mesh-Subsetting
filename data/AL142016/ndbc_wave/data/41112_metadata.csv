@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41112
-station_name,"Offshore Fernandina Beach, FL (132)"
-station_code,41112
-sensor,urn:ioos:sensor:wmo:41112::summarywav1
-lon,-81.292
-lat,30.709
-depth,

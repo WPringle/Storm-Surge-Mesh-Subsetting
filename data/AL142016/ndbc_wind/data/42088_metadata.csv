@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:42088
-station_name,"Angel Reef, TT"
-station_code,42088
-sensor,urn:ioos:sensor:wmo:42088::anemometer1
-lon,-60.521
-lat,11.300999999999998
-depth,-3.35

@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:plsf1
-station_name,"Pulaski Shoals Light, FL"
-station_code,plsf1
-sensor,urn:ioos:sensor:wmo:plsf1::anemometer1
-lon,-82.773
-lat,24.693
-depth,-17.7

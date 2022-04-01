@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41052
-station_name,"South of St. John, VI"
-station_code,41052
-sensor,urn:ioos:sensor:wmo:41052::anemometer1
-lon,-64.763
-lat,18.249000000000002
-depth,-4.0

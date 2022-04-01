@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41110
-station_name,"Masonboro Inlet, ILM2, NC (150)"
-station_code,41110
-sensor,urn:ioos:sensor:wmo:41110::summarywav1
-lon,-77.717
-lat,34.141
-depth,

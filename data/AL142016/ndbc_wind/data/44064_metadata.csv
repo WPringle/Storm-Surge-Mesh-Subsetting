@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:44064
-station_name,"First Landing, VA"
-station_code,44064
-sensor,urn:ioos:sensor:wmo:44064::anemometer1
-lon,-76.087
-lat,36.998000000000005
-depth,-3.0

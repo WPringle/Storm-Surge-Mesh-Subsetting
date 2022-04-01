@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41049
-station_name,SOUTH BERMUDA - 300 NM SSE of Bermuda
-station_code,41049
-sensor,urn:ioos:sensor:wmo:41049::anemometer1
-lon,-62.938
-lat,27.49
-depth,-3.8

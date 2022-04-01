@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:ssbn7
-station_name,Sunset Beach Nearshore Waves (SUN2WAVE)
-station_code,ssbn7
-sensor,urn:ioos:sensor:wmo:ssbn7::summarywav1
-lon,-78.484
-lat,33.838
-depth,

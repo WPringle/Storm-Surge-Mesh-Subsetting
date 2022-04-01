@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41029
-station_name,"Capers Nearshore, SC (CAP2)"
-station_code,41029
-sensor,urn:ioos:sensor:wmo:41029::anemometer1
-lon,-79.624
-lat,32.803000000000004
-depth,-2.95

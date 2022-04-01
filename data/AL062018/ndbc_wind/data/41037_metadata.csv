@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41037
-station_name,"Wrightsville Beach Offshore, NC (ILM3)"
-station_code,41037
-sensor,urn:ioos:sensor:wmo:41037::anemometer1
-lon,-77.362
-lat,33.988
-depth,-2.95

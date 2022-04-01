@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41056
-station_name,"Vieques Island, PR"
-station_code,41056
-sensor,urn:ioos:sensor:wmo:41056::summarywav1
-lon,-65.464
-lat,18.261
-depth,

@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:lmfs1
-station_name,Lake Murray SC
-station_code,lmfs1
-sensor,urn:ioos:sensor:wmo:lmfs1::anemometer1
-lon,-81.271
-lat,34.107
-depth,-9.0

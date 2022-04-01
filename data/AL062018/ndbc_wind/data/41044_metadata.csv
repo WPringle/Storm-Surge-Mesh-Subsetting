@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41044
-station_name,NE ST MARTIN - 330 NM NE St Martin Is
-station_code,41044
-sensor,urn:ioos:sensor:wmo:41044::anemometer1
-lon,-58.63
-lat,21.581999999999997
-depth,-4.1

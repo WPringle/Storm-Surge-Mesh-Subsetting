@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:mlrf1
-station_name,"Molasses Reef, FL"
-station_code,mlrf1
-sensor,urn:ioos:sensor:wmo:mlrf1::anemometer1
-lon,-80.376
-lat,25.011999999999997
-depth,-15.8

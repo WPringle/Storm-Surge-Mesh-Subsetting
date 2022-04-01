@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:42085
-station_name,"Southeast of Ponce, PR"
-station_code,42085
-sensor,urn:ioos:sensor:wmo:42085::anemometer1
-lon,-66.532
-lat,17.869
-depth,-4.0

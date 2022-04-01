@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:arop4
-station_name,"9757809 - Arecibo, PR"
-station_code,arop4
-sensor,urn:ioos:sensor:wmo:arop4::anemometer1
-lon,-66.702
-lat,18.48
-depth,-6.4

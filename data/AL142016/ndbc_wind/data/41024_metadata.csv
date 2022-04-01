@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41024
-station_name,"Sunset Nearshore, NC (SUN2)"
-station_code,41024
-sensor,urn:ioos:sensor:wmo:41024::anemometer1
-lon,-78.477
-lat,33.836999999999996
-depth,-2.95

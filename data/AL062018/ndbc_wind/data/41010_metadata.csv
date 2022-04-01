@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41010
-station_name,CANAVERAL EAST - 120NM East of Cape Canaveral
-station_code,41010
-sensor,urn:ioos:sensor:wmo:41010::anemometer1
-lon,-78.485
-lat,28.878
-depth,-4.1

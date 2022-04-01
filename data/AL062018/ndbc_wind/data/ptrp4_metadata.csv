@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:ptrp4
-station_name,"Puntas Rincon, PR"
-station_code,ptrp4
-sensor,urn:ioos:sensor:wmo:ptrp4::anemometer1
-lon,-67.251
-lat,18.367
-depth,-15.0

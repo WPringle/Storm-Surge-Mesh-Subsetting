@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:42058
-station_name,"Central Caribbean - 210 NM SSE of Kingston, Jamaica"
-station_code,42058
-sensor,urn:ioos:sensor:wmo:42058::anemometer1
-lon,-74.548
-lat,14.776
-depth,-3.8

@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:chds1
-station_name,"Strom Thurmond Dam, SC"
-station_code,chds1
-sensor,urn:ioos:sensor:wmo:chds1::anemometer1
-lon,-82.199
-lat,33.661
-depth,-2.1

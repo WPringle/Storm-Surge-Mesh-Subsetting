@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41033
-station_name,"Fripp Nearshore, SC (FRP2)"
-station_code,41033
-sensor,urn:ioos:sensor:wmo:41033::anemometer1
-lon,-80.406
-lat,32.279
-depth,-2.95

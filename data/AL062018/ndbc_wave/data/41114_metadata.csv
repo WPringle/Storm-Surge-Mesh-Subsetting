@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41114
-station_name,"Fort Pierce, FL (134)"
-station_code,41114
-sensor,urn:ioos:sensor:wmo:41114::summarywav1
-lon,-80.217
-lat,27.55
-depth,

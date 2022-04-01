@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:42057
-station_name,"Western Caribbean - 195 NM WSW of Negril, Jamaica"
-station_code,42057
-sensor,urn:ioos:sensor:wmo:42057::anemometer1
-lon,-81.422
-lat,16.908
-depth,-4.1

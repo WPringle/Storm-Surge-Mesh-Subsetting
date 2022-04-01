@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:42098
-station_name,"Egmont Channel Entrance, FL (214)"
-station_code,42098
-sensor,urn:ioos:sensor:wmo:42098::summarywav1
-lon,-82.931
-lat,27.59
-depth,

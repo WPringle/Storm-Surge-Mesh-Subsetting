@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41013
-station_name,"Frying Pan Shoals, NC"
-station_code,41013
-sensor,urn:ioos:sensor:wmo:41013::anemometer1
-lon,-77.743
-lat,33.436
-depth,-4.1

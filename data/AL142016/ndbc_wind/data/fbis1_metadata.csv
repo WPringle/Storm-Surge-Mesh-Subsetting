@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:fbis1
-station_name,"Folly Island, SC"
-station_code,fbis1
-sensor,urn:ioos:sensor:wmo:fbis1::anemometer1
-lon,-79.888
-lat,32.685
-depth,-9.8

@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:fwyf1
-station_name,"Fowey Rock, FL"
-station_code,fwyf1
-sensor,urn:ioos:sensor:wmo:fwyf1::anemometer1
-lon,-80.097
-lat,25.590999999999998
-depth,-43.9

@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:smkf1
-station_name,"Sombrero Key, FL"
-station_code,smkf1
-sensor,urn:ioos:sensor:wmo:smkf1::anemometer1
-lon,-81.109
-lat,24.628
-depth,-6.6

@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:fhpf1
-station_name,"FHP - Fred Howard Park, FL"
-station_code,fhpf1
-sensor,urn:ioos:sensor:wmo:fhpf1::anemometer1
-lon,-82.801
-lat,28.153000000000002
-depth,-9.4

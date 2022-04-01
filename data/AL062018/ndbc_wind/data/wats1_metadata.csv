@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:wats1
-station_name,"Lake Wateree, SC"
-station_code,wats1
-sensor,urn:ioos:sensor:wmo:wats1::anemometer1
-lon,-80.702
-lat,34.335
-depth,-3.1

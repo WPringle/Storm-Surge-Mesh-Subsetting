@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:44095
-station_name,"Oregon Inlet, NC (192)"
-station_code,44095
-sensor,urn:ioos:sensor:wmo:44095::summarywav1
-lon,-75.33
-lat,35.75
-depth,

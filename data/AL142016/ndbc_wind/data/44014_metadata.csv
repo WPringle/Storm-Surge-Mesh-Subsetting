@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:44014
-station_name,"VIRGINIA BEACH 64 NM East of Virginia Beach, VA"
-station_code,44014
-sensor,urn:ioos:sensor:wmo:44014::anemometer1
-lon,-74.84
-lat,36.606
-depth,-4.9

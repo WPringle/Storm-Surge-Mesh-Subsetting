@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:bgcf1
-station_name,"BCP - Big Carlos Pass, FL"
-station_code,bgcf1
-sensor,urn:ioos:sensor:wmo:bgcf1::anemometer1
-lon,-81.881
-lat,26.404
-depth,-17.3

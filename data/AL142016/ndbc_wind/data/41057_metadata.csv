@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41057
-station_name,"Puerto Plata, DO"
-station_code,41057
-sensor,urn:ioos:sensor:wmo:41057::anemometer1
-lon,-70.73100000000001
-lat,19.833
-depth,-3.35

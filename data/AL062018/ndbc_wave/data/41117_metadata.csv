@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41117
-station_name,"St. Augustine, FL (194)"
-station_code,41117
-sensor,urn:ioos:sensor:wmo:41117::summarywav1
-lon,-81.08
-lat,30.0
-depth,

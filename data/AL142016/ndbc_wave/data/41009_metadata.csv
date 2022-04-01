@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41009
-station_name,"CANAVERAL 20 NM East of Cape Canaveral, FL"
-station_code,41009
-sensor,urn:ioos:sensor:wmo:41009::wpm1
-lon,-80.185
-lat,28.508000000000003
-depth,

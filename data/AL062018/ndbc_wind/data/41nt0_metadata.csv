@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:41nt0
-station_name,NTAS - Northwest Tropical Atlantic
-station_code,41nt0
-sensor,urn:ioos:sensor:wmo:41nt0::anemometer1
-lon,-50.945
-lat,14.743
-depth,-3.4

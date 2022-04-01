@@ -1,8 +1,0 @@
-,0
-station,urn:ioos:station:wmo:42023
-station_name,"C13 - WFS South Buoy, 50m Isobath"
-station_code,42023
-sensor,urn:ioos:sensor:wmo:42023::anemometer1
-lon,-83.086
-lat,26.01
-depth,-3.1

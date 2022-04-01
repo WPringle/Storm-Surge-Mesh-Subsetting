@@ -13,26 +13,32 @@ Table of contents
    * [Changelog](#changelog)
 <!--te-->
 
+Purpose
+============
+Subset a high-resolution mesh used for storm surge and coastal floods forecasts. The mesh subsetting is based on information such as a forecasted hurricane track. Subsetted meshes are seamlessly merged with a coarser mesh of the greater region.
+
 Starting Out
 ============
 
-## Edit header of the Setup*.sh scripts and execute to create the run directory and submit the job 
-- Setup_ATCF_Run.sh : for running a synthetic vortex-forced ADCIRC storm tide simulation based on ATCF best-track
-- Setup_NAM_Run.sh : for running a NAM analysis-forced ADCIRC storm tide simulation
-- Setup_NDFD_Run.sh : for running a NDFD forecast-forced ADCIRC storm tide simulation
+1) Look at the `readmes` inside the `data/`, `mesh/`, and `exec/` directories to see what you might want to add to these directories in preparation. 
 
-NB: currently ATCF one is the most mature and likely to work correctly in the current directory setup
+2) With python and MATLAB loaded execute: `python besttrack_subset_merge.py`
 
-### Probably also need to edit job script located inside one of ATCF, NAM or NDFD directories to make sure the correct modules are loaded for your system 
-
-### Look at the readmes inside the data, mesh, and exec directories to see what you need to add in each of these directories
+3) Use `CoupledModelDriver` to set-up the simulation. 
 
 Requirements
 ==============
 
-- ADCIRC Version 55 (fortran program - add these into exec directory)
-- OceanMesh2D (matlab program - expecting to be located at: ~/MATLAB/OceanMesh2D/ )
-- ADCIRCpy (python program - expecting it to be installed onto conda environment)
+Python packages:
+- [adcircpy](https://github.com/noaa-ocs-modeling/adcircpy)
+- [CoupledModelDriver](https://github.com/noaa-ocs-modeling/CoupledModelDriver)
+- [EnsemblePerturbation](https://github.com/noaa-ocs-modeling/EnsemblePerturbation)
+
+MATLAB toolboxes:
+- [OceanMesh2D](https://github.com/CHLNDDEV/OceanMesh2D)
+
+FORTRAN executables:
+- [adcirc-cg](https://github.com/adcirc/adcirc-cg)
 
 References
 ==============

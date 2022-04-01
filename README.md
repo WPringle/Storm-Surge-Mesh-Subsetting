@@ -6,6 +6,7 @@ Table of contents
 <!--ts-->
    * [Storm-Surge-Mesh-Subsetting](#storm-surge-mesh-subsetting)
    * [Table of contents](#table-of-contents)
+   * [Purpose](#purpose)
    * [Starting out](#starting-out)
    * [Requirements](#requirements)
    * [References](#references)
@@ -29,15 +30,18 @@ Starting Out
 Requirements
 ==============
 
-Python packages:
+### For mesh subset and merging
+Python package:
 - [adcircpy](https://github.com/noaa-ocs-modeling/adcircpy)
-- [CoupledModelDriver](https://github.com/noaa-ocs-modeling/CoupledModelDriver)
-- [EnsemblePerturbation](https://github.com/noaa-ocs-modeling/EnsemblePerturbation)
 
-MATLAB toolboxes:
+MATLAB toolbox:
 - [OceanMesh2D](https://github.com/CHLNDDEV/OceanMesh2D)
 
-FORTRAN executables:
+### For simulation
+Python package:
+- [CoupledModelDriver](https://github.com/noaa-ocs-modeling/CoupledModelDriver)
+
+FORTRAN code:
 - [adcirc-cg](https://github.com/adcirc/adcirc-cg)
 
 References
